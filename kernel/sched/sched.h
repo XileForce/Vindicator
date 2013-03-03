@@ -19,6 +19,11 @@ extern int __read_mostly sched_balance_policy;
 extern unsigned int max_possible_freq;
 extern unsigned int min_max_freq;
 
+#define SCHED_POLICY_PERFORMANCE	(0x1)
+#define SCHED_POLICY_POWERSAVING	(0x2)
+
+extern int __read_mostly sched_balance_policy;
+
 /*
  * Convert user-nice values [ -20 ... 0 ... 19 ]
  * to static priority [ MAX_RT_PRIO..MAX_PRIO-1 ],

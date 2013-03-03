@@ -1162,7 +1162,7 @@ void init_new_task_load(struct task_struct *p)
 		p->ravg.sum_history[i] = 0;
 }
 
-#ifdef CONFIG_SMP
+#if defined(CONFIG_SMP)
 /*
  * We choose a half-life close to 1 scheduling period.
  * Note: The tables below are dependent on this value.
