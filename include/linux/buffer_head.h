@@ -141,6 +141,9 @@ BUFFER_FNS(Defer_Completion, defer_completion)
 	})
 #define page_has_buffers(page)	PagePrivate(page)
 
+void buffer_check_dirty_writeback(struct page *page,
+				     bool *dirty, bool *writeback);
+
 /*
  * Declarations
  */
