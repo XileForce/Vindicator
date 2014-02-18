@@ -113,7 +113,6 @@ obj-$(CONFIG_ARCH_APQ8084) += gpiomux-v2.o gpiomux.o
 obj-$(CONFIG_ARCH_FSM9900) += gpiomux-v2.o gpiomux.o
 
 obj-$(CONFIG_BLU_PLUG) += blu_plug.o
-obj-$(CONFIG_MSM_RUN_QUEUE_STATS) += msm_rq_stats.o
 obj-$(CONFIG_MSM_NATIVE_RESTART) += restart.o
 
 obj-$(CONFIG_MSM_CACHE_ERP) += cache_erp.o
@@ -137,8 +136,6 @@ obj-$(CONFIG_MSM_DEVFREQ_CPUBW) += devfreq_cpubw.o
 
 obj-$(CONFIG_HAS_MACH_MEMUTILS) += memutils/
 obj-$(CONFIG_PERFMAP) += perfmap.o
-obj-$(CONFIG_MMI_UNIT_INFO) += mmi-unit-info.o
-obj-$(CONFIG_MMI_SOC_INFO) += mmi_soc_info.o
 obj-$(CONFIG_MAKO_HOTPLUG) += mako_hotplug.o
 obj-$(CONFIG_MSM_SLEEPER) += msm-sleeper.o
 obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
