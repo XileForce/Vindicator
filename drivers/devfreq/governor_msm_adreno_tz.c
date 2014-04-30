@@ -42,6 +42,7 @@ static DEFINE_SPINLOCK(tz_lock);
 #define BUSY_BIN	95
 #define LONG_FRAME	25000
 
+#define MAX_TZ_VERSION		0
 
 /*
  * CEILING is 50msec, larger than any standard
@@ -87,19 +88,57 @@ static int __secure_tz_update_entry3(unsigned int *scm_data, u32 size_scm_data,
 	spin_lock(&tz_lock);
 	/* sync memory before sending the commands to tz*/
 	__iowmb();
-	ret = scm_call_atomic2(SCM_SVC_IO, cmd, val1, val2);
+	if (!is_64)
+		ret = scm_call_atomic2(SCM_SVC_IO, TZ_RESET_ID, scm_data[0],
+					scm_data[1]);
+	else
+		ret = scm_call(SCM_SVC_DCVS, TZ_RESET_ID_64, scm_data,
+				size_scm_data, NULL, 0);
 	spin_unlock(&tz_lock);
 	return ret;
 }
 
-static int __secure_tz_entry3(u32 cmd, u32 val1, u32 val2, u32 val3)
+static int __secure_tz_update_entry3(unsigned int *scm_data, u32 size_scm_data,
+					int *val, u32 size_val, bool is_64)
 {
 	int ret;
 	spin_lock(&tz_lock);
 	/* sync memory before sending the commands to tz*/
 	__iowmb();
-	ret = scm_call_atomic3(SCM_SVC_IO, cmd, val1, val2, val3);
+	if (!is_64) {
+		ret = scm_call_atomic3(SCM_SVC_IO, TZ_UPDATE_ID,
+					scm_data[0], scm_data[1], scm_data[2]);
+		*val = ret;
+	} else {
+		ret = scm_call(SCM_SVC_DCVS, TZ_UPDATE_ID_64, scm_data,
+				size_scm_data, val, size_val);
+	}
 	spin_unlock(&tz_lock);
+	return ret;
+}
+
+static int tz_init(struct devfreq_msm_adreno_tz_data *priv,
+			unsigned int *tz_pwrlevels, u32 size_pwrlevels,
+			unsigned int *version, u32 size_version)
+{
+	int ret;
+	/* Make sure all CMD IDs are avaialble */
+	if (scm_is_call_available(SCM_SVC_DCVS, TZ_INIT_ID)) {
+		ret = scm_call(SCM_SVC_DCVS, TZ_INIT_ID, tz_pwrlevels,
+				size_pwrlevels, NULL, 0);
+		*version = 0;
+
+	} else if (scm_is_call_available(SCM_SVC_DCVS, TZ_INIT_ID_64) &&
+			scm_is_call_available(SCM_SVC_DCVS, TZ_UPDATE_ID_64) &&
+			scm_is_call_available(SCM_SVC_DCVS, TZ_RESET_ID_64)) {
+
+		ret = scm_call(SCM_SVC_DCVS, TZ_INIT_ID_64, tz_pwrlevels,
+			size_pwrlevels, version, size_version);
+		if (!ret)
+			priv->is_64 = true;
+	} else
+		ret = -EINVAL;
+
 	return ret;
 }
 
@@ -138,6 +177,7 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 	int norm_cycles;
 	int gpu_percent;
 	static int busy_bin, frame_flag;
+	unsigned int scm_data[3];
 
 	if (priv->bus.num)
 		stats.private_data = &b;
@@ -234,6 +274,12 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 				priv->bin.total_time,
 				priv->bin.busy_time);
 #endif
+
+		scm_data[0] = level;
+		scm_data[1] = priv->bin.total_time;
+		scm_data[2] = priv->bin.busy_time;
+		__secure_tz_update_entry3(scm_data, sizeof(scm_data),
+					&val, sizeof(val), priv->is_64);
 	}
 	priv->bin.total_time = 0;
 	priv->bin.busy_time = 0;
@@ -314,6 +360,7 @@ static int tz_start(struct devfreq *devfreq)
 	unsigned int tz_pwrlevels[MSM_ADRENO_MAX_PWRLEVELS + 1];
 	unsigned int t1, t2 = 2 * HIST;
 	int i, out, ret;
+	unsigned int version;
 
 	if (devfreq->data == NULL) {
 		pr_err(TAG "data is required for this governor\n");
@@ -333,10 +380,9 @@ static int tz_start(struct devfreq *devfreq)
 		return -EINVAL;
 	}
 
-	ret = scm_call(SCM_SVC_DCVS, TZ_INIT_ID, tz_pwrlevels,
-			sizeof(tz_pwrlevels), NULL, 0);
-
-	if (ret != 0) {
+	ret = tz_init(priv, tz_pwrlevels, sizeof(tz_pwrlevels), &version,
+				sizeof(version));
+	if (ret != 0 || version > MAX_TZ_VERSION) {
 		pr_err(TAG "tz_init failed\n");
 		return ret;
 	}
