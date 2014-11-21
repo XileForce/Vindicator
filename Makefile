@@ -1,8 +1,8 @@
 VERSION = 3
 PATCHLEVEL = 10
-SUBLEVEL =
-EXTRAVERSION = -zen
-NAME = 
+SUBLEVEL = 41
+EXTRAVERSION =
+NAME = TOSSUG Baby Fish
 
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
