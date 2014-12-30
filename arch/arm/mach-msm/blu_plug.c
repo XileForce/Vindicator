@@ -1,9 +1,9 @@
 /*
- * Dynamic Hotplug for mako / hammerhead
+ * Dynamic Hotplug for mako / hammerhead / shamu
  *
  * Copyright (C) 2013 Stratos Karafotis <stratosk@semaphore.gr> (dyn_hotplug for mako)
  *
- * Copyright (C) 2014 engstk <eng.stk@sapo.pt> (hammerhead port, fixes and changes to blu_plug) 
+ * Copyright (C) 2014 engstk <eng.stk@sapo.pt> (hammerhead & shamu implementation, fixes and changes to blu_plug)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -21,9 +21,10 @@
 #include <linux/workqueue.h>
 #include <linux/sched.h>
 #include <linux/timer.h>
-#include <linux/lcd_notify.h>
+#include <linux/notifier.h>
+#include <linux/fb.h>
+#include <soc/qcom/cpufreq.h>
 #include <linux/cpufreq.h>
-#include <mach/cpufreq.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
 #include <linux/input.h>
@@ -37,7 +38,7 @@
 #define DEF_UP_TIMER_CNT	(2)	/* 1 sec */
 #define MAX_CORES_SCREENOFF (1)
 #define MAX_FREQ_SCREENOFF (1190400)
-#define MAX_FREQ_PLUG (2265600)
+#define MAX_FREQ_PLUG (2649600)
 #define MAX_CORES_PLUG (4)
 
 
@@ -253,23 +254,30 @@ static __ref void dyn_lcd_resume(struct work_struct *work)
 	max_screenoff(false);
 }
 
-static __ref int lcd_notifier_callback(struct notifier_block *this, unsigned long event, void *data)
+static int fb_notifier_callback(struct notifier_block *self,
+				unsigned long event, void *data)
 {
-	switch (event) {
-	case LCD_EVENT_ON_END:
-	case LCD_EVENT_OFF_START:
-		break;
-	case LCD_EVENT_ON_START:
-		queue_work_on(0, dyn_workq, &resume);
-		break;
-	case LCD_EVENT_OFF_END:
-		queue_work_on(0, dyn_workq, &suspend);
-		break;
-	default:
-		break;
+	struct fb_event *evdata = data;
+	int *blank;
+
+	if (evdata && evdata->data && event == FB_EVENT_BLANK) {
+		blank = evdata->data;
+		switch (*blank) {
+			case FB_BLANK_UNBLANK:
+				//display on
+				queue_work_on(0, dyn_workq, &resume);
+				break;
+			case FB_BLANK_POWERDOWN:
+			case FB_BLANK_HSYNC_SUSPEND:
+			case FB_BLANK_VSYNC_SUSPEND:
+			case FB_BLANK_NORMAL:
+				//display off
+				queue_work_on(0, dyn_workq, &suspend);
+				break;
+		}
 	}
 
-	return NOTIFY_OK;
+	return 0;
 }
 
 static void blu_plug_input_event(struct input_handle *handle,
@@ -539,9 +547,7 @@ module_param_cb(up_timer_cnt, &up_timer_cnt_ops, &up_timer_cnt, 0644);
 
 static int __init dyn_hp_init(void)
 {
-	notify.notifier_call = lcd_notifier_callback;
-	if (lcd_register_client(&notify) != 0)
-		pr_info("%s: lcd client register error\n", __func__);
+	notify.notifier_call = fb_notifier_callback;
 	
 	rcrc = input_register_handler(&blu_plug_input_handler);
 	if (rcrc)
@@ -573,7 +579,7 @@ static void __exit dyn_hp_exit(void)
 
 MODULE_AUTHOR("Stratos Karafotis <stratosk@semaphore.gr");
 MODULE_AUTHOR("engstk <eng.stk@sapo.pt>");
-MODULE_DESCRIPTION("'dyn_hotplug' - A dynamic hotplug driver for mako / hammerhead (blu_plug)");
+MODULE_DESCRIPTION("'dyn_hotplug' - A dynamic hotplug driver for mako / hammerhead / shamu (blu_plug)");
 MODULE_LICENSE("GPLv2");
 
 late_initcall(dyn_hp_init);
