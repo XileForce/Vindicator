@@ -192,7 +192,7 @@ static struct platform_driver msm_thermal_device_driver = {
 	},
 };
 
-static int __init msm_thermal_device_init(void)
+int __init msm_thermal_device_init(void)
 {
 	return platform_driver_register(&msm_thermal_device_driver);
 }
