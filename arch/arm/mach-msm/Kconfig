@@ -1459,6 +1459,10 @@ config HAS_MACH_MEMUTILS
 config MAKO_HOTPLUG
 	bool "CPU hotplug driver"
 	default n
+
+config MSM_SLEEPER
+	bool "CPU hotplug driver"
+	default n
 	help
 	  CPU hotplug driver
 endif
