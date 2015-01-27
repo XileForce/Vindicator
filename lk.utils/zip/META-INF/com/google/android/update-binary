@@ -9,7 +9,7 @@ ui_print() {
 }
 
 ui_print " "
-ui_print "Flashing leanKernel..."
+ui_print "Flashing Vindicator..."
 ui_print " "
 ui_print "Mounting system"
 mount /system
