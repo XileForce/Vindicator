@@ -9,7 +9,11 @@ ui_print() {
 }
 
 ui_print " "
-ui_print "Flashing Ascension..."
+ui_print " ___    ______       _____________             _____               "        
+ui_print " __ |  / /__(_)____________  /__(_)___________ __  /______________ "
+ui_print " __ | / /__  /__  __ \  __  /__  /_  ___/  __ `/  __/  __ \_  ___/ "
+ui_print " __ |/ / _  / _  / / / /_/ / _  / / /__ / /_/ // /_ / /_/ /  /     "
+ui_print " _____/  /_/  /_/ /_/\__,_/  /_/  \___/ \__,_/ \__/ \____//_/      "                                                             
 ui_print " "
 ui_print "Mounting system"
 mount /system
