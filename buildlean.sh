@@ -6,14 +6,16 @@ objdir="/home/ryan/Kernels/Ascension_Out"
 device="shamu"
 cc="/home/ryan/Onyx/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-"
 filename="Ascension.I.zip"
-ocuc_branch="lk-lp-ocuc"
 
 compile() {
-  cd $sdir
-  CROSS_COMPILE=$cc
+  export CROSS_COMPILE=$cc
+  export ARCH=arm
+  export SUBARCH=arm
+  export KBUILD_BUILD_USER=Xile
+  export KBUILD_BUILD_HOST=Xile
   make clean && make mrproper
   make lk_defconfig
-  make O=$objdir ARCH=arm -j5
+  make -j5
 }
 
 ramdisk() {
@@ -34,6 +36,7 @@ zipit() {
   cd zip
   zip -r /tmp/$1 *
   rm boot.img
+  cp $filename /home/ryan/Kernels/Ascension_Out
   cd $sdir
 } 
 
