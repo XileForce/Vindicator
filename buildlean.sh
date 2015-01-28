@@ -2,7 +2,7 @@
 
 sdir="/home/ryan/Kernels/Ascension"
 udir="/home/ryan/Kernels/Ascension/lk.utils"
-objdir="/home/ryan/Kernels/Ascension_Out"
+outdir="/home/ryan/Kernels/Ascension_Out"
 device="shamu"
 cc="/home/ryan/Onyx/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-"
 filename="Ascension.I.zip"
@@ -27,16 +27,15 @@ ramdisk() {
   chmod 755 res res/images res/images/charger
   chmod 640 fstab.shamu
   find . | cpio -o -H newc | gzip > /tmp/ramdisk.img
-  /bin/mkbootimg --kernel $sdir/arch/arm/boot/zImage-dtb  --ramdisk /tmp/ramdisk.img --cmdline "console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=shamu msm_rtb.filter=0x37 ehci-hcd.park=3 utags.blkdev=/dev/block/platform/msm_sdcc.1/by-name/utags utags.backup=/dev/block/platform/msm_sdcc.1/by-name/utagsBackup coherent_pool=8M" --pagesize 2048 -o /tmp/boot.img
+  /bin/mkbootimg --kernel $sdir/arch/arm/boot/zImage-dtb  --ramdisk /tmp/ramdisk.img --cmdline "console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=shamu msm_rtb.filter=0x37 ehci-hcd.park=3 utags.blkdev=/dev/block/platform/msm_sdcc.1/by-name/utags utags.backup=/dev/block/platform/msm_sdcc.1/by-name/utagsBackup coherent_pool=8M" --pagesize 2048 -o $outdir/boot.img
 }
 
 zipit() {
   cd $udir
-  cp -f /tmp/boot.img zip/
+  cp -f $outdir/boot.img zip/
   cd zip
-  zip -r /tmp/$1 *
+  zip -r $outdir/$1 *
   rm boot.img
-  cp $filename /home/ryan/Kernels/Ascension_Out
   cd $sdir
 } 
 
