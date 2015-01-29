@@ -350,7 +350,7 @@ GRAPHITE	    = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -fl
 CFLAGS_MODULE   = $(GRAPHITE)
 AFLAGS_MODULE   = $(GRAPHITE)
 LDFLAGS_MODULE  = $(GRAPHITE)
-CFLAGS_KERNEL	= $(GRAPHITE) -fgcse-lm -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -mtune=cortex-a15 -mfpu=neon-vfpv4 -floop-nest-optimize
+CFLAGS_KERNEL	= $(GRAPHITE) -fgcse-lm -falign-functions -falign-jumps -falign-loops -ftree-partial-pre -ftree-loop-distribute-patterns -finline-functions -funswitch-loops -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -mtune=cortex-a15 -mfpu=neon-vfpv4 -floop-nest-optimize
 AFLAGS_KERNEL	= $(GRAPHITE)
 CFLAGS_GCOV	    = -fprofile-arcs -ftest-coverage
 
@@ -380,10 +380,10 @@ KBUILD_CFLAGS   := $(GRAPHITE) -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs 
 		   -Wno-format-security \
                    -mtune=cortex-a15 \
                    -fmodulo-sched -fmodulo-sched-allow-regmoves \
-		   -fno-tree-vectorize -ffast-math \
+		   -fno-tree-vectorize -ffast-math -ftree-partial-pre -falign-functions -falign-jumps -falign-loops \
                    -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
 		   -fno-aggressive-loop-optimizations \
-		   -fno-delete-null-pointer-checks \
+		   -fno-delete-null-pointer-checks -ftree-loop-distribute-patterns -finline-functions \
 		   -floop-nest-optimize
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
