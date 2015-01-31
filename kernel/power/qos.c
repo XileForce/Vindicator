@@ -153,38 +153,6 @@ static inline void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
 	c->target_value = value;
 }
 
-static inline void pm_qos_set_value_for_cpus(struct pm_qos_constraints *c,
-		struct cpumask *cpus)
-{
-	struct pm_qos_request *req = NULL;
-	int cpu;
-	s32 qos_val[NR_CPUS] = { [0 ... (NR_CPUS - 1)] = c->default_value };
-
-	plist_for_each_entry(req, &c->list, node) {
-		for_each_cpu(cpu, &req->cpus_affine) {
-			switch (c->type) {
-			case PM_QOS_MIN:
-				if (qos_val[cpu] > req->node.prio)
-					qos_val[cpu] = req->node.prio;
-				break;
-			case PM_QOS_MAX:
-				if (req->node.prio > qos_val[cpu])
-					qos_val[cpu] = req->node.prio;
-				break;
-			default:
-				BUG();
-				break;
-			}
-		}
-	}
-
-	for_each_possible_cpu(cpu) {
-		if (c->target_per_cpu[cpu] != qos_val[cpu])
-			cpumask_set_cpu(cpu, cpus);
-		c->target_per_cpu[cpu] = qos_val[cpu];
-	}
-}
-
 /**
  * pm_qos_update_target - manages the constraints list and calls the notifiers
  *  if needed
@@ -201,8 +169,6 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
 {
 	unsigned long flags;
 	int prev_value, curr_value, new_value;
-	struct plist_node *node = &req->node;
-	struct cpumask cpus;
 
 	spin_lock_irqsave(&pm_qos_lock, flags);
 	prev_value = pm_qos_get_value(c);
@@ -232,16 +198,14 @@ int pm_qos_update_target(struct pm_qos_constraints *c, struct plist_node *node,
 	}
 
 	curr_value = pm_qos_get_value(c);
-	cpumask_clear(&cpus);
 	pm_qos_set_value(c, curr_value);
-	pm_qos_set_value_for_cpus(c, &cpus);
 
 	spin_unlock_irqrestore(&pm_qos_lock, flags);
 
 	if (prev_value != curr_value) {
 		blocking_notifier_call_chain(c->notifiers,
 					     (unsigned long)curr_value,
-					     &cpus);
+					     NULL);
 		return 1;
 	} else {
 		return 0;
