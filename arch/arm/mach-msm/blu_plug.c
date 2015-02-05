@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2013 Stratos Karafotis <stratosk@semaphore.gr> (dyn_hotplug for mako)
  *
- * Copyright (C) 2015 engstk <eng.stk@sapo.pt> (hammerhead & shamu implementation, fixes and changes to blu_plug)
+ * Copyright (C) 2014 engstk <eng.stk@sapo.pt> (hammerhead & shamu implementation, fixes and changes to blu_plug)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -186,16 +186,31 @@ static __ref void load_timer(struct work_struct *work)
  */
 static __ref void max_screenoff(bool screenoff)
 {
-	uint32_t cpu;
+	uint32_t cpu, freq;
 	
 	if (screenoff) {
 		max_freq_plug = cpufreq_quick_get_max(0);
+		
+		if (max_freq_plug == 729600) {
+			freq = 729600;
+			max_online = 1;
+			prevsaver = true;
+		}
+		else {
+			freq = max_freq_screenoff;
 			
-		max_cores_plug = max_online;
-		max_online = max_cores_screenoff;
+			if (max_cores_plug > max_online && prevsaver) {
+				max_online = max_cores_plug;
+				prevsaver = false;
+			}
+			else
+				max_cores_plug = max_online;
+				
+			max_online = max_cores_screenoff;
+		}
 		
 		for_each_possible_cpu(cpu) {
-			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, max_freq_screenoff);
+			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, freq);
 			
 			if (cpu && num_online_cpus() > max_online)
 				cpu_down(cpu);
@@ -203,12 +218,19 @@ static __ref void max_screenoff(bool screenoff)
 		cpufreq_update_policy(cpu);
 	}
 	else {
-		max_online = max_cores_plug;
+		if (max_freq_plug == 729600) {
+			freq = 729600;
+			max_online = 2;
+		}
+		else {
+			freq = max_freq_plug;
+			max_online = max_cores_plug;
+		}
 		
 		up_all(true);
 		
 		for_each_possible_cpu(cpu) {
-			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, max_freq_plug);
+			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, freq);
 		}
 		cpufreq_update_policy(cpu);
 		
@@ -562,4 +584,3 @@ MODULE_LICENSE("GPLv2");
 
 late_initcall(dyn_hp_init);
 module_exit(dyn_hp_exit);
-
