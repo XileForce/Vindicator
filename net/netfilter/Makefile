@@ -1,4 +1,4 @@
-CFLAGS_KERNEL := -fno-graphite -fno-fast-math
+CFLAGS_KERNEL := -fno-graphite -fno-fast-math -fno-strict-aliasing
 
 netfilter-objs := core.o nf_log.o nf_queue.o nf_sockopt.o
 
