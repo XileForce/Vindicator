@@ -33,7 +33,6 @@ case $option in
 	;;
 1)
 	echo 1 > /data/data/leankernel/cc
-	echo N > /sys/module/cpu_boost/parameters/cpuboost_enable
 	stop mpdecision
 	mount -o rw,remount /system
 	cp /sbin/nofreq-mpd /system/bin/mpdecision
@@ -46,8 +45,6 @@ case $option in
         ;;
 2)
 	echo 2 > /data/data/leankernel/cc
-	echo Y > /sys/module/cpu_boost/parameters/cpuboost_enable
-	rm -f /data/data/leankernel/cpuboost_enable
 	stop mpdecision
 	echo 1 > /sys/devices/system/cpu/cpu1/online
 	echo 1 > /sys/devices/system/cpu/cpu2/online
@@ -60,8 +57,6 @@ case $option in
 	;;
 3)
 	rm -f /data/data/leankernel/cc
-	echo Y > /sys/module/cpu_boost/parameters/cpuboost_enable
-	rm -f /data/data/leankernel/cpuboost_enable
 	stop mpdecision
 	mount -o rw,remount /system
 	cp /sbin/stock-mpd /system/bin/mpdecision

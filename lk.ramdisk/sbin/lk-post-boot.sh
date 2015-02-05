@@ -42,11 +42,6 @@ CFILE="/data/data/leankernel/use_spi_crc"
 SFILE="/sys/module/mmc_core/parameters/use_spi_crc"
 [ -f $CFILE ] && echo `cat $CFILE` > $SFILE
 
-# cpu boost
-CFILE="/data/data/leankernel/cpuboost_enable"
-SFILE="/sys/module/cpu_boost/parameters/cpuboost_enable"
-[ -f $CFILE ] && echo `cat $CFILE` > $SFILE
-
 # charging led
 CFILE="/data/data/leankernel/charging_led"
 SFILE="/sys/class/leds/charging"
@@ -89,12 +84,11 @@ if [ -f "/data/data/leankernel/cc" ]; then
 	val=`cat /data/data/leankernel/cc`
 	case $val in
 	  1)
-		echo N > /sys/module/cpu_boost/parameters/cpuboost_enable
 		# nofreq mpdecision binary should be in already
 		# add mp5sum check etc later
 		;;
 	  2)
-		echo Y > /sys/module/cpu_boost/parameters/cpuboost_enable
+
 		stop mpdecision
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 		echo 1 > /sys/devices/system/cpu/cpu2/online
