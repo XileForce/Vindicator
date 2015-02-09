@@ -126,7 +126,7 @@
 		status = "okay";
 		pma8084_s6: regulator-s6 {
                         regulator-min-microvolt = <700000>;
-                        regulator-max-microvolt = <900000>;
+                        regulator-max-microvolt = <910000>;
                         status = "okay";
                 };
                 pma8084_s6_corner: regulator-s6-corner {
