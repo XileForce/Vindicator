@@ -21,6 +21,8 @@ chmod 444 /dev/frandom
 	"allow drmserver theme_data_file file r_file_perms" \
 	"allow netd self capability fsetid" \
 	"allow radio tap2wake_dev file r_file_perms"
+	"allow mediaserver mediaserver_tmpfs file execute" \
+	"allow drmserver theme_data_file file r_file_perms"
 
 # take a little more RAM from file/dir caches and give them to apps 
 echo 200 > /proc/sys/vm/vfs_cache_pressure
@@ -80,6 +82,11 @@ SFILE="/sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy
 # smb135x wakelock
 CFILE="/data/data/leankernel/smb135x_use_wlock"
 SFILE="/sys/module/smb135x_charger/parameters/use_wlock"
+[ -f $CFILE ] && echo `cat $CFILE` > $SFILE
+
+# sensor_ind wakelock
+CFILE="/data/data/leankernel/sensor_ind"
+SFILE="/sys/module/wakeup/parameters/enable_si_ws"
 [ -f $CFILE ] && echo `cat $CFILE` > $SFILE
 
 # lkcc
