@@ -241,8 +241,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -fstrict-aliasing -flto -fuse-linker-plugin -fno-toplevel-reorder -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -floop-nest-optimize -fsingle-precision-constant
-HOSTCXXFLAGS = -Ofast -fstrict-aliasing -flto -fuse-linker-plugin -fno-toplevel-reorder -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -floop-nest-optimize -fsingle-precision-constant
+HOSTCFLAGS   = -Wall -fstrict-aliasing -flto -fuse-linker-plugin -fno-toplevel-reorder -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -floop-nest-optimize
+HOSTCXXFLAGS = -Ofast -fstrict-aliasing -flto -fuse-linker-plugin -fno-toplevel-reorder -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -floop-nest-optimize
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -350,7 +350,7 @@ GRAPHITE	    = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -fl
 CFLAGS_MODULE   = $(GRAPHITE)
 AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 LDFLAGS_MODULE  = $(GRAPHITE) -DMODULE -DNDEBUG
-CFLAGS_KERNEL	= $(GRAPHITE) -fmodulo-sched -Ofast -fmodulo-sched-allow-regmoves -fgcse-lm -falign-functions -falign-jumps -falign-loops -ftree-partial-pre -ftree-loop-distribute-patterns -finline-functions -funswitch-loops -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -mtune=cortex-a15 -mfpu=neon-vfpv4 -floop-nest-optimize -DNDEBUG
+CFLAGS_KERNEL	= $(GRAPHITE) -fgcse-lm -falign-functions -falign-jumps -falign-loops -ftree-partial-pre -ftree-loop-distribute-patterns -finline-functions -funswitch-loops -fgcse-sm -fsched-spec-load -ffast-math -fsingle-precision-constant -mtune=cortex-a15 -mfpu=neon-vfpv4 -floop-nest-optimize -DNDEBUG
 AFLAGS_KERNEL	= $(GRAPHITE)
 CFLAGS_GCOV	    = -fprofile-arcs -ftest-coverage
 
@@ -378,11 +378,11 @@ KBUILD_CFLAGS   := $(GRAPHITE) -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs 
 		   -fstrict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-                   -mtune=cortex-a15 -mcpu=cortex-a15 -mfpu=neon-vfpv4 \
+                   -mtune=cortex-a15 \
                    -fmodulo-sched -fmodulo-sched-allow-regmoves \
 		   -fno-tree-vectorize -ffast-math -ftree-partial-pre -falign-functions -falign-jumps -falign-loops \
                    -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
-		   -fno-aggressive-loop-optimizations -fsingle-precision-constant \
+		   -fno-aggressive-loop-optimizations \
 		   -fno-delete-null-pointer-checks -DNDEBUG -ftree-loop-distribute-patterns -finline-functions \
 		   -floop-nest-optimize
 KBUILD_AFLAGS_KERNEL :=
