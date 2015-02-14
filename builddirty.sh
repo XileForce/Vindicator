@@ -13,9 +13,8 @@ compile() {
   export SUBARCH=arm
   export KBUILD_BUILD_USER=Xile
   export KBUILD_BUILD_HOST=Xile
-  make clean && make mrproper
   make lk_defconfig
-  make -j6
+  make -j5
 }
 
 ramdisk() {
