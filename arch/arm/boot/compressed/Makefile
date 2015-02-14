@@ -3,7 +3,6 @@
 #
 # create a compressed vmlinuz image from the original vmlinux
 #
-CFLAGS_KERNEL := -mhard-float
 
 OBJS		=
 
