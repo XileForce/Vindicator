@@ -203,7 +203,7 @@ ifeq ($(DRIVER_TYPE),y)
   DHDCFLAGS += -DUSE_LATE_INITCALL_SYNC
 endif
 
-EXTRA_CFLAGS += $(DHDCFLAGS) -DDHD_DEBUG
+EXTRA_CFLAGS += $(DHDCFLAGS)
 EXTRA_CFLAGS += -DSRCBASE=\"$(src)\"
 EXTRA_CFLAGS += -I$(src)/include/ -I$(src)/
 KBUILD_CFLAGS += -I$(LINUXDIR)/include -I$(shell pwd)
