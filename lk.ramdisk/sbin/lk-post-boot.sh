@@ -24,8 +24,8 @@ chmod 444 /dev/frandom
 	"allow mediaserver mediaserver_tmpfs file execute" \
 	"allow drmserver theme_data_file file r_file_perms"
 
-# take a little more RAM from file/dir caches and give them to apps 
-echo 200 > /proc/sys/vm/vfs_cache_pressure
+# With Zram we can afford this. 
+echo 10 > /proc/sys/vm/vfs_cache_pressure
 
 # for lkconfig
 [ ! -d "/data/data/leankernel" ] && mkdir /data/data/leankernel
