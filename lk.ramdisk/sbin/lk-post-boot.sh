@@ -25,7 +25,7 @@ chmod 444 /dev/frandom
 	"allow drmserver theme_data_file file r_file_perms"
 
 # With Zram we can afford this. 
-echo 10 > /proc/sys/vm/vfs_cache_pressure
+echo 25 > /proc/sys/vm/vfs_cache_pressure
 
 # for lkconfig
 [ ! -d "/data/data/leankernel" ] && mkdir /data/data/leankernel
