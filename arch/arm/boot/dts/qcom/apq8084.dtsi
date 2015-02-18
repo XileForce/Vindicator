@@ -1011,9 +1011,11 @@
 
 		qcom,l2-fmax =
 			<          0 0			 >,
+			<   67320000 2 /* POWERSAVE */ >,
 			<  576000000 4 /* SVS_SOC */	 >,
 			< 1036800000 5 /* NORMAL */	 >,
-			< 1728000000 7 /* SUPER_TURBO */ >;
+			< 1728000000 7 /* SUPER_TURBO */ >,
+			< 2013600000 8 /* QUANTUM */ >;
 
 		qcom,svs-fmax = <883200000>;
 
