@@ -22,7 +22,8 @@ chmod 444 /dev/frandom
 	"allow netd self capability fsetid" \
 	"allow radio tap2wake_dev file r_file_perms"
 	"allow mediaserver mediaserver_tmpfs file execute" \
-	"allow drmserver theme_data_file file r_file_perms"
+	"allow drmserver theme_data_file file r_file_perms" \
+	"allow debuggerd app_data_file dir search"
 
 # With Zram we can afford this. 
 echo 25 > /proc/sys/vm/vfs_cache_pressure
