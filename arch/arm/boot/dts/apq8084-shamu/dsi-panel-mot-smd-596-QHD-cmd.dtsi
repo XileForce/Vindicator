@@ -25,7 +25,7 @@
 		qcom,mdss-dsi-panel-height = <2560>;
 		qcom,mdss-pan-physical-width-dimension = <74>;
 		qcom,mdss-pan-physical-height-dimension = <132>;
-		qcom,mdss-dsi-panel-clockrate = <800000000>;
+		qcom,mdss-dsi-panel-clockrate = <700000000>;
 		qcom,mdss-dsi-h-front-porch = <120>;
 		qcom,mdss-dsi-h-back-porch = <44>;
 		qcom,mdss-dsi-h-pulse-width = <16>;
@@ -116,7 +116,7 @@
 		qcom,mdss-dsi-panel-height = <2560>;
 		qcom,mdss-pan-physical-width-dimension = <74>;
 		qcom,mdss-pan-physical-height-dimension = <132>;
-		qcom,mdss-dsi-panel-clockrate = <800000000>;
+		qcom,mdss-dsi-panel-clockrate = <700000000>;
 		qcom,mdss-dsi-h-front-porch = <120>;
 		qcom,mdss-dsi-h-back-porch = <44>;
 		qcom,mdss-dsi-h-pulse-width = <16>;

@@ -230,12 +230,12 @@
 
 &sdhc_1 {
 	vdd-supply = <&pma8084_l20>;
-	qcom,vdd-voltage-level = <2950000 2950000>;
+	qcom,vdd-voltage-level = <2850000 2850000>;
 	qcom,vdd-current-level = <200 500000>;
 
 	vdd-io-supply = <&pma8084_s4>;
 	qcom,vdd-io-always-on;
-	qcom,vdd-io-voltage-level = <1800000 1800000>;
+	qcom,vdd-io-voltage-level = <1700000 1700000>;
 	qcom,vdd-io-current-level = <200 154000>;
 
 	qcom,pad-pull-on = <0x0 0x3 0x3 0x1>; /* no-pull, pull-up, pull-up, pull-down */
@@ -251,11 +251,11 @@
 
 &sdhc_2 {
 	vdd-supply = <&pma8084_l21>;
-	qcom,vdd-voltage-level = <2950000 2950000>;
+	qcom,vdd-voltage-level = <2850000 2850000>;
 	qcom,vdd-current-level = <200 800000>;
 
 	vdd-io-supply = <&pma8084_l13>;
-	qcom,vdd-io-voltage-level = <1800000 2950000>;
+	qcom,vdd-io-voltage-level = <1700000 2950000>;
 	qcom,vdd-io-current-level = <200 22000>;
 
 	qcom,pad-pull-on = <0x0 0x3 0x3>; /* no-pull, pull-up, pull-up */
@@ -479,8 +479,8 @@
 		qcom,cdc-micbias4-ext-cap;
 
 		cdc-vdd-spkdrv-supply = <&hdmi_vreg>;
-		qcom,cdc-vdd-spkdrv-voltage = <5000000 5000000>;
-		qcom,cdc-vdd-spkdrv-current = <1250000>;
+		qcom,cdc-vdd-spkdrv-voltage = <4500000 4500000>;
+		qcom,cdc-vdd-spkdrv-current = <1240000>;
 
 		qcom,cdc-on-demand-supplies = "cdc-vdd-spkdrv";
 	};
@@ -771,7 +771,7 @@
 		imagis,is-erm;
 		imagis,regulator {
 			regulator-name = "vcc_i2c";
-			regulator-min-microvolt = <1800000>;
+			regulator-min-microvolt = <1700000>;
 			regulator-max-microvolt = <1800000>;
 			regulator-max-microamp = <9360>;
 		};
@@ -784,7 +784,7 @@
 		reg = <2>;
 		interrupt-parent = <&msmgpio>;
 		interrupts = <60 0>;
-		spi-max-frequency = <4800000>;
+		spi-max-frequency = <4750000>;
 		rst-gpio = <&msmgpio 59 0>;
 		vdd-io-supply = <&spi_eth_vreg>;
 		vdd-phy-supply = <&spi_eth_vreg>;
