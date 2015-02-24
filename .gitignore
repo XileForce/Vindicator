@@ -36,6 +36,7 @@ modules.builtin
 #
 # Top-level generic files
 #
+/Vindicator_Out
 /tags
 /TAGS
 /linux
