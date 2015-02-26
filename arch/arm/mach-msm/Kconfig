@@ -1470,6 +1470,12 @@ config MAKO_HOTPLUG
 config MSM_SLEEPER
 	bool "CPU hotplug driver"
 	default n
+
+config BRICKED_HOTPLUG
+	bool "Enable kernel based mpdecision"
+	depends on MSM_RUN_QUEUE_STATS
+	default n
 	help
-	  CPU hotplug driver
+	  This enables kernel based multi core control.
+	  (up/down hotplug based on load)
 endif
