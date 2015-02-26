@@ -139,6 +139,7 @@ obj-$(CONFIG_PERFMAP) += perfmap.o
 obj-$(CONFIG_MAKO_HOTPLUG) += mako_hotplug.o
 obj-$(CONFIG_MSM_SLEEPER) += msm-sleeper.o
 obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
+obj-$(CONFIG_INTELLI_HOTPLUG) += intelli_hotplug.o
 obj-$(CONFIG_MSM_LIMITER) += msm_limiter.o
 obj-$(CONFIG_TURBO_BOOST) += msm_turbo.o
 obj-$(CONFIG_MSM_HOTPLUG) += msm_hotplug.o
