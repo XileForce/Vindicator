@@ -1472,4 +1472,12 @@ config MSM_SLEEPER
 	default n
 	help
 	  CPU hotplug driver
+
+config BRICKED_HOTPLUG
+	bool "Enable kernel based mpdecision"
+	depends on MSM_RUN_QUEUE_STATS
+	default y
+	help
+	  This enables kernel based multi core control.
+	  (up/down hotplug based on load)
 endif
