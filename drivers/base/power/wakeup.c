@@ -19,7 +19,7 @@
 
 static bool enable_si_ws = false;
 module_param(enable_si_ws, bool, 0644);
-static bool enable_bluesleep_ws = false;
+static bool enable_bluesleep_ws = true;
 module_param(enable_bluesleep_ws, bool, 0644);
 
 #include "power.h"

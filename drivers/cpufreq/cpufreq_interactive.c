@@ -120,7 +120,7 @@ unsigned int input_boost_freq = DEFAULT_INPUT_BOOST_FREQ;
 #define DEFAULT_TIMER_SLACK (4 * DEFAULT_TIMER_RATE)
 static int timer_slack_val = DEFAULT_TIMER_SLACK;
 
-#define DEFAULT_SCREEN_OFF_MAX 652800
+#define DEFAULT_SCREEN_OFF_MAX 729600
 static unsigned long screen_off_max = DEFAULT_SCREEN_OFF_MAX;
 
 static bool io_is_busy;

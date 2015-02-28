@@ -258,7 +258,7 @@
 		interrupt-names = "qup_err_intr";
 		interrupts = <0 106 0>;
 		qcom,i2c-bus-freq = <400000>;
-		qcom,i2c-src-freq = <50000000>;
+		qcom,i2c-src-freq = <19200000>;
 		qcom,sda-gpio = <&msmgpio 49 0>;
 		qcom,scl-gpio = <&msmgpio 50 0>;
 		qcom,master-id = <84>;
@@ -351,7 +351,7 @@
 };
 
 &pma8084_l3 {
-	regulator-min-microvolt = <1000000>;
+	regulator-min-microvolt = <950000>;
 	regulator-max-microvolt = <1000000>;
 	qcom,init-voltage = <1000000>;
 };
@@ -945,9 +945,9 @@
 };
 
 &pma8084_l19 {
-	regulator-min-microvolt = <3300000>;
+	regulator-min-microvolt = <3100000>;
 	regulator-max-microvolt = <3300000>;
-	qcom,init-voltage = <3300000>;
+	qcom,init-voltage = <3200000>;
 	qcom,init-current = <100>;
 	qcom,system-load = <100000>;
 	qcom,init-ldo-mode = <1>;
@@ -1051,7 +1051,7 @@
 		imagis,mode-ctrl = <2>;
 		imagis,regulator {
 			regulator-name = "vcc_i2c";
-			regulator-min-microvolt = <1800000>;
+			regulator-min-microvolt = <1700000>;
 			regulator-max-microvolt = <1800000>;
 			regulator-max-microamp = <9360>;
 		};
