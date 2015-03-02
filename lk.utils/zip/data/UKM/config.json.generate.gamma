@@ -1,0 +1,686 @@
+cat << CTAG
+{
+	name:GAMMA,
+		elements:[
+			`if [ -d "/sys/devices/platform/kcal_ctrl.0" ]; then
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_enable" ]; then
+				KCALE=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_enable\`;
+					$BB echo '{ SPane:{
+						title:"KCAL",
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"Enables/Disables RGB Multiplier Control",
+							default:'$KCALE',
+							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_enable",
+						}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal" ]; then
+				KCAL=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal\`;
+					$BB echo '{ SPane:{
+						title:"Values",
+					}},
+						{ SGeneric:{
+							title:"KCAL",
+							description:"Controls R/G/B Multipliers",
+							default:'$KCAL',
+							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal",
+						}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_invert" ]; then
+				KCALINV=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_invert\`;
+					$BB echo '{ SCheckBox:{
+						label:"KCAL inverted colors",
+						description:"Enables/Disables Display Inversion Mode",
+						default:'$KCALINV',
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_invert"
+					}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_min" ]; then
+				KM=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_min\`
+						$BB echo '{ SSeekBar:{
+							title:"KCAL Min",
+							description:"Controls minimum RGB Multiplier value.",
+							min:0,
+							max:255,
+							step:1,
+							default:'$KM',
+							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_min"
+						}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_cont" ]; then
+				KCALCONT=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_cont\`;
+					$BB echo '{ SSeekBar:{
+						title:"Contrast",
+						description:"Controls display contrast.",
+						min:128,
+						max:383,
+						step:1,
+						default:'$KCALCONT',
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_cont",
+					}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_hue" ]; then
+				KCALHUE=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_hue\`;
+					$BB echo '{ SSeekBar:{
+						title:"Hue",
+						description:"Controls display hue.",
+						min:0,
+						max:1536,
+						step:1,
+						default:'$KCALHUE',
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_hue",
+					}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_sat" ]; then
+				KCALSAT=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_sat\`;
+					$BB echo '{ SSeekBar:{
+						title:"Saturation",
+						description:"Controls saturation intensity. Move slider all the way to the left for grayscale mode.",
+						min:128,
+						max:383,
+						step:1,
+						default:'$KCALSAT',
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_sat",
+					}},'
+				fi
+				if [ -f "/sys/devices/platform/kcal_ctrl.0/kcal_val" ]; then
+				KCALVAL=\`$BB cat /sys/devices/platform/kcal_ctrl.0/kcal_val\`;
+					$BB echo '{ SSeekBar:{
+						title:"Value",
+						description:"Controls display value.",
+						min:128,
+						max:383,
+						step:1,
+						default:'$KCALVAL',
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_val",
+					}},'
+				fi
+			fi`
+			`if [ -f "/sys/devices/platform/mipi_lgit.1537/kgamma_b" ]; then
+			PROF=\`$BB cat $UKM/files/gamma_prof\`;
+			BLUE=\`$BB cat /sys/devices/platform/mipi_lgit.1537/kgamma_b\`;
+			GREEN=\`$BB cat /sys/devices/platform/mipi_lgit.1537/kgamma_g\`;
+			RED=\`$BB cat /sys/devices/platform/mipi_lgit.1537/kgamma_r\`;
+					$BB echo '{ SGeneric:{
+						title:"Blue",
+						default:'$BLUE',
+						action:"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_b",
+					}},
+					{ SGeneric:{
+						title:"Green",
+						default:'$GREEN',
+						action:"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_g",
+					}},
+					{ SGeneric:{
+						title:"Red",
+						default:'$RED',
+						action:"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_r",
+					}},
+				{ SPane:{
+					title:"Gamma Profiles",
+					description:"After you apply a profile, turn screen Off/On to update. More custom profiles here: <a href='https://docs.google.com/spreadsheet/ccc?key=0AoDp2qRui0u0dGE4T2gtSDBTRHVFSldPS2RrX1Rya0E#gid=5'>HERE</a>"
+				}},
+					{ SOptionList:{
+						default:"Custom",
+						action:"restorebackup applygammafaux",
+						values:[ "Custom", '
+							for FAUX in \`$UKM/actions/restorebackup listgammafaux\`; do
+								echo "\"$FAUX\","
+							done;
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, APPLY ],
+								to:[
+									"gamma '$UKM'/files/gamma_prof",
+									"gamma /sys/devices/platform/kcal_ctrl.0/kcal",
+									"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_b",
+									"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_g",
+									"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_r"
+								]
+							}
+						]
+					}},
+				{ SPane:{
+					title:"Gamma Actions",
+				}},
+					{ SButton:{
+						label:"Delete Selected Profile",
+						action:"restorebackup deletegammafaux",
+						notify:[
+							{
+								on:APPLY,
+								do:[ RESET, APPLY ],
+								to:"gamma '$UKM'/files/gamma_prof"
+							}
+						]
+					}},
+					{ SGeneric:{
+						title:"Profile Name",
+						default:"Custom",
+						action:"gamma '$UKM'/files/gamma_prof",
+					}},
+						{ SDescription:{
+							description:"First set a name above and apply. After this you can press the Backup Current Profile button below."
+						}},
+						{ SButton:{
+							label:"Backup Current Profile",
+							action:"restorebackup keepgammafaux",
+							notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:"gamma '$UKM'/files/gamma_prof"
+								}
+							]
+						}},
+				{ SPane:{
+					title:"General Actions",
+					description:"To update/refresh lists, select Restart Synapse below."
+				}},
+					{ SButton:{
+						label:"Restart Synapse",
+						action:"restorebackup restart"
+					}},'
+			fi`
+			`if [ -f "/sys/class/misc/gammacontrol/brightness" ]; then
+			RED_GREYS=\`$BB cat /sys/class/misc/gammacontrol/red_greys\`;
+			RED_MIDS=\`$BB cat /sys/class/misc/gammacontrol/red_mids\`;
+			RED_BLACKS=\`$BB cat /sys/class/misc/gammacontrol/red_blacks\`;
+			RED_WHITES=\`$BB cat /sys/class/misc/gammacontrol/red_whites\`;
+			GREEN_GREYS=\`$BB cat /sys/class/misc/gammacontrol/green_greys\`;
+			GREEN_MIDS=\`$BB cat /sys/class/misc/gammacontrol/green_mids\`;
+			GREEN_BLACKS=\`$BB cat /sys/class/misc/gammacontrol/green_blacks\`;
+			GREEN_WHITES=\`$BB cat /sys/class/misc/gammacontrol/green_whites\`;
+			BLUE_GREYS=\`$BB cat /sys/class/misc/gammacontrol/blue_greys\`;
+			BLUE_MIDS=\`$BB cat /sys/class/misc/gammacontrol/blue_mids\`;
+			BLUE_BLACKS=\`$BB cat /sys/class/misc/gammacontrol/blue_blacks\`;
+			BLUE_WHITES=\`$BB cat /sys/class/misc/gammacontrol/blue_whites\`;
+			CONTRAST=\`$BB cat /sys/class/misc/gammacontrol/contrast\`;
+			BRIGHTNESS=\`$BB cat /sys/class/misc/gammacontrol/brightness\`;
+			SATURATION=\`$BB cat /sys/class/misc/gammacontrol/saturation\`;
+				$BB echo '{ SGeneric:{
+							title:"Red Greys",
+							default:'$RED_GREYS',
+							action:"gamma /sys/class/misc/gammacontrol/red_greys",
+						}},
+						{ SGeneric:{
+							title:"Red Mids",
+							default:'$RED_MIDS',
+							action:"gamma /sys/class/misc/gammacontrol/red_mids",
+						}},
+						{ SGeneric:{
+							title:"Red Blacks",
+							default:'$RED_BLACKS',
+							action:"gamma /sys/class/misc/gammacontrol/red_blacks",
+						}},
+						{ SGeneric:{
+							title:"Red Whites",
+							default:'$RED_WHITES',
+							action:"gamma /sys/class/misc/gammacontrol/red_whites",
+						}},
+						{ SGeneric:{
+							title:"Green Greys",
+							default:'$GREEN_GREYS',
+							action:"gamma /sys/class/misc/gammacontrol/green_greys",
+						}},
+						{ SGeneric:{
+							title:"Green Mids",
+							default:'$GREEN_MIDS',
+							action:"gamma /sys/class/misc/gammacontrol/green_mids",
+						}},
+						{ SGeneric:{
+							title:"Green Blacks",
+							default:'$GREEN_BLACKS',
+							action:"gamma /sys/class/misc/gammacontrol/green_blacks",
+						}},
+						{ SGeneric:{
+							title:"Green Whites",
+							default:'$GREEN_WHITES',
+							action:"gamma /sys/class/misc/gammacontrol/green_whites",
+						}},
+						{ SGeneric:{
+							title:"Blue Greys",
+							default:'$BLUE_GREYS',
+							action:"gamma /sys/class/misc/gammacontrol/blue_greys",
+						}},
+						{ SGeneric:{
+							title:"Blue Mids",
+							default:'$BLUE_MIDS',
+							action:"gamma /sys/class/misc/gammacontrol/blue_mids",
+						}},
+						{ SGeneric:{
+							title:"Blue Blacks",
+							default:'$BLUE_BLACKS',
+							action:"gamma /sys/class/misc/gammacontrol/blue_blacks",
+						}},
+						{ SGeneric:{
+							title:"Blue Whites",
+							default:'$BLUE_WHITES',
+							action:"gamma /sys/class/misc/gammacontrol/blue_whites",
+						}},
+						{ SGeneric:{
+							title:"Contrast",
+							default:'$CONTRAST',
+							action:"gamma /sys/class/misc/gammacontrol/contrast",
+						}},
+						{ SGeneric:{
+							title:"Brightness",
+							default:'$BRIGHTNESS',
+							action:"gamma /sys/class/misc/gammacontrol/brightness",
+						}},
+						{ SGeneric:{
+							title:"Saturation",
+							default:'$SATURATION',
+							action:"gamma /sys/class/misc/gammacontrol/saturation",
+						}},
+				{ SPane:{
+					title:"Gamma Profiles",
+					description:"After you apply a profile, turn screen Off/On to update. More custom profiles here: <a href='https://docs.google.com/spreadsheet/ccc?key=0AoDp2qRui0u0dGE4T2gtSDBTRHVFSldPS2RrX1Rya0E#gid=6'>HERE</a>"
+				}},
+					{ SOptionList:{
+						default:"Custom",
+						action:"restorebackup applygammafranco",
+						values:[ "Custom", '
+							for FRANCO in \`$UKM/actions/restorebackup listgammafranco\`; do
+								echo "\"$FRANCO\","
+							done;
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, APPLY ],
+								to:[
+									"gamma '$UKM'/files/gamma_prof",
+									"gamma /sys/devices/platform/kcal_ctrl.0/kcal",
+									"gamma /sys/class/misc/gammacontrol/red_greys",
+									"gamma /sys/class/misc/gammacontrol/red_mids",
+									"gamma /sys/class/misc/gammacontrol/red_blacks",
+									"gamma /sys/class/misc/gammacontrol/red_whites",
+									"gamma /sys/class/misc/gammacontrol/green_greys",
+									"gamma /sys/class/misc/gammacontrol/green_mids",
+									"gamma /sys/class/misc/gammacontrol/green_blacks",
+									"gamma /sys/class/misc/gammacontrol/green_whites",
+									"gamma /sys/class/misc/gammacontrol/blue_greys",
+									"gamma /sys/class/misc/gammacontrol/blue_mids",
+									"gamma /sys/class/misc/gammacontrol/blue_blacks",
+									"gamma /sys/class/misc/gammacontrol/blue_whites",
+									"gamma /sys/class/misc/gammacontrol/contrast",
+									"gamma /sys/class/misc/gammacontrol/brightness",
+									"gamma /sys/class/misc/gammacontrol/saturation"
+								]
+							}
+						]
+					}},
+				{ SPane:{
+					title:"Gamma Actions",
+				}},
+					{ SButton:{
+						label:"Delete Selected Profile",
+						action:"restorebackup deletegammafranco",
+						notify:[
+							{
+								on:APPLY,
+								do:[ RESET, APPLY ],
+								to:"gamma '$UKM'/files/gamma_prof"
+							}
+						]
+					}},
+					{ SGeneric:{
+						title:"Profile Name",
+						default:"Custom",
+						action:"gamma '$UKM'/files/gamma_prof",
+					}},
+						{ SDescription:{
+							description:"First set a name above and apply. After this you can press the Backup Current Profile button below."
+						}},
+						{ SButton:{
+							label:"Backup Current Profile",
+							action:"restorebackup keepgammafranco",
+							notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:"gamma '$UKM'/files/gamma_prof"
+								}
+							]
+						}},
+				{ SPane:{
+					title:"General Actions",
+					description:"To update/refresh lists, select Restart Synapse below."
+				}},
+					{ SButton:{
+						label:"Restart Synapse",
+						action:"restorebackup restart"
+					}},'
+			fi`
+			`if [ -f "/sys/devices/platform/mipi_lgit.1537/kgamma_blue" ] && [ ! -f "/sys/devices/platform/mipi_lgit.1537/kgamma_b" ]; then
+			BLUE=\`$BB cat /sys/devices/platform/mipi_lgit.1537/kgamma_blue\`;
+			GREEN=\`$BB cat /sys/devices/platform/mipi_lgit.1537/kgamma_green\`;
+			RED=\`$BB cat /sys/devices/platform/mipi_lgit.1537/kgamma_red\`;
+				$BB echo '{ SGeneric:{
+							title:"Blue",
+							default:'$BLUE',
+							action:"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_blue",
+						}},
+						{ SGeneric:{
+							title:"Green",
+							default:'$GREEN',
+							action:"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_green",
+						}},
+						{ SGeneric:{
+							title:"Red",
+							default:'$RED',
+							action:"gamma /sys/devices/platform/mipi_lgit.1537/kgamma_red",
+						}},'
+			fi`
+			`if [ -f "/sys/module/dsi_panel/kgamma_bn" ]; then
+			KGAMMA_BN=\`$BB cat /sys/module/dsi_panel/kgamma_bn\`;
+			KGAMMA_BP=\`$BB cat /sys/module/dsi_panel/kgamma_bp\`;
+			KGAMMA_GN=\`$BB cat /sys/module/dsi_panel/kgamma_gn\`;
+			KGAMMA_GP=\`$BB cat /sys/module/dsi_panel/kgamma_gp\`;
+			KGAMMA_RN=\`$BB cat /sys/module/dsi_panel/kgamma_rn\`;
+			KGAMMA_RP=\`$BB cat /sys/module/dsi_panel/kgamma_rp\`;
+			KGAMMA_W=\`$BB cat /sys/module/dsi_panel/kgamma_w\`;
+				$BB echo '{ SGeneric:{
+						title:"Blue Negative",
+						default:'$KGAMMA_BN',
+						action:"gamma /sys/module/dsi_panel/kgamma_bn",
+					}},
+					{ SGeneric:{
+						title:"Blue Positive",
+						default:'$KGAMMA_BP',
+						action:"gamma /sys/module/dsi_panel/kgamma_bp",
+					}},
+					{ SGeneric:{
+						title:"Green Negative",
+						default:'$KGAMMA_GN',
+						action:"gamma /sys/module/dsi_panel/kgamma_gn",
+					}},
+					{ SGeneric:{
+						title:"Green Positive",
+						default:'$KGAMMA_GP',
+						action:"gamma /sys/module/dsi_panel/kgamma_gp",
+					}},
+					{ SGeneric:{
+						title:"Red Negative",
+						default:'$KGAMMA_RN',
+						action:"gamma /sys/module/dsi_panel/kgamma_rn",
+					}},
+					{ SGeneric:{
+						title:"Red Positive",
+						default:'$KGAMMA_RP',
+						action:"gamma /sys/module/dsi_panel/kgamma_rp",
+					}},
+					{ SGeneric:{
+						title:"White Point",
+						default:'$KGAMMA_W',
+						action:"gamma /sys/module/dsi_panel/kgamma_w",
+					}},
+				{ SPane:{
+					title:"Gamma Profiles",
+					description:"After you apply a profile, turn screen Off/On to update."
+				}},
+					{ SOptionList:{
+						default:"Custom",
+						action:"restorebackup applygammafrancoN5",
+						values:[ "Custom", '
+							for FRANCON5 in \`$UKM/actions/restorebackup listgammafrancoN5\`; do
+								echo "\"$FRANCON5\","
+							done;
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, APPLY ],
+								to:[
+									"gamma '$UKM'/files/gamma_prof",
+									"gamma /sys/module/dsi_panel/kgamma_bn",
+									"gamma /sys/module/dsi_panel/kgamma_bp",
+									"gamma /sys/module/dsi_panel/kgamma_gn",
+									"gamma /sys/module/dsi_panel/kgamma_gp",
+									"gamma /sys/module/dsi_panel/kgamma_rn",
+									"gamma /sys/module/dsi_panel/kgamma_rp",
+									"gamma /sys/module/dsi_panel/kgamma_w"
+								]
+							}
+						]
+					}},
+				{ SPane:{
+					title:"Gamma Actions",
+				}},
+					{ SButton:{
+						label:"Delete Selected Profile",
+						action:"restorebackup deletegammafrancoN5",
+						notify:[
+							{
+								on:APPLY,
+								do:[ RESET, APPLY ],
+								to:"gamma '$UKM'/files/gamma_prof"
+							}
+						]
+					}},
+					{ SGeneric:{
+						title:"Profile Name",
+						default:"Custom",
+						action:"gamma '$UKM'/files/gamma_prof",
+					}},
+						{ SDescription:{
+							description:"First set a name above and apply. After this you can press the Backup Current Profile button below."
+						}},
+						{ SButton:{
+							label:"Backup Current Profile",
+							action:"restorebackup keepgammafrancoN5",
+							notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:"gamma '$UKM'/files/gamma_prof"
+								}
+							]
+						}},
+				{ SPane:{
+					title:"General Actions",
+					description:"To update/refresh lists, select Restart Synapse below."
+				}},
+					{ SButton:{
+						label:"Restart Synapse",
+						action:"restorebackup restart"
+					}},'
+			fi`
+			`if [ -d "/sys/devices/virtual/graphics/fb0" ]; then
+				if [ -f "/sys/devices/virtual/graphics/fb0/panel_calibration" ]; then
+				PC=\`$BB cat /sys/devices/virtual/graphics/fb0/panel_calibration\`;
+				$BB echo '{ SPane:{
+					title:"Graphics"
+				}},
+					{ SGeneric:{
+						title:"Panel Calibration",
+						default:'$PC',
+						action:"generic /sys/devices/virtual/graphics/fb0/panel_calibration",
+					}},'
+				fi
+				if [ -f "/sys/devices/virtual/graphics/fb0/cabc" ]; then
+				CABC=\`$BB cat /sys/devices/virtual/graphics/fb0/cabc\`;
+					$BB echo '{ SCheckBox:{
+						label:"CABC control",
+						default:'$CABC',
+						action:"generic /sys/devices/virtual/graphics/fb0/cabc"
+					}},'
+				fi
+				if [ -f "/sys/devices/virtual/graphics/fb0/color_enhance" ]; then
+				CE=\`$BB cat /sys/devices/virtual/graphics/fb0/color_enhance\`;
+					$BB echo '{ SCheckBox:{
+						label:"Color enhancement",
+						default:'$CE',
+						action:"generic /sys/devices/virtual/graphics/fb0/color_enhance"
+					}},'
+				fi
+				if [ -f "/sys/devices/virtual/graphics/fb0/sre" ]; then
+				SRE=\`$BB cat /sys/devices/virtual/graphics/fb0/sre\`;
+					$BB echo '{ SCheckBox:{
+						label:"Sunlight readability enhancement",
+						default:'$SRE',
+						action:"generic /sys/devices/virtual/graphics/fb0/sre"
+					}},'
+				fi
+				if [ -f "/sys/devices/virtual/graphics/fb0/gamma" ]; then
+				GAMMAOPO=\`$BB cat /sys/devices/virtual/graphics/fb0/gamma\`;
+					$BB echo '{ SSeekBar:{
+							title:"Gamma Selection",
+							min:0,
+							max:3,
+							step:1,
+							default:'$GAMMAOPO',
+							action:"generic /sys/devices/virtual/graphics/fb0/gamma",
+					}},'
+				fi
+			fi`
+			`if [ -f "/sys/module/panel_s6e8aa0/parameters/contrast" ]; then
+			TC=\`$BB cat /sys/module/panel_s6e8aa0/parameters/contrast\`;
+				$BB echo '{ SSeekBar:{
+					title:"Trinity Contrast",
+					description:"Set the luminance difference between dark and light.",
+					min:-24,
+					max:16,
+					step:1,
+					default:'$TC',
+					action:"generic /sys/module/panel_s6e8aa0/parameters/contrast"
+				}},'
+			fi`
+			`if [ -f "/sys/devices/platform/omapdss/manager0/gamma" ]; then
+			OGC=\`$BB cat /sys/devices/platform/omapdss/manager0/gamma\`;
+				$BB echo '{ SSeekBar:{
+					title:"OMAP Gamma Contrast",
+					description:"Set midtones (middle gray levels).",
+					default:'$OGC',
+					action:"generic /sys/devices/platform/omapdss/manager0/gamma",
+					values:{ 
+						0:"0 (Disabled)", 1:"1", 2:"2", 3:"3", 4:"4", 5:"5 (Default)", 6:"6", 7:"7", 8:"8", 9:"9", 10:"10"
+					}
+				}},'
+			fi`
+			`if [ -f "/sys/class/backlight/s6e8aa0/acl_set" ]; then
+			CAB=\`$BB cat /sys/class/backlight/s6e8aa0/acl_set\`;
+				$BB echo '{ SCheckBox:{
+					label:"Content Adaptive Brightness",
+					description:"Decreases the brightness of mostly-white backgrounds to save battery.",
+					default:'$CAB',
+					action:"generic /sys/class/backlight/s6e8aa0/acl_set"
+				}},'
+			fi`
+			`if [ -f "/sys/devices/i2c-0/0-0038/lm3530_br_mode" ]; then
+				BRMOD=\`$BB cat /sys/devices/i2c-0/0-0038/lm3530_br_mode\`;
+				$BB echo '{ SPane:{
+						title:"LCD Backlight"
+				}},
+					{ SCheckBox:{
+						label:"Linear/Exponential.",
+						description:"Sets the linear (Checked) or exponential (Un-Checked) brightness mapping mode. Please note that the exponential brightness mode uses a very low LCD brightness on a low external light.",
+						default:'$BRMOD',
+						action:"generic /sys/devices/i2c-0/0-0038/lm3530_br_mode"
+					}},'
+				if [ -f "/sys/devices/i2c-0/0-0038/lm3530_min_br" ]; then
+				BRMIN=\`$BB cat /sys/devices/i2c-0/0-0038/lm3530_min_br\`;
+					$BB echo '{ SSeekBar:{
+							title:"Min Brightness",
+							description:"Sets the minimum brightness level.",
+							min:2,
+							max:114,
+							step:1,
+							default:'$BRMIN',
+							action:"generic /sys/devices/i2c-0/0-0038/lm3530_min_br",
+					}},'
+				fi
+				if [ -f "/sys/devices/i2c-0/0-0038/lm3530_max_br" ]; then
+				BRMAX=\`$BB cat /sys/devices/i2c-0/0-0038/lm3530_max_br\`;
+					$BB echo '{ SSeekBar:{
+							title:"Max Brightness",
+							description:"Sets the maximum brightness level.",
+							min:2,
+							max:114,
+							step:1,
+							default:'$BRMAX',
+							action:"generic /sys/devices/i2c-0/0-0038/lm3530_max_br",
+					}},'
+				fi					
+			fi`
+			`if [ -f "/sys/module/lm3630_bl/parameters/backlight_dimmer" ]; then
+ 			BLD=\`bool /sys/module/lm3630_bl/parameters/backlight_dimmer\`;
+ 				$BB echo '{ SPane:{
+ 					title:"Backlight Dimmer",
+					description:"Allows you to adjust the LCD screen brightness lower than is possible with stock. Be careful, you can lower the brightness so much you can barely see it."
+ 				}},
+ 					{ SCheckBox:{
+						label:"Enable",
+ 						default:'$BLD',
+ 						action:"boolean /sys/module/lm3630_bl/parameters/backlight_dimmer"
+ 					}},'
+				if [ -f "/sys/module/lm3630_bl/parameters/min_brightness" ]; then
+				BLKD=\`$BB cat /sys/module/lm3630_bl/parameters/min_brightness\`;
+					$BB echo '{ SSeekBar:{
+						title:"Minimum Brightness",
+						description:"Allows you to adjust the LCD screen brightness lower than is possible with stock. Be careful, you can lower the brightness so much you can barely see it.",
+						step:1,
+						min:0,
+						max:50,
+						default:'$BLKD',
+						action:"generic /sys/module/lm3630_bl/parameters/min_brightness"
+					}},'
+				fi
+				if [ -f "/sys/module/lm3630_bl/parameters/backlight_threshold" ]; then
+				BLT=\`$BB cat /sys/module/lm3630_bl/parameters/backlight_threshold\`;
+					$BB echo '{ SSeekBar:{
+						title:"Backlight Dimmer Threshold",
+						description:"Sets threshold value for backlight dimmer.",
+						step:1,
+						min:0,
+						max:50,
+						default:'$BLT',
+						action:"generic /sys/module/lm3630_bl/parameters/backlight_threshold",
+					}},'
+				fi
+				if [ -f "/sys/module/lm3630_bl/parameters/backlight_offset" ]; then
+				BLO=\`$BB cat /sys/module/lm3630_bl/parameters/backlight_offset\`;
+					$BB echo '{ SSeekBar:{
+						title:"Backlight Dimmer Offset",
+						description:"Sets offset value for backlight dimmer.",
+						step:1,
+						min:0,
+						max:50,
+						default:'$BLO',
+						action:"generic /sys/module/lm3630_bl/parameters/backlight_offset",
+					}},'
+				fi
+ 			fi`
+			`if [ -f "/sys/module/msm_fb/parameters/backlight_dimmer" ]; then
+ 			BLKD=\`$BB cat /sys/module/msm_fb/parameters/backlight_dimmer\`;
+ 				$BB echo '{ SPane:{
+ 					title:"Backlight Dimmer Control"
+ 				}},
+ 					{ SSeekBar:{
+ 						description:"Allows you to adjust the LCD screen brightness lower than is possible with stock. Be careful, you can lower the brightness so much you can barely see it.",
+ 						step:1,
+ 						min:0,
+ 						max:100,
+ 						default:'$BLKD',
+ 						action:"generic /sys/module/msm_fb/parameters/backlight_dimmer"
+ 					}},'
+ 			fi`
+			`if [ -f "/sys/module/mdss_dsi/parameters/color_preset" ]; then
+			CP=\`$BB cat /sys/module/mdss_dsi/parameters/color_preset\`;
+ 				$BB echo '{ SOptionList:{
+						title:"Color Preset",
+						description:"When this option is enabled you will have slighly cooler and vivid color preset. For changes to take effect use power button to lock screen off and then on.",
+						default:'$CP',
+						action:"generic /sys/module/mdss_dsi/parameters/color_preset",
+						values:{
+							0:"Disabled", 1:"Vivid", 2:"Stock"
+						}
+					}},'
+ 			fi`
+		]
+}
+CTAG
