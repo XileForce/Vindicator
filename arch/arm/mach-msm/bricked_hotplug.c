@@ -399,7 +399,7 @@ static int bricked_hotplug_start(void)
 		pr_err("%s: Failed to allocate suspend workqueue\n",
 		       MPDEC_TAG);
 		ret = -ENOMEM;
-		goto err_out;
+		goto err_dev;
 	}
 
 #ifdef CONFIG_STATE_NOTIFIER
@@ -435,6 +435,10 @@ static int bricked_hotplug_start(void)
 					msecs_to_jiffies(hotplug.startdelay));
 
 	return ret;
+err_susp:
+	destroy_workqueue(susp_wq);
+err_dev:
+	destroy_workqueue(hotplug_wq);
 err_out:
 	hotplug.bricked_enabled = 0;
 	return ret;

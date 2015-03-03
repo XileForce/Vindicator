@@ -393,8 +393,6 @@ static struct input_handler cpuboost_input_handler = {
 	.id_table       = cpuboost_ids,
 };
 
-<<<<<<< HEAD
-=======
 static int cpuboost_cpu_callback(struct notifier_block *cpu_nb,
 				 unsigned long action, void *hcpu)
 {
@@ -470,7 +468,6 @@ static int fb_notifier_callback(struct notifier_block *self,
 }
 #endif
 
->>>>>>> 72795db... msm: Add state notifiers to existing drivers
 static int cpu_boost_init(void)
 {
 	int cpu, ret;
@@ -499,9 +496,6 @@ static int cpu_boost_init(void)
 					&boost_migration_nb);
 
 	ret = input_register_handler(&cpuboost_input_handler);
-<<<<<<< HEAD
-	return 0;
-=======
 	if (ret)
 		pr_err("Cannot register cpuboost input handler.\n");
 
@@ -520,6 +514,5 @@ static int cpu_boost_init(void)
 #endif
 
 	return ret;
->>>>>>> 72795db... msm: Add state notifiers to existing drivers
 }
 late_initcall(cpu_boost_init);

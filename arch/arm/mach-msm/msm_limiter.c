@@ -214,15 +214,12 @@ static int msm_cpufreq_limit_start(void)
 	}
 #else
 	limit.notif.notifier_call = fb_notifier_callback;
-<<<<<<< HEAD
-=======
 	if (fb_register_client(&limit.notif)) {
 		pr_err("%s: Failed to register FB notifier callback\n",
 			MSM_LIMIT);
 		goto err_dev;
 	}
 #endif
->>>>>>> 72795db... msm: Add state notifiers to existing drivers
 
 	for_each_possible_cpu(cpu)
 		mutex_init(&limit.msm_limiter_mutex[cpu]);
@@ -234,6 +231,8 @@ static int msm_cpufreq_limit_start(void)
 	queue_work_on(0, limiter_wq, &limit.resume_work);
 
 	return ret;
+err_dev:
+	destroy_workqueue(limiter_wq);
 err_out:
 	limit.limiter_enabled = 0;
 	return ret;
@@ -252,14 +251,11 @@ static void msm_cpufreq_limit_stop(void)
 	for_each_possible_cpu(cpu)	
 		mutex_destroy(&limit.msm_limiter_mutex[cpu]);
 
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_STATE_NOTIFIER
 	state_unregister_client(&limit.notif);
 #else
 	fb_unregister_client(&limit.notif);
 #endif
->>>>>>> 72795db... msm: Add state notifiers to existing drivers
 	limit.notif.notifier_call = NULL;
 	destroy_workqueue(limiter_wq);
 }
