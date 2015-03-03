@@ -15,7 +15,6 @@
 
 #include <linux/kernel.h>
 #include <linux/init.h>
-#include <linux/notifier.h>
 #include <linux/cpufreq.h>
 #include <linux/cpu.h>
 #include <linux/sched.h>
@@ -25,6 +24,8 @@
 #include <linux/slab.h>
 #include <linux/input.h>
 #include <linux/time.h>
+#include <linux/fb.h>
+
 
 struct cpu_sync {
 	struct task_struct *thread;
@@ -393,6 +394,17 @@ static int cpu_boost_init(void)
 					&boost_migration_nb);
 
 	ret = input_register_handler(&cpuboost_input_handler);
-	return 0;
+	if (ret)
+		pr_err("Cannot register cpuboost input handler.\n");
+
+	ret = register_hotcpu_notifier(&cpu_nblk);
+	if (ret)
+		pr_err("Cannot register cpuboost hotplug handler.\n");
+
+	notif.notifier_call = fb_notifier_callback;
+	if (fb_register_client(&notif))
+		pr_err("Cannot register FB notifier callback for cpuboost.\n");
+
+	return ret;
 }
 late_initcall(cpu_boost_init);
