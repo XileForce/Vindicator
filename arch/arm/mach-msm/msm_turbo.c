@@ -27,13 +27,13 @@
 #endif
 
 int msm_turbo(int cpufreq){
-struct *cpufreq_policy policy;
+struct cpufreq_policy *policy;
 cpufreq_get_policy(&policy, 0);
-struct *cpufreq_policy policy1;
+struct cpufreq_policy *policy1;
 cpufreq_get_policy(&policy1, 1);
-struct *cpufreq_policy policy2;
+struct cpufreq_policy *policy2;
 cpufreq_get_policy(&policy2, 2);
-struct *cpufreq_policy policy3;
+struct cpufreq_policy *policy3;
 cpufreq_get_policy(&policy3, 3);
 
 
