@@ -31,9 +31,10 @@ int msm_turbo(int cpufreq)
 {
 	if (num_online_cpus() > 2) {
 		if (cpufreq > STOCK_CPU_MAX_SPEED)
-		for(int i=0;i<4;i++){	
-cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, i);
-}
+		cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 0);
+cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 1);
+cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 2);
+cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 3);
         }
 	return cpufreq;
 }
