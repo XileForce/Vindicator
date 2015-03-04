@@ -26,14 +26,29 @@
 #define STOCK_CPU_MAX_SPEED	1574400
 #endif
 
-int msm_turbo(int cpufreq)
-{
+int msm_turbo(int cpufreq){
+struct *cpufreq_policy policy;
+cpufreq_get_policy(&policy, 0);
+struct *cpufreq_policy policy1;
+cpufreq_get_policy(&policy1, 1);
+struct *cpufreq_policy policy2;
+cpufreq_get_policy(&policy2, 2);
+struct *cpufreq_policy policy3;
+cpufreq_get_policy(&policy3, 3);
+
+
 	if (num_online_cpus() > 2) {
-		if (cpufreq > STOCK_CPU_MAX_SPEED)
-		cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 0);
-cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 1);
-cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 2);
-cpufreq_set_freq(STOCK_CPU_MAX_SPEED, DEFAULT_MIN_FREQUENCY, 3);
+		if (policy->cur > STOCK_CPU_MAX_SPEED)
+		policy->cur=STOCK_CPU_MAX_SPEED;
+cpufreq_update_policy(0);
+policy1->cur=STOCK_CPU_MAX_SPEED;
+cpufreq_update_policy(1);
+policy2->cur=STOCK_CPU_MAX_SPEED;
+cpufreq_update_policy(2);
+policy3->cur=STOCK_CPU_MAX_SPEED;
+cpufreq_update_policy(3);
+
+
         }
 	return cpufreq;
 }
