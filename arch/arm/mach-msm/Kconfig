@@ -1435,6 +1435,14 @@ config KRAIT_REGULATOR
 	 regulators running in ganged mode inside the PMIC. Enable
 	 this option to support such configurations.
 
+config TURBO_BOOST
+	bool "Enable CPU Turbo boost option"
+	default y
+	help
+	  This option allows overclocking of 2 cores to higher clock rate
+	  than stock maximum.  When more than 2 cores are active, the clock
+	  is limited to stock max speeds
+
 config MMI_DEVICE_DTBS
 	depends on ARCH_MSM
 	default n
