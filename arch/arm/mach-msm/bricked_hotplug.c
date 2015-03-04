@@ -23,8 +23,11 @@
 #include <linux/platform_device.h>
 #include <linux/module.h>
 #include <linux/device.h>
+#ifdef CONFIG_STATE_NOTIFIER
+#include <linux/state_notifier.h>
+#else
 #include <linux/fb.h>
-#include <linux/notifier.h>
+#endif
 
 #define DEBUG 0
 
@@ -320,6 +323,38 @@ static void __ref bricked_hotplug_resume(struct work_struct *work)
 	}
 }
 
+static void __bricked_hotplug_resume(void)
+{
+	flush_workqueue(susp_wq);
+	cancel_delayed_work_sync(&suspend_work);
+	queue_work_on(0, susp_wq, &resume_work);
+}
+
+static void __bricked_hotplug_suspend(void)
+{
+	INIT_DELAYED_WORK(&suspend_work, bricked_hotplug_suspend);
+	queue_delayed_work_on(0, susp_wq, &suspend_work, 
+		msecs_to_jiffies(hotplug.suspend_defer_time * 1000)); 
+}
+
+#ifdef CONFIG_STATE_NOTIFIER
+static int state_notifier_callback(struct notifier_block *this,
+				unsigned long event, void *data)
+{
+	switch (event) {
+		case STATE_NOTIFIER_ACTIVE:
+			__bricked_hotplug_resume();
+			break;
+		case STATE_NOTIFIER_SUSPEND:
+			__bricked_hotplug_suspend();
+			break;
+		default:
+			break;
+	}
+
+	return NOTIFY_OK;
+}
+#else
 static int fb_notifier_callback(struct notifier_block *self,
 				unsigned long event, void *data)
 {
@@ -331,25 +366,21 @@ static int fb_notifier_callback(struct notifier_block *self,
 		switch (*blank) {
 			case FB_BLANK_UNBLANK:
 				//display on
-				flush_workqueue(susp_wq);
-				cancel_delayed_work_sync(&suspend_work);
-				queue_work_on(0, susp_wq, &resume_work);
+				__bricked_hotplug_resume();
 				break;
 			case FB_BLANK_POWERDOWN:
 			case FB_BLANK_HSYNC_SUSPEND:
 			case FB_BLANK_VSYNC_SUSPEND:
 			case FB_BLANK_NORMAL:
 				//display off
-				INIT_DELAYED_WORK(&suspend_work, bricked_hotplug_suspend);
-				queue_delayed_work_on(0, susp_wq, &suspend_work, 
-					msecs_to_jiffies(hotplug.suspend_defer_time * 1000)); 
+				__bricked_hotplug_suspend();
 				break;
 		}
 	}
 
 	return 0;
 }
-
+#endif
 
 static int bricked_hotplug_start(void)
 {
@@ -371,7 +402,24 @@ static int bricked_hotplug_start(void)
 		goto err_out;
 	}
 
+#ifdef CONFIG_STATE_NOTIFIER
+	notif.notifier_call = state_notifier_callback;
+	if (state_register_client(&notif)) {
+		pr_err("%s: Failed to register State notifier callback\n",
+			MPDEC_TAG);
+		goto err_susp;
+	}
+#else
 	notif.notifier_call = fb_notifier_callback;
+<<<<<<< HEAD
+=======
+	if (fb_register_client(&notif)) {
+		pr_err("%s: Failed to register FB notifier callback\n",
+			MPDEC_TAG);
+		goto err_susp;
+	}
+#endif
+>>>>>>> 72795db... msm: Add state notifiers to existing drivers
 
 	mutex_init(&hotplug.bricked_cpu_mutex);
 	mutex_init(&hotplug.bricked_hotplug_mutex);
@@ -411,6 +459,14 @@ static void bricked_hotplug_stop(void)
 	cancel_delayed_work_sync(&hotplug_work);
 	mutex_destroy(&hotplug.bricked_hotplug_mutex);
 	mutex_destroy(&hotplug.bricked_cpu_mutex);
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_STATE_NOTIFIER
+	state_unregister_client(&notif);
+#else
+	fb_unregister_client(&notif);
+#endif
+>>>>>>> 72795db... msm: Add state notifiers to existing drivers
 	notif.notifier_call = NULL;
 	destroy_workqueue(susp_wq);
 	destroy_workqueue(hotplug_wq);
