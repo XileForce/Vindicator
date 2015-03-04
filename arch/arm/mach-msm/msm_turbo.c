@@ -23,8 +23,7 @@
 
 #define DEFAULT_MIN_FREQUENCY		35800
 #ifdef CONFIG_TURBO_BOOST
-#define STOCK_CPU_MAX_SPEED	1512000
-#endif
+#define STOCK_CPU_MAX_SPEED	1574400
 #endif
 
 int msm_turbo(int cpufreq)
