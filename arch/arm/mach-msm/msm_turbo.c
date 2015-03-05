@@ -118,7 +118,7 @@ static int msm_turbo_boost_init(void)
     if (mykobj) {
         kobject_init(mykobj, &mytype);
         if (kobject_add(mykobj, NULL, "%s", "turbo_boost")) {
-             err = -1;
+             
              printk("Sysfs creation failed\n");
              kobject_put(mykobj);
              mykobj = NULL;
@@ -127,7 +127,7 @@ static int msm_turbo_boost_init(void)
         if (!wq)
                 wq = create_singlethread_workqueue("msm_turbo");
         if (wq)
-                queue_work(wc, &turboboost_work);
+                queue_work(wq, &turboboost_work);
  
 
 	return 0;
