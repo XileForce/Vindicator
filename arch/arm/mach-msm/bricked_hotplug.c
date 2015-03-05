@@ -411,15 +411,12 @@ static int bricked_hotplug_start(void)
 	}
 #else
 	notif.notifier_call = fb_notifier_callback;
-<<<<<<< HEAD
-=======
 	if (fb_register_client(&notif)) {
 		pr_err("%s: Failed to register FB notifier callback\n",
 			MPDEC_TAG);
 		goto err_susp;
 	}
 #endif
->>>>>>> 72795db... msm: Add state notifiers to existing drivers
 
 	mutex_init(&hotplug.bricked_cpu_mutex);
 	mutex_init(&hotplug.bricked_hotplug_mutex);
@@ -459,14 +456,11 @@ static void bricked_hotplug_stop(void)
 	cancel_delayed_work_sync(&hotplug_work);
 	mutex_destroy(&hotplug.bricked_hotplug_mutex);
 	mutex_destroy(&hotplug.bricked_cpu_mutex);
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_STATE_NOTIFIER
 	state_unregister_client(&notif);
 #else
 	fb_unregister_client(&notif);
 #endif
->>>>>>> 72795db... msm: Add state notifiers to existing drivers
 	notif.notifier_call = NULL;
 	destroy_workqueue(susp_wq);
 	destroy_workqueue(hotplug_wq);
