@@ -135,7 +135,8 @@ static int msm_turbo_boost_init(void)
 static void msm_turbo_boost_exit(void)
 {
 if (wq)
-                destroy_workqueue(wq);
+cancel_delayed_work(&turboboost_work);	/* no "new ones" */
+	flush_workqueue(wq);                destroy_workqueue(wq);
 }
 
 module_init(msm_turbo_boost_init);
