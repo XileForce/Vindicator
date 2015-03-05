@@ -57,18 +57,18 @@ static void
 turboboost_work_handler(struct work_struct *w)
 {
 if(on==1){
-struct cpufreq_policy policy;
-cpufreq_get_policy(&policy, 0);
-struct cpufreq_policy policy1;
-cpufreq_get_policy(&policy1, 1);
-struct cpufreq_policy policy2;
-cpufreq_get_policy(&policy2, 2);
-struct cpufreq_policy policy3;
-cpufreq_get_policy(&policy3, 3);
+struct cpufreq_policy *policy;
+cpufreq_get_policy(policy, 0);
+struct cpufreq_policy *policy1;
+cpufreq_get_policy(policy1, 1);
+struct cpufreq_policy *policy2;
+cpufreq_get_policy(policy2, 2);
+struct cpufreq_policy *policy3;
+cpufreq_get_policy(policy3, 3);
 
         while(num_online_cpus() > 2) {
-		if (cpufreq_quick_get(0) > STOCK_CPU_MAX_SPEED)
-		policy->cur=STOCK_CPU_MAX_SPEED;
+		if (cpufreq_quick_get(0) > STOCK_CPU_MAX_SPEED){
+	
 policy->cur=STOCK_CPU_MAX_SPEED;
 cpufreq_update_policy(0);
 policy1->cur=STOCK_CPU_MAX_SPEED;
@@ -77,7 +77,7 @@ policy2->cur=STOCK_CPU_MAX_SPEED;
 cpufreq_update_policy(2);
 policy3->cur=STOCK_CPU_MAX_SPEED;
 cpufreq_update_policy(3);
-
+}
         }
 	}
 }
