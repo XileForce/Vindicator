@@ -107,7 +107,15 @@ static ssize_t default_store(struct kobject *kobj, struct attribute *attr,
 on=&a->value;
     return sizeof(int);
 }
+static struct sysfs_ops myops = {
+    .show = default_show,
+    .store = default_store,
+};
 
+static struct kobj_type mytype = {
+    .sysfs_ops = &myops,
+    .default_attrs = myattr,
+};
 
 struct kobject *mykobj;
 
