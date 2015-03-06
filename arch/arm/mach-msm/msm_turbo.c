@@ -36,12 +36,12 @@ struct sysfsAttr {
     int value;
 };
 
-int on=0;
+int on=1;
 
 static struct sysfsAttr enableAttr = {
     .attr.name="turbo_boost",
     .attr.mode = 0644,
-    .value = 0,
+    .value = 1,
 };
 
 static struct attribute * boostattr[] = {
@@ -119,7 +119,6 @@ static int msm_turbo_boost_init(void)
              kobject_put(turbokobj);
              turbokobj = NULL;
         }
-}
         if (!wq)
                 wq = create_singlethread_workqueue("msm_turbo");
         if (wq)
