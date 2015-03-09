@@ -17,7 +17,7 @@
 #include <asm/fncpy.h>
 #include <asm/mach-types.h>
 #include <asm/system_misc.h>
-
+#include <asm/mmu_writeable.h>
 extern void relocate_new_kernel(void);
 extern const unsigned int relocate_new_kernel_size;
 
@@ -25,6 +25,11 @@ extern unsigned long kexec_start_address;
 extern unsigned long kexec_indirection_page;
 extern unsigned long kexec_mach_type;
 extern unsigned long kexec_boot_atags;
+
+#ifdef CONFIG_KEXEC_HARDBOOT
+extern unsigned long kexec_hardboot;
+void (*kexec_hardboot_hook)(void);
+#endif
 
 static atomic_t waiting_for_crash_ipi;
 
@@ -150,19 +155,19 @@ void machine_kexec(struct kimage *image)
 	    page_to_pfn(image->control_code_page) << PAGE_SHIFT;
 	reboot_code_buffer = page_address(image->control_code_page);
 
-	/* Prepare parameters for reboot_code_buffer*/
-	kexec_start_address = image->start;
-	kexec_indirection_page = page_list;
-	kexec_mach_type = machine_arch_type;
-	if (!kexec_boot_atags)
-		kexec_boot_atags = image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET;
-
+mem_text_write_kernel_word(&kexec_start_address, image->start);
+mem_text_write_kernel_word(&kexec_indirection_page, page_list);
+mem_text_write_kernel_word(&kexec_mach_type, machine_arch_type);
+mem_text_write_kernel_word(&kexec_boot_atags, image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET);
+#ifdef CONFIG_KEXEC_HARDBOOT
+	mem_text_write_kernel_word(&kexec_hardboot, image->hardboot);
+#endif
 
 	/* copy our kernel relocation code to the control code page */
 	reboot_entry = fncpy(reboot_code_buffer,
 			     reboot_entry,
 			     relocate_new_kernel_size);
-	reboot_entry_phys = (unsigned long)reboot_entry +
+	reboot_entry_phys = (unsigned long)reboot_entry  +
 		(reboot_code_buffer_phys - (unsigned long)reboot_code_buffer);
 
 	printk(KERN_INFO "Bye!\n");
@@ -170,8 +175,15 @@ void machine_kexec(struct kimage *image)
 	if (kexec_reinit)
 		kexec_reinit();
 
+#ifdef CONFIG_KEXEC_HARDBOOT
+	/* Run any final machine-specific shutdown code. */
+	if (image->hardboot && kexec_hardboot_hook) 	kexec_hardboot_hook();
+#endif
+
 	soft_restart(reboot_entry_phys);
 }
+
+
 
 void arch_crash_save_vmcoreinfo(void)
 {
