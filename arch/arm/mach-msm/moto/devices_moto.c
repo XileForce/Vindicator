@@ -1,0 +1,202 @@
+/* Copyright (c) 2012, Jacob McSwain
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ */
+
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/platform_device.h>
+#include <linux/memory.h>
+#include <linux/persistent_ram.h>
+
+#ifdef CONFIG_KEXEC_HARDBOOT
+#include <linux/memblock.h>
+#endif
+
+#include <asm/setup.h>
+#include <asm/sizes.h>
+#include <asm/system_info.h>
+#include <asm/memory.h>
+
+#include <mach/board_moto.h>
+
+#include <ram_console.h>
+
+
+#ifdef CONFIG_ANDROID_PERSISTENT_RAM
+static struct persistent_ram_descriptor pram_descs[] = {
+#ifdef CONFIG_ANDROID_RAM_CONSOLE
+	{
+		.name = "ram_console",
+		.size = MOTO_RAM_CONSOLE_SIZE,
+	},
+#endif
+};
+
+static struct persistent_ram moto_persistent_ram = {
+	.size = ASUSTEK_PERSISTENT_RAM_SIZE,
+	.num_descs = ARRAY_SIZE(pram_descs),
+	.descs = pram_descs,
+};
+
+void __init moto_add_persistent_ram(void)
+{
+	struct persistent_ram *pram = &moto_persistent_ram;
+	struct membank* bank = &meminfo.bank[0];
+
+	pram->start = bank->start + bank->size - MOTO_PERSISTENT_RAM_SIZE;
+
+	persistent_ram_early_init(pram);
+}
+#endif
+
+void __init moto_reserve(void)
+{
+#ifdef CONFIG_KEXEC_HARDBOOT
+	// Reserve space for hardboot page, just before the ram_console
+	struct membank* bank = &meminfo.bank[0];
+	phys_addr_t start = bank->start + bank->size - SZ_1M - MOTO_PERSISTENT_RAM_SIZE;
+	int ret = memblock_remove(start, SZ_1M);
+	if(!ret)
+		pr_info("Hardboot page reserved at 0x%X\n", start);
+	else
+		pr_err("Failed to reserve space for hardboot page at 0x%X!\n", start);
+#endif
+
+	moto_add_persistent_ram();
+}
+
+#ifdef CONFIG_ANDROID_RAM_CONSOLE
+static char bootreason[128] = {0,};
+int __init moto_boot_reason(char *s)
+{
+	int n;
+
+	if (*s == '=')
+		s++;
+	n = snprintf(bootreason, sizeof(bootreason),
+		 "Boot info:\n"
+		 "Last boot reason: %s\n", s);
+	bootreason[n] = '\0';
+	return 1;
+}
+__setup("bootreason", moto_boot_reason);
+
+struct ram_console_platform_data ram_console_pdata = {
+	.bootinfo = bootreason,
+};
+
+static struct platform_device ram_console_device = {
+	.name = "ram_console",
+	.id = -1,
+	.dev = {
+		.platform_data = &ram_console_pdata,
+	}
+};
+
+void __init moto_add_ramconsole_devices(void)
+{
+	platform_device_register(&ram_console_device);
+}
+#endif /* CONFIG_ANDROID_RAM_CONSOLE */
+
+#ifdef CONFIG_MOTO_PCBID
+static char serialno[32] = {0,};
+int __init moto_androidboot_serialno(char *s)
+{
+	int n;
+
+	if (*s == '=')
+		s++;
+	n = snprintf(serialno, sizeof(serialno), "%s", s);
+	serialno[n] = '\0';
+
+	return 1;
+}
+__setup("androidboot.serialno", moto_androidboot_serialno);
+
+struct moto_pcbid_platform_data asustek_pcbid_pdata = {
+	.UUID = serialno,
+};
+
+static struct resource resources_moto_pcbid[] = {
+	{
+		.start	= 57,
+		.end	= 57,
+		.name	= "PCB_ID0",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 59,
+		.end	= 59,
+		.name	= "PCB_ID1",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 12,
+		.end	= 12,
+		.name	= "PCB_ID2",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 1,
+		.end	= 1,
+		.name	= "PCB_ID3",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 14,
+		.end	= 14,
+		.name	= "PCB_ID4",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 53,
+		.end	= 53,
+		.name	= "PCB_ID5",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 51,
+		.end	= 51,
+		.name	= "PCB_ID6",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 28,
+		.end	= 28,
+		.name	= "PCB_ID7",
+		.flags	= IORESOURCE_IO,
+	},
+	{
+		.start	= 86,
+		.end	= 86,
+		.name	= "PCB_ID8",
+		.flags	= IORESOURCE_IO,
+	},
+};
+
+static struct platform_device moto_pcbid_device = {
+	.name		= "moto_pcbid",
+	.id		= -1,
+	.num_resources	= ARRAY_SIZE(resources_moto_pcbid),
+	.resource = resources_moto_pcbid,
+	.dev = {
+		.platform_data = &moto_pcbid_pdata,
+	}
+};
+
+void __init moto_add_pcbid_devices(void)
+{
+	platform_device_register(&moto_pcbid_device);
+}
+
+#endif
