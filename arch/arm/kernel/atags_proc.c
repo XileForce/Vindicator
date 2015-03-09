@@ -9,10 +9,17 @@ struct buffer {
 	char data[];
 };
 
+
+
+static struct buffer* atags_buffer = NULL;
 static ssize_t atags_read(struct file *file, char __user *buf,
 			  size_t count, loff_t *ppos)
 {
-	struct buffer *b = PDE_DATA(file_inode(file));
+	// These are introduced in kernel 3.10. I don't want to backport
+	// the whole chunk, and other things (ram_console) use static
+	// variable to keep data too, so I guess it's okay.
+	//struct buffer *b = PDE_DATA(file_inode(file));
+	struct buffer *b = atags_buffer;
 	return simple_read_from_buffer(buf, count, ppos, b->data, b->size);
 }
 
@@ -52,7 +59,7 @@ static int __init init_atags_procfs(void)
 	size = (char *)tag - atags_copy + sizeof(struct tag_header);
 
 	WARN_ON(tag->hdr.tag != ATAG_NONE);
-
+atags_buffer = b;
 	b = kmalloc(sizeof(*b) + size, GFP_KERNEL);
 	if (!b)
 		goto nomem;
