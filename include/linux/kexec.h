@@ -111,6 +111,12 @@ struct kimage {
 #define KEXEC_TYPE_CRASH   1
 	unsigned int preserve_context : 1;
 
+
+#ifdef CONFIG_KEXEC_HARDBOOT
+	unsigned int hardboot : 1;
+#endif
+
+
 #ifdef ARCH_HAS_KIMAGE_ARCH
 	struct kimage_arch arch;
 #endif
@@ -171,15 +177,19 @@ unsigned long paddr_vmcoreinfo_note(void);
 extern struct kimage *kexec_image;
 extern struct kimage *kexec_crash_image;
 
-#ifndef kexec_flush_icache_page
-#define kexec_flush_icache_page(page)
+/* List of defined/legal kexec flags */
+#if defined(CONFIG_KEXEC_JUMP) && defined(CONFIG_KEXEC_HARDBOOT)
+#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_HARDBOOT)
+#elif defined(CONFIG_KEXEC_JUMP)
+#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
+#elif defined(CONFIG_KEXEC_HARDBOOT)
+#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_HARDBOOT)
+#else
+#define KEXEC_FLAGS    (KEXEC_ON_CRASH)
 #endif
 
-/* List of defined/legal kexec flags */
-#ifndef CONFIG_KEXEC_JUMP
-#define KEXEC_FLAGS    KEXEC_ON_CRASH
-#else
-#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
+#ifdef CONFIG_KEXEC_HARDBOOT
+#define KEXEC_HARDBOOT		0x00000004
 #endif
 
 #define VMCOREINFO_BYTES           (4096)
@@ -210,6 +220,8 @@ int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
 int crash_shrink_memory(unsigned long new_size);
 size_t crash_get_memory_size(void);
 void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+
+
 
 #else /* !CONFIG_KEXEC */
 struct pt_regs;
