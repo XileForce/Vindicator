@@ -26,6 +26,7 @@ config ARM
 	select HAVE_ARCH_TRACEHOOK
 	select HAVE_BPF_JIT
 	select HAVE_C_RECORDMCOUNT
+	select HAVE_CC_STACKPROTECTOR
 	select HAVE_DEBUG_KMEMLEAK
 	select HAVE_DMA_API_DEBUG
 	select HAVE_DMA_ATTRS
@@ -1107,15 +1108,6 @@ config ARM_NR_BANKS
 	default 16 if ARCH_EP93XX
 	default 8
 
-config RESERVE_FIRST_PAGE
-	bool
-	default n
-	help
-	  Reserve the first page at PHYS_OFFSET. The first
-	  physical page is used by many platforms for warm
-	  boot operations. Reserve this page so that it is
-	  not allocated by the kernel.
-
 config IWMMXT
 	bool "Enable iWMMXt support" if !CPU_PJ4
 	depends on CPU_XSCALE || CPU_XSC3 || CPU_MOHAWK || CPU_PJ4
@@ -1807,15 +1799,6 @@ config PERF_EVENTS_RESET_PMU_DEBUGFS
 
 source "mm/Kconfig"
 
-config ARCH_MEMORY_PROBE
-	def_bool n
-
-config ARCH_MEMORY_REMOVE
-	def_bool n
-
-config ENABLE_DMM
-	def_bool n
-
 choice
 	prompt "Virtual Memory Reclaim"
 	default NO_VM_RECLAIM
@@ -2216,6 +2199,17 @@ config AUTO_ZRELADDR
 	  will be determined at run-time by masking the current IP with
 	  0xf8000000. This assumes the zImage being placed in the first 128MB
 	  from start of memory.
+
+config ARM_DECOMPRESSOR_LIMIT
+	hex "Limit the decompressor memory area"
+	default 0x10000000
+	help
+	  Allows overriding of the memory size that decompressor maps with
+	  read, write and execute permissions to avoid speculative prefetch.
+
+	  By default ARM_DECOMPRESSOR_LIMIT maps first 1GB of memory
+	  with read, write and execute permissions and reset of the memory
+	  as strongly ordered.
 
 endmenu
 

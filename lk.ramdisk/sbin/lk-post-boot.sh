@@ -28,6 +28,10 @@ chmod 444 /dev/frandom
 # With Zram we can afford this. 
 echo 25 > /proc/sys/vm/vfs_cache_pressure
 
+# Default To Powersaveing Scheduler
+echo powersaving > $lkdata/current_sched_balance_policy
+echo powersaving > /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy
+
 # for lkconfig
 [ ! -d "/data/data/leankernel" ] && mkdir /data/data/leankernel
 chmod 755 /data/data/leankernel

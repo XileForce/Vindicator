@@ -5,7 +5,7 @@ udir="/home/ryan/Kernels/Vindicator/lk.utils"
 outdir="/home/ryan/Kernels/Vindicator_Out"
 device="shamu"
 cc="/home/ryan/Onyx/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9/bin/arm-eabi-"
-filename="Vindicator.1.0.zip"
+filename="Vindicator.1.5.zip"
 
 compile() {
   export CROSS_COMPILE=$cc

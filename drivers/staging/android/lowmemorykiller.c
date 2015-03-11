@@ -146,7 +146,7 @@ void tune_lmk_zone_param(struct zonelist *zonelist, int classzone_idx,
 		za->file = zone_page_state(zone, NR_FILE_PAGES)
 					- zone_page_state(zone, NR_SHMEM);
 		if (zone_idx == ZONE_MOVABLE) {
-			if (!use_cma_pages) {
+			if (!use_cma_pages && other_free) {
 				unsigned long free_cma = zone_page_state(zone,
 						NR_FREE_CMA_PAGES);
 				za->free -= free_cma;
@@ -162,7 +162,8 @@ void tune_lmk_zone_param(struct zonelist *zonelist, int classzone_idx,
 				*other_file -= za->file;
 			za->free = za->file = 0;
 		} else if (zone_idx < classzone_idx) {
-			if (zone_watermark_ok(zone, 0, 0, classzone_idx, 0)) {
+			if (zone_watermark_ok(zone, 0, 0, classzone_idx, 0) &&
+			    other_free) {
 				unsigned long lowmem_reserve =
 					  zone->lowmem_reserve[classzone_idx];
 				if (!use_cma_pages) {
@@ -179,7 +180,7 @@ void tune_lmk_zone_param(struct zonelist *zonelist, int classzone_idx,
 					za->free -= lowmem_reserve;
 				}
 			} else {
-				*other_free -= za->free;
+				if (other_free) *other_free -= za->free;
 				za->free = 0;
 			}
 		}
@@ -304,6 +305,9 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	int other_file;
 	unsigned long nr_to_scan = sc->nr_to_scan;
 	struct zone_avail zall[MAX_NUMNODES][MAX_NR_ZONES];
+#if defined (CONFIG_SWAP) && (defined (CONFIG_ZSWAP) || defined (CONFIG_ZRAM))
+	struct sysinfo si;
+#endif
 
 	if (nr_to_scan > 0) {
 		if (mutex_lock_interruptible(&scan_mutex) < 0)
@@ -314,9 +318,19 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 
 	if (global_page_state(NR_SHMEM) + total_swapcache_pages() <
 		global_page_state(NR_FILE_PAGES))
+#if defined (CONFIG_SWAP) && (defined (CONFIG_ZSWAP) || defined (CONFIG_ZRAM))
+		{
+		si_swapinfo(&si);
+		other_file = global_page_state(NR_FILE_PAGES) -
+						global_page_state(NR_SHMEM) +
+						(si.freeswap >> 1) -
+						total_swapcache_pages();
+		}
+#else
 		other_file = global_page_state(NR_FILE_PAGES) -
 						global_page_state(NR_SHMEM) -
 						total_swapcache_pages();
+#endif
 	else
 		other_file = 0;
 

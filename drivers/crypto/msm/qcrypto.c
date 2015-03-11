@@ -1,6 +1,6 @@
 /* Qualcomm Crypto driver
  *
- * Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -69,6 +69,7 @@ enum qcrypto_bus_state {
 	BUS_BANDWIDTH_RELEASING,
 	BUS_BANDWIDTH_ALLOCATING,
 	BUS_SUSPENDED,
+	BUS_SUSPENDING,
 };
 
 struct crypto_stat {
@@ -126,6 +127,7 @@ struct crypto_engine {
 	u64 err_req;
 	u32 unit;
 	u32 ce_device;
+	u32 ce_hw_instance;
 	unsigned int signature;
 
 	enum qcrypto_bus_state bw_state;
@@ -226,6 +228,63 @@ static struct crypto_engine *_qrypto_find_pengine_device(struct crypto_priv *cp,
 
 	return entry;
 }
+
+static struct crypto_engine *_qrypto_find_pengine_device_hw
+			(struct crypto_priv *cp,
+			u32 device,
+			u32 hw_instance)
+{
+	struct crypto_engine *entry = NULL;
+	unsigned long flags;
+
+	spin_lock_irqsave(&cp->lock, flags);
+	list_for_each_entry(entry, &cp->engine_list, elist) {
+		if ((entry->ce_device == device) &&
+			(entry->ce_hw_instance == hw_instance))
+			break;
+	}
+	spin_unlock_irqrestore(&cp->lock, flags);
+
+	if (((entry != NULL) &&
+		((entry->ce_device != device)
+		|| (entry->ce_hw_instance != hw_instance)))
+		|| (entry == NULL)) {
+		pr_err("Device node for CE device %d NOT FOUND!!\n",
+						 device);
+		return NULL;
+	}
+	return entry;
+}
+
+int qcrypto_get_num_engines()
+{
+	struct crypto_priv *cp = &qcrypto_dev;
+	struct crypto_engine *entry = NULL;
+	int count = 0;
+
+	list_for_each_entry(entry, &cp->engine_list, elist) {
+		count++;
+	}
+	return count;
+}
+EXPORT_SYMBOL(qcrypto_get_num_engines);
+
+void qcrypto_get_engine_list(size_t num_engines,
+				struct crypto_engine_entry *arr)
+{
+	struct crypto_priv *cp = &qcrypto_dev;
+	struct crypto_engine *entry = NULL;
+	size_t arr_index = 0;
+
+	list_for_each_entry(entry, &cp->engine_list, elist) {
+			arr[arr_index].ce_device = entry->ce_device;
+			arr[arr_index].hw_instance = entry->ce_hw_instance;
+			arr_index++;
+			if (arr_index >= num_engines)
+				break;
+	}
+}
+EXPORT_SYMBOL(qcrypto_get_engine_list);
 
 static void qcrypto_unlock_ce(struct work_struct *work)
 {
@@ -963,6 +1022,7 @@ static void _qcrypto_remove_engine(struct crypto_engine *pengine)
 	cancel_work_sync(&pengine->bw_reaper_ws);
 	cancel_work_sync(&pengine->bw_allocate_ws);
 	del_timer_sync(&pengine->bw_reaper_timer);
+	device_init_wakeup(&pengine->pdev->dev, false);
 
 	if (pengine->bus_scale_handle != 0)
 		msm_bus_scale_unregister_client(pengine->bus_scale_handle);
@@ -1884,6 +1944,12 @@ again:
 
 	backlog_eng = crypto_get_backlog(&pengine->req_queue);
 
+	/* make sure it is in high bandwidth state */
+	if (pengine->bw_state != BUS_HAS_BANDWIDTH) {
+		spin_unlock_irqrestore(&cp->lock, flags);
+		return 0;
+	}
+
 	/* try to get request from request queue of the engine first */
 	async_req = crypto_dequeue_request(&pengine->req_queue);
 	if (!async_req) {
@@ -2035,6 +2101,7 @@ static int _qcrypto_queue_req(struct crypto_priv *cp,
 			pengine = NULL;
 			break;
 		case BUS_SUSPENDED:
+		case BUS_SUSPENDING:
 		default:
 			pengine = NULL;
 			break;
@@ -3677,6 +3744,22 @@ int qcrypto_cipher_set_device(struct ablkcipher_request *req, unsigned int dev)
 };
 EXPORT_SYMBOL(qcrypto_cipher_set_device);
 
+int qcrypto_cipher_set_device_hw(struct ablkcipher_request *req, u32 dev,
+			u32 hw_inst)
+{
+	struct qcrypto_cipher_ctx *ctx = crypto_tfm_ctx(req->base.tfm);
+	struct crypto_priv *cp = ctx->cp;
+	struct crypto_engine *pengine = NULL;
+
+	pengine = _qrypto_find_pengine_device_hw(cp, dev, hw_inst);
+	if (pengine == NULL)
+		return -ENODEV;
+	ctx->pengine = pengine;
+
+	return 0;
+}
+EXPORT_SYMBOL(qcrypto_cipher_set_device_hw);
+
 int qcrypto_aead_set_device(struct aead_request *req, unsigned int dev)
 {
 	struct qcrypto_cipher_ctx *ctx = crypto_tfm_ctx(req->base.tfm);
@@ -4304,6 +4387,7 @@ static int  _qcrypto_probe(struct platform_device *pdev)
 	pengine->last_active_seq = 0;
 	pengine->check_flag = false;
 	qcrypto_bw_set_timeout(pengine);
+	device_init_wakeup(&pengine->pdev->dev, true);
 
 	tasklet_init(&pengine->done_tasklet, req_done, (unsigned long)pengine);
 	crypto_init_queue(&pengine->req_queue, MSM_QCRYPTO_REQ_QUEUE_LENGTH);
@@ -4318,6 +4402,7 @@ static int  _qcrypto_probe(struct platform_device *pdev)
 	spin_unlock_irqrestore(&cp->lock, flags);
 
 	qce_hw_support(pengine->qce, &cp->ce_support);
+	pengine->ce_hw_instance = cp->ce_support.ce_hw_instance;
 	if (cp->ce_support.bam)	 {
 		cp->platform_support.ce_shared = cp->ce_support.is_shared;
 		cp->platform_support.shared_ce_resource = 0;
@@ -4656,6 +4741,25 @@ err:
 	return rc;
 };
 
+static int _qcrypto_engine_in_use(struct crypto_engine *pengine)
+{
+	struct crypto_priv *cp = pengine->pcp;
+
+	if (pengine->req || pengine->req_queue.qlen || cp->req_queue.qlen)
+		return 1;
+	return 0;
+}
+
+static void _qcrypto_do_suspending(struct crypto_engine *pengine)
+{
+	struct crypto_priv *cp = pengine->pcp;
+
+	if (cp->platform_support.bus_scale_table == NULL)
+		return;
+	del_timer_sync(&pengine->bw_reaper_timer);
+	qcrypto_ce_set_bus(pengine, false);
+}
+
 static int  _qcrypto_suspend(struct platform_device *pdev, pm_message_t state)
 {
 	int ret = 0;
@@ -4683,9 +4787,20 @@ static int  _qcrypto_suspend(struct platform_device *pdev, pm_message_t state)
 			ret = -EBUSY;
 		break;
 	case BUS_HAS_BANDWIDTH:
+		if (_qcrypto_engine_in_use(pengine)) {
+			ret = -EBUSY;
+		} else {
+			pengine->bw_state = BUS_SUSPENDING;
+			spin_unlock_irqrestore(&cp->lock, flags);
+			_qcrypto_do_suspending(pengine);
+			spin_lock_irqsave(&cp->lock, flags);
+			pengine->bw_state = BUS_SUSPENDED;
+		}
+		break;
 	case BUS_BANDWIDTH_RELEASING:
 	case BUS_BANDWIDTH_ALLOCATING:
 	case BUS_SUSPENDED:
+	case BUS_SUSPENDING:
 	default:
 			ret = -EBUSY;
 			break;
@@ -4708,6 +4823,7 @@ static int  _qcrypto_resume(struct platform_device *pdev)
 	struct crypto_engine *pengine;
 	struct crypto_priv *cp;
 	unsigned long flags;
+	int ret = 0;
 
 	pengine = platform_get_drvdata(pdev);
 
@@ -4734,9 +4850,11 @@ static int  _qcrypto_resume(struct platform_device *pdev)
 				pengine->high_bw_req = true;
 			}
 		}
-	}
+	} else
+		ret = -EBUSY;
+
 	spin_unlock_irqrestore(&cp->lock, flags);
-	return 0;
+	return ret;
 }
 
 static struct of_device_id qcrypto_match[] = {

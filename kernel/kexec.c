@@ -840,7 +840,7 @@ static int kimage_load_normal_segment(struct kimage *image,
 out:
 	return result;
 }
-
+kexec_flush_icache_page(page);
 static int kimage_load_crash_segment(struct kimage *image,
 					struct kexec_segment *segment)
 {
@@ -878,7 +878,6 @@ static int kimage_load_crash_segment(struct kimage *image,
 			memset(ptr + uchunk, 0, mchunk - uchunk);
 		}
 		result = copy_from_user(ptr, buf, uchunk);
-		kexec_flush_icache_page(page);
 		kunmap(page);
 		if (result) {
 			result = -EFAULT;

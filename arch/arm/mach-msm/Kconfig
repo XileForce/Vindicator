@@ -1437,7 +1437,7 @@ config KRAIT_REGULATOR
 
 config TURBO_BOOST
 	bool "Enable CPU Turbo boost option"
-	default y
+	default n
 	help
 	  This option allows overclocking of 2 cores to higher clock rate
 	  than stock maximum.  When more than 2 cores are active, the clock
@@ -1484,7 +1484,7 @@ config MSM_SLEEPER
 config BRICKED_HOTPLUG
 	bool "Enable kernel based mpdecision"
 	depends on MSM_RUN_QUEUE_STATS
-	default y
+	default n
 	help
 	  This enables kernel based multi core control.
 	  (up/down hotplug based on load)
