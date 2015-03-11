@@ -29,10 +29,7 @@
 	};
 
 
-       kexec_hardboot-hole {
-              compatible = "qcom,msm-contig-mem";
-             qcom,memblock-reserve = <0x3e9df000 0x1000>;
-       };
+       
 
 
 	cycapsense_prog {
@@ -53,6 +50,11 @@
 };
 
 &soc {
+
+kexec_hardboot {
+              compatible = "qcom,msm-contig-mem";
+             qcom,memblock-reserve = <0x3e9df000 0x1000>;
+       };
 	ramoops {
 		compatible = "ramoops";
 		status = "ok";
