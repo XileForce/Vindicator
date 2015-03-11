@@ -28,6 +28,13 @@
 		qca,bt-vdd-pa-supply = <&wlan_vreg>;
 	};
 
+
+       kexec_hardboot-hole {
+              compatible = "qcom,msm-contig-mem";
+             qcom,memblock-reserve = <0x3e9df000 0x1000>;
+       };
+
+
 	cycapsense_prog {
 			compatible = "cypress,cycapsense_prog";
 			label = "cy8c20247_24lkxi";
