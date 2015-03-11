@@ -103,7 +103,7 @@ hardboot:
 loop:	b	loop
 #elif defined(CONFIG_ARCH_APQ8084)
 	/* Restart using the PMIC chip, see mach-msm/restart.c */
-	ldr	r0, =APQ8064_TLMM_PHYS
+	ldr	r0, =APQ8084_TLMM_PHYS
 	mov	r1, #0
 	str	r1, [r0, #0x820]  @ PSHOLD_CTL_SU
 loop:	b	loop
