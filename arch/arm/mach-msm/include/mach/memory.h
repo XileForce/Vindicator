@@ -27,9 +27,9 @@
 #elif defined(CONFIG_MACH_APQ8064_MAKO)
 #define KEXEC_HB_PAGE_ADDR		UL(0x88600000)
 #elif defined(CONFIG_MACH_APQ8086_SHAMU)
-#define KEXEC_HB_PAGE_ADDR UL(0x0d400000)
+#define KEXEC_HB_PAGE_ADDR UL(0x3e9df000)
 #else
-#define KEXEC_HB_PAGE_ADDR UL(0x0d400000)
+#define KEXEC_HB_PAGE_ADDR UL(0x3e9df000)
 #endif
 #endif
 

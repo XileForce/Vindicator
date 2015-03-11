@@ -33,6 +33,7 @@
 #include <linux/swap.h>
 #include <linux/syscore_ops.h>
 
+#include <asm/cacheflush.h>
 #include <asm/page.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
@@ -840,7 +841,6 @@ static int kimage_load_normal_segment(struct kimage *image,
 out:
 	return result;
 }
-kexec_flush_icache_page(page);
 static int kimage_load_crash_segment(struct kimage *image,
 					struct kexec_segment *segment)
 {
