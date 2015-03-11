@@ -10,7 +10,7 @@
 #include <asm/memory.h>
 #if defined(CONFIG_ARCH_TEGRA_2x_SOC) || defined(CONFIG_ARCH_TEGRA_3x_SOC)
   #include <mach/iomap.h>
-#elif defined(CONFIG_ARCH_APQ8064)
+#elif defined(CONFIG_ARCH_APQ8084)
   #include <mach/msm_iomap.h>
 #endif
 #endif
@@ -101,7 +101,7 @@ hardboot:
 	orr	r1, r1, #0x10
 	str	r1, [r0]
 loop:	b	loop
-#elif defined(CONFIG_ARCH_APQ8064)
+#elif defined(CONFIG_ARCH_APQ8084)
 	/* Restart using the PMIC chip, see mach-msm/restart.c */
 	ldr	r0, =APQ8064_TLMM_PHYS
 	mov	r1, #0
