@@ -25,9 +25,6 @@ chmod 444 /dev/frandom
 	"allow drmserver theme_data_file file r_file_perms" \
 	"allow debuggerd app_data_file dir search"
 
-# With Zram we can afford this. 
-echo 25 > /proc/sys/vm/vfs_cache_pressure
-
 # Default To Powersaveing Scheduler
 echo powersaving > $lkdata/current_sched_balance_policy
 echo powersaving > /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy
