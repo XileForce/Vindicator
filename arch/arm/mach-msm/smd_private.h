@@ -133,7 +133,6 @@ struct smd_channel {
 	unsigned char *send_data;
 	unsigned char *recv_data;
 	unsigned fifo_size;
-	unsigned fifo_mask;
 	struct list_head ch_list;
 
 	unsigned current_packet;
@@ -143,7 +142,7 @@ struct smd_channel {
 
 	int (*read)(smd_channel_t *ch, void *data, int len, int user_buf);
 	int (*write)(smd_channel_t *ch, const void *data, int len,
-			int user_buf);
+			int user_buf, bool int_ntfy);
 	int (*read_avail)(smd_channel_t *ch);
 	int (*write_avail)(smd_channel_t *ch);
 	int (*read_from_cb)(smd_channel_t *ch, void *data, int len,
@@ -152,8 +151,10 @@ struct smd_channel {
 	void (*update_state)(smd_channel_t *ch);
 	unsigned last_state;
 	void (*notify_other_cpu)(smd_channel_t *ch);
-	void *(*read_from_fifo)(void *dest, const void *src, size_t num_bytes);
-	void *(*write_to_fifo)(void *dest, const void *src, size_t num_bytes);
+	void *(*read_from_fifo)(void *dest, const void *src, size_t num_bytes,
+			bool to_user);
+	void *(*write_to_fifo)(void *dest, const void *src, size_t num_bytes,
+			bool from_user);
 
 	char name[20];
 	struct platform_device pdev;
