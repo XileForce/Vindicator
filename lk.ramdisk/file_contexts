@@ -417,3 +417,6 @@
 
 # Lockscreen wallpaper
 /data/system/users/[0-9]+/keyguard_wallpaper   u:object_r:wallpaper_file:s0
+
+# High brightness mode
+/sys/devices/virtual/graphics/fb0/hbm u:object_r:sysfs_display:s0
