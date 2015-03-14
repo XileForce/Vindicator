@@ -412,3 +412,6 @@
 
 /system/bin/imsdatadaemon                       u:object_r:ims_exec:s0
 /system/bin/imsqmidaemon                        u:object_r:ims_exec:s0
+
+# High brightness mode
+/sys/devices/virtual/graphics/fb0/hbm u:object_r:sysfs_display:s0
