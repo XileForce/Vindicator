@@ -25,10 +25,6 @@ chmod 444 /dev/frandom
 	"allow drmserver theme_data_file file r_file_perms" \
 	"allow debuggerd app_data_file dir search"
 
-# Default To Powersaveing Scheduler
-echo powersaving > $lkdata/current_sched_balance_policy
-echo powersaving > /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy
-
 # for lkconfig
 [ ! -d "/data/data/leankernel" ] && mkdir /data/data/leankernel
 chmod 755 /data/data/leankernel
