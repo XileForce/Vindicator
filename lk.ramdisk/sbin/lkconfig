@@ -27,10 +27,9 @@ echo "7) vibe strength"
 echo "8) power saving mode for cpu scheduler"
 echo "9) faux sound control"
 echo "10) selinux mode"
+echo "11) mpdecision control"
 echo
-echo "20) drop caches to free up RAM for apps"
 echo "21) check top 10 wake locks (ie. wakeup sources)"
-echo "22) launch core control configurator"
 echo
 echo -n "please enter a number (or press enter to exit): "
 
@@ -82,6 +81,8 @@ case $option in
 	cat /sys/module/snd_soc_wcd9320/parameters/enable_fs
 	echo -n "10) selinux mode (1 is enforcing, 0 is permissive): "
 	cat /sys/fs/selinux/enforce
+	echo;echo -n "11) mpdecision: "
+	[ -f "$lkdata/mpdd" ] && echo "disabled" || echo "enabled"
 	;;
 1)
 	echo -n "Enter 1 for min freq, 2 for max freq, 3 for interactiveX screen-off freq:"
@@ -424,14 +425,25 @@ case $option in
 	esac
 	[ $mc -eq 1 ] && echo && echo "Done! (also will persist at boot)"
 	;;
-20)
-	echo
-	grep MemFree /proc/meminfo
-	echo "Please wait..."
-	sync
-	echo 3 > /proc/sys/vm/drop_caches
-	grep MemFree /proc/meminfo
-	echo "Caches purged! You have more RAM for apps for a while."
+11)
+	echo -n "Enter 0 to disable or 1 to enable mpdecision (default):"
+	read value
+	case $value in
+	  0)
+		stop mpdecision
+		touch $lkdata/mpdd
+		echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+		echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+		echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+		echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+		;;
+	  1)
+		start mpdecision
+		rm -f $lkdata/mpdd
+		;;
+	  *) mc=0;;
+	esac
+	[ $mc -eq 1 ] && echo && echo "Done! (also will persist at boot)"
 	;;
 21)
 	echo
@@ -446,9 +458,6 @@ case $option in
 	else
 		echo "busybox required!"
 	fi
-	;;
-22)
-	exec lkcc
 	;;
 99)
 	echo Y > /sys/module/selinux/parameters/force_audit;;

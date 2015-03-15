@@ -25,13 +25,6 @@ chmod 444 /dev/frandom
 	"allow drmserver theme_data_file file r_file_perms" \
 	"allow debuggerd app_data_file dir search"
 
-# With Zram we can afford this. 
-echo 25 > /proc/sys/vm/vfs_cache_pressure
-
-# Default To Powersaveing Scheduler
-echo powersaving > $lkdata/current_sched_balance_policy
-echo powersaving > /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy
-
 # for lkconfig
 [ ! -d "/data/data/leankernel" ] && mkdir /data/data/leankernel
 chmod 755 /data/data/leankernel
@@ -102,40 +95,6 @@ CFILE="/data/data/leankernel/sensor_ind"
 SFILE="/sys/module/wakeup/parameters/enable_si_ws"
 [ -f $CFILE ] && echo `cat $CFILE` > $SFILE
 
-# lkcc
-CFILE="/data/data/leankernel/cc"
-if [ -f "/data/data/leankernel/cc" ]; then
-	val=`cat /data/data/leankernel/cc`
-	case $val in
-	  1)
-		# nofreq mpdecision binary should be in already
-		# add mp5sum check etc later
-		;;
-	  2)
-
-		stop mpdecision
-		echo 1 > /sys/devices/system/cpu/cpu1/online
-		echo 1 > /sys/devices/system/cpu/cpu2/online
-		echo 1 > /sys/devices/system/cpu/cpu3/online
-		echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-		echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-		echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-		;;
-	  3)
-		echo N > /sys/module/cpu_boost/parameters/cpuboost_enable
-		stop mpdecision
-		echo 1 > /sys/devices/system/cpu/cpu1/online
-		echo 1 > /sys/devices/system/cpu/cpu2/online
-		echo 1 > /sys/devices/system/cpu/cpu3/online
-		echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-		echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-		echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-		;;
-	esac
-fi
-
 # faux sound control
 CFILE="/data/data/leankernel/sc"
 SFILE="/sys/module/snd_soc_wcd9320/parameters/enable_fs"
@@ -150,6 +109,16 @@ SFILE="/sys/module/bcmdhd/parameters/wl_divide"
 CFILE="/data/data/leankernel/msm_hsic"
 SFILE="/sys/module/xhci_hcd/parameters/wl_divide"
 [ -f $CFILE ] && echo `cat $CFILE` > $SFILE
+
+# mpdecision control
+CFILE="/data/data/leankernel/mpdd"
+if [ -f $CFILE ]; then 
+	stop mpdecision
+	echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+	echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+	echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+fi
 
 # cpu minfreq
 CFILE="/data/data/leankernel/minfreq"
