@@ -1458,6 +1458,11 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
 		else
 			tool = MT_TOOL_FINGER;
 
+#ifdef CONFIG_WAKE_GESTURES
+		if (atomic_read(&data->suspended)) {
+		        x += 5000;
+		}
+#endif
 		/* Touch active */
 		input_mt_report_slot_state(input_dev, tool, 1);
 		input_report_abs(input_dev, ABS_MT_POSITION_X, x);
@@ -2586,7 +2591,7 @@ struct mxt_data *gl_mxt_data;
 bool scr_suspended(void)
 {
 	struct mxt_data *mxt_data = gl_mxt_data;
-	return (bool)atomic_read(&mxt_data->suspended);
+	return atomic_read(&mxt_data->suspended);
 }
 
 void set_internal_dt(bool input)
@@ -5046,7 +5051,7 @@ static int mxt_suspend(struct device *dev)
 		mxt_lock(&data->crit_section_lock);
 
 #ifdef CONFIG_WAKE_GESTURES
-		if (s2w_switch && !disable_s2w)
+		if (s2w_switch)
 			mxt_set_sensor_state(data, STATE_WG);
 		else
 #endif
