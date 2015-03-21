@@ -969,7 +969,7 @@ static void __exit bluesleep_exit(void)
 	remove_proc_entry("bluetooth", 0);
 }
 
-module_init(bluesleep_init);
+deferred_module_init(bluesleep_init);
 module_exit(bluesleep_exit);
 
 MODULE_DESCRIPTION("Bluetooth Sleep Mode Driver ver %s " VERSION);
