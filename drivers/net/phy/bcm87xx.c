@@ -221,7 +221,7 @@ static int __init bcm87xx_init(void)
 	return phy_drivers_register(bcm87xx_driver,
 		ARRAY_SIZE(bcm87xx_driver));
 }
-module_init(bcm87xx_init);
+deferred_module_init(bcm87xx_init);
 
 static void __exit bcm87xx_exit(void)
 {

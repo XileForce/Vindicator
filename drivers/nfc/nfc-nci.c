@@ -1588,7 +1588,7 @@ static int __init qca199x_dev_init(void)
 	}
 	return i2c_add_driver(&qca199x);
 }
-module_init(qca199x_dev_init);
+deferred_module_init(qca199x_dev_init);
 
 static void __exit qca199x_dev_exit(void)
 {

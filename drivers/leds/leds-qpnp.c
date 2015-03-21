@@ -3897,7 +3897,7 @@ static int __init qpnp_led_init(void)
 {
 	return spmi_driver_register(&qpnp_leds_driver);
 }
-module_init(qpnp_led_init);
+deferred_module_init(qpnp_led_init);
 
 static void __exit qpnp_led_exit(void)
 {
