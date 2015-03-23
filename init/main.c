@@ -918,7 +918,7 @@ static noinline void __init kernel_init_freeable(void)
 extern initcall_t __deferred_initcall_start[], __deferred_initcall_end[];
 
 /* call deferred init routines */
-void do_deferred_initcalls(void)
+void __init do_deferred_initcalls(void)
 {
 	initcall_t *call;
 	static int already_run=0;
