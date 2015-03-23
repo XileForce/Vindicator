@@ -384,7 +384,7 @@ static void __exit btsdio_exit(void)
 	sdio_unregister_driver(&btsdio_driver);
 }
 
-module_init(btsdio_init);
+deferred_module_init(btsdio_init);
 module_exit(btsdio_exit);
 
 MODULE_AUTHOR("Marcel Holtmann <marcel@holtmann.org>");

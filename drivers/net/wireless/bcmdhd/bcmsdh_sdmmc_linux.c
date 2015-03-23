@@ -356,7 +356,7 @@ bcmsdh_module_cleanup(void)
 	sdio_function_cleanup();
 }
 
-module_init(bcmsdh_module_init);
+deferred_module_init(bcmsdh_module_init);
 module_exit(bcmsdh_module_cleanup);
 
 MODULE_LICENSE("GPL v2");
