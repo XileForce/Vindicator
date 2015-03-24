@@ -523,5 +523,5 @@ MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("MSM Bluetooth power control driver");
 MODULE_VERSION("1.40");
 
-deferred_module_init(bluetooth_power_init);
+module_init(bluetooth_power_init);
 module_exit(bluetooth_power_exit);
