@@ -170,7 +170,7 @@ static void __exit msm_sensor_exit_module(void)
 	return;
 }
 
-deferred_module_init(msm_sensor_init_module);
+module_init(msm_sensor_init_module);
 module_exit(msm_sensor_exit_module);
 MODULE_DESCRIPTION("msm_sensor_init");
 MODULE_LICENSE("GPL v2");
