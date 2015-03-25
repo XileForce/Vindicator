@@ -157,7 +157,7 @@ static struct file_system_type proc_fs_type = {
 
 extern void do_deferred_initcalls(void);
 
-static ssize_t deferred_initcalls_read_proc(struct file *file, char __user *buf,
+static __init ssize_t deferred_initcalls_read_proc(struct file *file, char __user *buf,
 					   size_t nbytes, loff_t *ppos)
 {
 	static int deferred_initcalls_done = 0;
