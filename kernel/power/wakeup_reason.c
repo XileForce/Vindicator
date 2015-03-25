@@ -48,6 +48,11 @@ static struct timespec curr_stime; /* total_sleep_time after last suspend */
 bool log_wakeups __read_mostly;
 struct completion wakeups_completion;
 
+static struct timespec last_xtime; /* wall time before last suspend */
+static struct timespec curr_xtime; /* wall time after last suspend */
+static struct timespec last_stime; /* total_sleep_time before last suspend */
+static struct timespec curr_stime; /* total_sleep_time after last suspend */
+
 static void init_wakeup_irq_node(struct wakeup_irq_node *p, int irq)
 {
 	p->irq = irq;
@@ -522,14 +527,14 @@ static int wakeup_reason_pm_event(struct notifier_block *notifier,
 	switch (pm_event) {
 	case PM_SUSPEND_PREPARE:
 		clear_wakeup_reasons();
-		spin_unlock(&resume_reason_lock);
 
 		get_xtime_and_monotonic_and_sleep_offset(&last_xtime, &xtom,
-			&last_stime);
+				&last_stime);
 		break;
 	case PM_POST_SUSPEND:
 		get_xtime_and_monotonic_and_sleep_offset(&curr_xtime, &xtom,
-			&curr_stime);
+				&curr_stime);
+
 		/* log_wakeups should have been cleared by now. */
 		if (WARN_ON(logging_wakeup_reasons())) {
 			stop_logging_wakeup_reasons();
