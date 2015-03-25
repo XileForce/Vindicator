@@ -754,5 +754,5 @@ static void __exit wake_gestures_exit(void)
 	return;
 }
 
-deferred_module_init(wake_gestures_init);
+module_init(wake_gestures_init);
 module_exit(wake_gestures_exit);
