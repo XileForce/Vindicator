@@ -129,7 +129,7 @@ static int __init rpm_smd_debugfs_init(void)
 
 	return 0;
 }
-late_initcall(rpm_smd_debugfs_init);
+deferred_init(rpm_smd_debugfs_init);
 
 static void __exit rpm_smd_debugfs_exit(void)
 {

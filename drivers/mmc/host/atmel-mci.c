@@ -2604,7 +2604,7 @@ static void __exit atmci_exit(void)
 	platform_driver_unregister(&atmci_driver);
 }
 
-late_initcall(atmci_init); /* try to load after dma driver when built-in */
+deferred_init(atmci_init); /* try to load after dma driver when built-in */
 module_exit(atmci_exit);
 
 MODULE_DESCRIPTION("Atmel Multimedia Card Interface driver");

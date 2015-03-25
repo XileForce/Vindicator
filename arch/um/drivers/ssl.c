@@ -179,7 +179,7 @@ static int ssl_init(void)
 	register_console(&ssl_cons);
 	return 0;
 }
-late_initcall(ssl_init);
+deferred_init(ssl_init);
 
 static void ssl_exit(void)
 {

@@ -645,4 +645,4 @@ static int __init s5pv210_cpufreq_init(void)
 	return cpufreq_register_driver(&s5pv210_driver);
 }
 
-late_initcall(s5pv210_cpufreq_init);
+deferred_init(s5pv210_cpufreq_init);

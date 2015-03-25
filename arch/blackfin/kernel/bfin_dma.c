@@ -93,7 +93,7 @@ static int __init proc_dma_init(void)
 	proc_create("dma", 0, NULL, &proc_dma_operations);
 	return 0;
 }
-late_initcall(proc_dma_init);
+deferred_init(proc_dma_init);
 #endif
 
 static void set_dma_peripheral_map(unsigned int channel, const char *device_id)

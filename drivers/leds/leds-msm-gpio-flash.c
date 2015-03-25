@@ -200,7 +200,7 @@ static void __exit led_gpio_flash_exit(void)
 	return platform_driver_unregister(&led_gpio_flash_driver);
 }
 
-late_initcall(led_gpio_flash_init);
+deferred_init(led_gpio_flash_init);
 module_exit(led_gpio_flash_exit);
 
 MODULE_DESCRIPTION("QCOM GPIO LEDs driver");

@@ -698,7 +698,7 @@ static int __init check_cache_coherency(void)
 	return 0;
 }
 
-late_initcall(check_cache_coherency);
+deferred_init(check_cache_coherency);
 #endif /* CONFIG_CHECK_CACHE_COHERENCY */
 
 #ifdef CONFIG_DEBUG_FS

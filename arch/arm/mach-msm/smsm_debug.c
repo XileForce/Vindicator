@@ -327,5 +327,5 @@ static int __init smsm_debugfs_init(void)
 	return 0;
 }
 
-late_initcall(smsm_debugfs_init);
+deferred_init(smsm_debugfs_init);
 #endif

@@ -381,7 +381,7 @@ static int __init init_late_machine(void)
 
 	return 0;
 }
-late_initcall(init_late_machine);
+deferred_init(init_late_machine);
 /*
  *  Get CPU information for use by the procfs.
  */

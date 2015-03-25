@@ -1802,7 +1802,7 @@ static int __init mpsc_late_console_init(void)
 	return 0;
 }
 
-late_initcall(mpsc_late_console_init);
+deferred_init(mpsc_late_console_init);
 
 #define MPSC_CONSOLE	&mpsc_console
 #else

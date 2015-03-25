@@ -53,9 +53,9 @@ extern void s3c6410_init_clocks(int xtal);
 #endif
 
 #ifdef CONFIG_PM
-int __init s3c64xx_pm_late_initcall(void);
+int __init s3c64xx_pm_deferred_init(void);
 #else
-static inline int s3c64xx_pm_late_initcall(void) { return 0; }
+static inline int s3c64xx_pm_deferred_init(void) { return 0; }
 #endif
 
 #endif /* __ARCH_ARM_MACH_S3C64XX_COMMON_H */

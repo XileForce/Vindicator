@@ -338,7 +338,7 @@ static void __exit ie6xx_wdt_exit(void)
 	platform_driver_unregister(&ie6xx_wdt_driver);
 }
 
-late_initcall(ie6xx_wdt_init);
+deferred_init(ie6xx_wdt_init);
 module_exit(ie6xx_wdt_exit);
 
 MODULE_AUTHOR("Alexander Stein <alexander.stein@systec-electronic.com>");

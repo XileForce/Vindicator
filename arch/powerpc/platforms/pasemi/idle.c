@@ -85,7 +85,7 @@ static int __init pasemi_idle_init(void)
 
 	return 0;
 }
-machine_late_initcall(pasemi, pasemi_idle_init);
+machine_deferred_init(pasemi, pasemi_idle_init);
 
 static int __init idle_param(char *p)
 {

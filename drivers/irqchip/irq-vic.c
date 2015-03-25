@@ -174,7 +174,7 @@ struct syscore_ops vic_syscore_ops = {
 /**
  * vic_pm_init - initicall to register VIC pm
  *
- * This is called via late_initcall() to register
+ * This is called via deferred_init() to register
  * the resources for the VICs due to the early
  * nature of the VIC's registration.
 */
@@ -185,7 +185,7 @@ static int __init vic_pm_init(void)
 
 	return 0;
 }
-late_initcall(vic_pm_init);
+deferred_init(vic_pm_init);
 #endif /* CONFIG_PM */
 
 static struct irq_chip vic_chip;

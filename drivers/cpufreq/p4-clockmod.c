@@ -322,5 +322,5 @@ MODULE_AUTHOR("Zwane Mwaikambo <zwane@commfireservices.com>");
 MODULE_DESCRIPTION("cpufreq driver for Pentium(TM) 4/Xeon(TM)");
 MODULE_LICENSE("GPL");
 
-late_initcall(cpufreq_p4_init);
+deferred_init(cpufreq_p4_init);
 module_exit(cpufreq_p4_exit);

@@ -1642,7 +1642,7 @@ static int ngd_slim_init(void)
 {
 	return platform_driver_register(&ngd_slim_driver);
 }
-late_initcall(ngd_slim_init);
+deferred_init(ngd_slim_init);
 
 static void ngd_slim_exit(void)
 {

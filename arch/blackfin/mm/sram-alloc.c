@@ -893,5 +893,5 @@ static int __init sram_proc_init(void)
 	}
 	return 0;
 }
-late_initcall(sram_proc_init);
+deferred_init(sram_proc_init);
 #endif

@@ -2047,7 +2047,7 @@ static int __init cpsw_init(void)
 {
 	return platform_driver_register(&cpsw_driver);
 }
-late_initcall(cpsw_init);
+deferred_init(cpsw_init);
 
 static void __exit cpsw_exit(void)
 {

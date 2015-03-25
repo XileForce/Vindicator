@@ -914,4 +914,4 @@ static int __init update_mp_table(void)
 	return 0;
 }
 
-late_initcall(update_mp_table);
+deferred_init(update_mp_table);

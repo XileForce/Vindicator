@@ -885,7 +885,7 @@ void msm_mpdec_exit(void)
 	platform_driver_unregister(&bricked_hotplug_driver);
 }
 
-late_initcall(msm_mpdec_init);
+deferred_init(msm_mpdec_init);
 module_exit(msm_mpdec_exit);
 
 MODULE_AUTHOR("Pranav Vashi <neobuddy89@gmail.com>");

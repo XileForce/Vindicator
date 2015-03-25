@@ -399,7 +399,7 @@ static int __cpuinit register_cavium_notifier(void)
 	hotcpu_notifier(octeon_cpu_callback, 0);
 	return 0;
 }
-late_initcall(register_cavium_notifier);
+deferred_init(register_cavium_notifier);
 
 #endif	/* CONFIG_HOTPLUG_CPU */
 

@@ -126,4 +126,4 @@ static int register_vde(void)
 	return 0;
 }
 
-late_initcall(register_vde);
+deferred_init(register_vde);

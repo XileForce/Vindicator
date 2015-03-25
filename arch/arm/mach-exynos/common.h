@@ -35,9 +35,9 @@ void exynos_firmware_init(void);
 void exynos_set_timer_source(u8 channels);
 
 #ifdef CONFIG_PM_GENERIC_DOMAINS
-int exynos_pm_late_initcall(void);
+int exynos_pm_deferred_init(void);
 #else
-static inline int exynos_pm_late_initcall(void) { return 0; }
+static inline int exynos_pm_deferred_init(void) { return 0; }
 #endif
 
 #ifdef CONFIG_ARCH_EXYNOS4

@@ -110,4 +110,4 @@ static int register_pcap(void)
 	return 0;
 }
 
-late_initcall(register_pcap);
+deferred_init(register_pcap);

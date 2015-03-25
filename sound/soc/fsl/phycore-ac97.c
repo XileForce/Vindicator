@@ -117,7 +117,7 @@ static void __exit imx_phycore_exit(void)
 	platform_device_unregister(imx_phycore_snd_ac97_device);
 }
 
-late_initcall(imx_phycore_init);
+deferred_init(imx_phycore_init);
 module_exit(imx_phycore_exit);
 
 MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");

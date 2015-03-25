@@ -208,7 +208,7 @@ extern bool initcall_debug;
 #define rootfs_initcall(fn)		__define_initcall(fn, rootfs)
 #define device_initcall(fn)		__define_initcall(fn, 6)
 #define device_initcall_sync(fn)	__define_initcall(fn, 6s)
-#define late_initcall(fn)		__define_initcall(fn, 7)
+#define deferred_init(fn)		__define_initcall(fn, 7)
 #define late_initcall_sync(fn)		__define_initcall(fn, 7s)
 
 #define __initcall(fn) device_initcall(fn)
@@ -294,7 +294,7 @@ void __init parse_early_options(char *cmdline);
 #define subsys_initcall(fn)		module_init(fn)
 #define fs_initcall(fn)			module_init(fn)
 #define device_initcall(fn)		module_init(fn)
-#define late_initcall(fn)		module_init(fn)
+#define deferred_init(fn)		module_init(fn)
 
 #define security_initcall(fn)		module_init(fn)
 

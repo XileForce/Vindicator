@@ -1528,7 +1528,7 @@ static void __exit fastrpc_device_exit(void)
 	unregister_chrdev_region(me->dev_no, NUM_CHANNELS);
 }
 
-late_initcall(fastrpc_device_init);
+deferred_init(fastrpc_device_init);
 module_exit(fastrpc_device_exit);
 
 MODULE_LICENSE("GPL v2");

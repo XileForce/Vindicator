@@ -132,4 +132,4 @@ static __init int kdb_ftrace_register(void)
 	return 0;
 }
 
-late_initcall(kdb_ftrace_register);
+deferred_init(kdb_ftrace_register);

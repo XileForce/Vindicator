@@ -410,4 +410,4 @@ static int __init export_htab_values(void)
 	of_node_put(node);
 	return 0;
 }
-late_initcall(export_htab_values);
+deferred_init(export_htab_values);

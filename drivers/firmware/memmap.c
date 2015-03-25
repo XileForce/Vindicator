@@ -400,7 +400,7 @@ static ssize_t memmap_attr_show(struct kobject *kobj,
  * Initialises stuff and adds the entries in the map_entries list to
  * sysfs. Important is that firmware_map_add() and firmware_map_add_early()
  * must be called before late_initcall. That's just because that function
- * is called as late_initcall() function, which means that if you call
+ * is called as deferred_init() function, which means that if you call
  * firmware_map_add() or firmware_map_add_early() afterwards, the entries
  * are not added to sysfs.
  */
@@ -413,5 +413,5 @@ static int __init firmware_memmap_init(void)
 
 	return 0;
 }
-late_initcall(firmware_memmap_init);
+deferred_init(firmware_memmap_init);
 

@@ -3313,7 +3313,7 @@ static __init int modem_restart_late_init(void)
 
 	return 0;
 }
-late_initcall(modem_restart_late_init);
+deferred_init(modem_restart_late_init);
 
 int __init msm_smd_init(void)
 {

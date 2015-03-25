@@ -623,7 +623,7 @@ static int __init ioc4_ide_init(void)
 	return ioc4_register_submodule(&ioc4_ide_submodule);
 }
 
-late_initcall(ioc4_ide_init); /* Call only after IDE init is done */
+deferred_init(ioc4_ide_init); /* Call only after IDE init is done */
 
 MODULE_AUTHOR("Aniket Malatpure/Jeremy Higdon");
 MODULE_DESCRIPTION("IDE PCI driver module for SGI IOC4 Base-IO Card");

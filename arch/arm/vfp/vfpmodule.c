@@ -842,4 +842,4 @@ static int __init vfp_procfs_init(void)
 }
 
 arch_initcall(vfp_init);
-late_initcall(vfp_procfs_init);
+deferred_init(vfp_procfs_init);

@@ -341,5 +341,5 @@ static int __init create_tlb_flushall_shift(void)
 			    arch_debugfs_dir, NULL, &fops_tlbflush);
 	return 0;
 }
-late_initcall(create_tlb_flushall_shift);
+deferred_init(create_tlb_flushall_shift);
 #endif

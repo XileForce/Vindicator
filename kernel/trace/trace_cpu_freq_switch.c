@@ -308,4 +308,4 @@ static int __init trace_freq_switch_init(void)
 
 	return 0;
 }
-late_initcall(trace_freq_switch_init);
+deferred_init(trace_freq_switch_init);

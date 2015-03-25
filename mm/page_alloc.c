@@ -1687,7 +1687,7 @@ fail:
 	return -ENOMEM;
 }
 
-late_initcall(fail_page_alloc_debugfs);
+deferred_init(fail_page_alloc_debugfs);
 
 #endif /* CONFIG_FAULT_INJECTION_DEBUG_FS */
 

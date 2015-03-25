@@ -647,4 +647,4 @@ int __init init_pmu_actions(void)
 }
 #endif
 device_initcall(register_pmu_driver);
-late_initcall(init_pmu_actions);
+deferred_init(init_pmu_actions);

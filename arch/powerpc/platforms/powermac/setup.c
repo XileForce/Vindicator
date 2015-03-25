@@ -357,7 +357,7 @@ static int pmac_late_init(void)
 	initializing = 0;
 	return 0;
 }
-machine_late_initcall(powermac, pmac_late_init);
+machine_deferred_init(powermac, pmac_late_init);
 
 /*
  * This is __init_refok because we check for "initializing" before

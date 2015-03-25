@@ -123,4 +123,4 @@ static int __init ucf64_init(void)
 	return 0;
 }
 
-late_initcall(ucf64_init);
+deferred_init(ucf64_init);

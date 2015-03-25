@@ -859,4 +859,4 @@ static int __init apr_late_init(void)
 	subsys_notif_register(&mnb, &lnb);
 	return ret;
 }
-late_initcall(apr_late_init);
+deferred_init(apr_late_init);

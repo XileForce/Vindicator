@@ -115,5 +115,5 @@ static int __init find_vga_mem_init(void)
 	return 0;
 }
 
-late_initcall(find_vga_mem_init);
+deferred_init(find_vga_mem_init);
 #endif /* !CONFIG_CPU_SUPPORTS_UNCACHED_ACCELERATED */

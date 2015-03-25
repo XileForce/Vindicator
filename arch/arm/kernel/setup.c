@@ -713,7 +713,7 @@ static int __init init_machine_late(void)
 		machine_desc->init_late();
 	return 0;
 }
-late_initcall(init_machine_late);
+deferred_init(init_machine_late);
 
 #ifdef CONFIG_KEXEC
 static inline unsigned long long get_total_mem(void)

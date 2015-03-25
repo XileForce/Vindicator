@@ -936,7 +936,7 @@ error:
 	return -ENOMEM;
 }
 /* must be late so crypto has time to come up */
-late_initcall(init_zswap);
+deferred_init(init_zswap);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Seth Jennings <sjenning@linux.vnet.ibm.com>");

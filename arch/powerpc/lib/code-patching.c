@@ -450,6 +450,6 @@ static int __init test_code_patching(void)
 
 	return 0;
 }
-late_initcall(test_code_patching);
+deferred_init(test_code_patching);
 
 #endif /* CONFIG_CODE_PATCHING_SELFTEST */

@@ -535,6 +535,6 @@ err_out:
 	debugfs_remove_recursive(clk_debugfs_root);
 	return err;
 }
-late_initcall(clk_debugfs_init);
+deferred_init(clk_debugfs_init);
 
 #endif /* defined(CONFIG_PM_DEBUG) && defined(CONFIG_DEBUG_FS) */

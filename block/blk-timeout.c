@@ -34,7 +34,7 @@ static int __init fail_io_timeout_debugfs(void)
 	return IS_ERR(dir) ? PTR_ERR(dir) : 0;
 }
 
-late_initcall(fail_io_timeout_debugfs);
+deferred_init(fail_io_timeout_debugfs);
 
 ssize_t part_timeout_show(struct device *dev, struct device_attribute *attr,
 			  char *buf)

@@ -428,7 +428,7 @@ static int __init clk_debug_init(void)
 
 	return 0;
 }
-late_initcall(clk_debug_init);
+deferred_init(clk_debug_init);
 #else
 static inline int clk_debug_register(struct clk *clk) { return 0; }
 static inline void clk_debug_reparent(struct clk *clk, struct clk *new_parent)
@@ -536,7 +536,7 @@ static int clk_disable_unused(void)
 
 	return 0;
 }
-late_initcall(clk_disable_unused);
+deferred_init(clk_disable_unused);
 
 /***    helper functions   ***/
 

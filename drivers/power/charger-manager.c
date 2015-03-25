@@ -1874,7 +1874,7 @@ static int __init charger_manager_init(void)
 
 	return platform_driver_register(&charger_manager_driver);
 }
-late_initcall(charger_manager_init);
+deferred_init(charger_manager_init);
 
 static void __exit charger_manager_cleanup(void)
 {

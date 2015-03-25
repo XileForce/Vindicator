@@ -152,7 +152,7 @@ static int __cpuinit register_shx3_cpu_notifier(void)
 	register_hotcpu_notifier(&shx3_cpu_notifier);
 	return 0;
 }
-late_initcall(register_shx3_cpu_notifier);
+deferred_init(register_shx3_cpu_notifier);
 
 struct plat_smp_ops shx3_smp_ops = {
 	.smp_setup		= shx3_smp_setup,

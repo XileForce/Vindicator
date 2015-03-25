@@ -1505,6 +1505,6 @@ end:
 	return 0;
 }
 
-late_initcall(kprobe_trace_self_tests_init);
+deferred_init(kprobe_trace_self_tests_init);
 
 #endif

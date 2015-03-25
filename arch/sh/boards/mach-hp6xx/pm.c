@@ -155,4 +155,4 @@ static int __init hp6x0_pm_init(void)
 	return 0;
 }
 
-late_initcall(hp6x0_pm_init);
+deferred_init(hp6x0_pm_init);

@@ -73,4 +73,4 @@ err_open:
 	return err;
 }
 
-late_initcall(rtc_hctosys);
+deferred_init(rtc_hctosys);

@@ -352,7 +352,7 @@ static __init int tboot_late_init(void)
 	return 0;
 }
 
-late_initcall(tboot_late_init);
+deferred_init(tboot_late_init);
 
 /*
  * TXT configuration registers (offsets from TXT_{PUB, PRIV}_CONFIG_REGS_BASE)

@@ -450,7 +450,7 @@ static int __init iommu_init_late_dart(void)
 	return 0;
 }
 
-late_initcall(iommu_init_late_dart);
+deferred_init(iommu_init_late_dart);
 #endif
 
 void __init alloc_dart_table(void)

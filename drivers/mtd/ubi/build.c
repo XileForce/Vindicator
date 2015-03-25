@@ -1312,7 +1312,7 @@ out:
 	ubi_err("UBI error: cannot initialize UBI, error %d", err);
 	return err;
 }
-late_initcall(ubi_init);
+deferred_init(ubi_init);
 
 static void __exit ubi_exit(void)
 {

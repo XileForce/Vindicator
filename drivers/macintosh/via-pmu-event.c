@@ -77,4 +77,4 @@ void via_pmu_event(int key, int down)
 	input_sync(pmu_input_dev);
 }
 
-late_initcall(via_pmu_event_init);
+deferred_init(via_pmu_event_init);

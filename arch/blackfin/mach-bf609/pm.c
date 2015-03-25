@@ -358,4 +358,4 @@ static int __init bf609_init_pm(void)
 	return 0;
 }
 
-late_initcall(bf609_init_pm);
+deferred_init(bf609_init_pm);

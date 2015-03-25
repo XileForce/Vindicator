@@ -879,6 +879,6 @@ static int __init pat_memtype_list_init(void)
 	return 0;
 }
 
-late_initcall(pat_memtype_list_init);
+deferred_init(pat_memtype_list_init);
 
 #endif /* CONFIG_DEBUG_FS && CONFIG_X86_PAT */

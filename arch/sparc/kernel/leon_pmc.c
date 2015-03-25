@@ -90,4 +90,4 @@ static int __init leon_pmc_install(void)
 /* This driver is not critical to the boot process, don't care
  * if initialized late.
  */
-late_initcall(leon_pmc_install);
+deferred_init(leon_pmc_install);

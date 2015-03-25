@@ -1305,7 +1305,7 @@ static int __init dmatest_init(void)
 #endif
 }
 /* when compiled-in wait for drivers to load first */
-late_initcall(dmatest_init);
+deferred_init(dmatest_init);
 
 static void __exit dmatest_exit(void)
 {

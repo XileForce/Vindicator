@@ -277,4 +277,4 @@ static int __init swp_emulation_init(void)
 	return 0;
 }
 
-late_initcall(swp_emulation_init);
+deferred_init(swp_emulation_init);

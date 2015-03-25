@@ -485,4 +485,4 @@ static int __init tx4938_late_init(void)
 	tx4938_stop_unused_modules();
 	return 0;
 }
-late_initcall(tx4938_late_init);
+deferred_init(tx4938_late_init);

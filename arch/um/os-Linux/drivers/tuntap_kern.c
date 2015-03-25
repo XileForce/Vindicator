@@ -83,4 +83,4 @@ static int register_tuntap(void)
 	return 0;
 }
 
-late_initcall(register_tuntap);
+deferred_init(register_tuntap);

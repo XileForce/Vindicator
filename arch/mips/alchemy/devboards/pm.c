@@ -259,4 +259,4 @@ static int __init pm_init(void)
 	return sysfs_create_group(power_kobj, &db1x_pmattr_group);
 }
 
-late_initcall(pm_init);
+deferred_init(pm_init);

@@ -456,7 +456,7 @@ static int __init msm_rq_stats_init(void)
 
 	return ret;
 }
-late_initcall(msm_rq_stats_init);
+deferred_init(msm_rq_stats_init);
 
 static int __init msm_rq_stats_early_init(void)
 {

@@ -1939,5 +1939,5 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Dan Magenheimer <dan.magenheimer@oracle.com>");
 MODULE_DESCRIPTION("In-kernel compression of cleancache/frontswap pages");
 #else
-late_initcall(zcache_init);
+deferred_init(zcache_init);
 #endif

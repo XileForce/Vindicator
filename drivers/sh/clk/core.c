@@ -706,4 +706,4 @@ static int __init clk_late_init(void)
 	mutex_unlock(&clock_list_sem);
 	return 0;
 }
-late_initcall(clk_late_init);
+deferred_init(clk_late_init);

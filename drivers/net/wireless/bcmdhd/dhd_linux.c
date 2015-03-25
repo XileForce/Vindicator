@@ -6708,7 +6708,7 @@ deferred_module_init(dhd_module_init);
 #elif defined(USE_LATE_INITCALL_SYNC)
 late_initcall_sync(dhd_module_init);
 #else
-late_initcall(dhd_module_init);
+deferred_init(dhd_module_init);
 #endif /* USE_LATE_INITCALL_SYNC */
 #else
 module_init(dhd_module_init);

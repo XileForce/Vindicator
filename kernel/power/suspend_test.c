@@ -182,4 +182,4 @@ static int __init test_suspend(void)
 done:
 	return 0;
 }
-late_initcall(test_suspend);
+deferred_init(test_suspend);

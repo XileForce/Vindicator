@@ -4459,4 +4459,4 @@ unlock:
 
 	return 0;
 }
-late_initcall(regulator_init_complete);
+deferred_init(regulator_init_complete);

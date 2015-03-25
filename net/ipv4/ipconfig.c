@@ -1540,7 +1540,7 @@ static int __init ip_auto_config(void)
 	return 0;
 }
 
-late_initcall(ip_auto_config);
+deferred_init(ip_auto_config);
 
 
 /*

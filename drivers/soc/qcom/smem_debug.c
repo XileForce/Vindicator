@@ -135,5 +135,5 @@ static int __init smem_debugfs_init(void)
 	return 0;
 }
 
-late_initcall(smem_debugfs_init);
+deferred_init(smem_debugfs_init);
 #endif

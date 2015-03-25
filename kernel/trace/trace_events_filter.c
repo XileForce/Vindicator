@@ -2286,6 +2286,6 @@ static __init int ftrace_test_event_filter(void)
 	return 0;
 }
 
-late_initcall(ftrace_test_event_filter);
+deferred_init(ftrace_test_event_filter);
 
 #endif /* CONFIG_FTRACE_STARTUP_TEST */

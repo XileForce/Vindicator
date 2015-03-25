@@ -163,4 +163,4 @@ static int __init coproc_a15_init(void)
 	kvm_register_target_coproc_table(&a15_target_table);
 	return 0;
 }
-late_initcall(coproc_a15_init);
+deferred_init(coproc_a15_init);

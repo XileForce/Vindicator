@@ -62,4 +62,4 @@ static int __init sh_pm_runtime_late_init(void)
 	pm_genpd_poweroff_unused();
 	return 0;
 }
-late_initcall(sh_pm_runtime_late_init);
+deferred_init(sh_pm_runtime_late_init);

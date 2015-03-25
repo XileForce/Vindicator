@@ -1826,7 +1826,7 @@ static int __init max_swapfiles_check(void)
 	MAX_SWAPFILES_CHECK();
 	return 0;
 }
-late_initcall(max_swapfiles_check);
+deferred_init(max_swapfiles_check);
 #endif
 
 static struct swap_info_struct *alloc_swap_info(void)

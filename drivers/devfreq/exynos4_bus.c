@@ -1140,7 +1140,7 @@ static int __init exynos4_busfreq_init(void)
 {
 	return platform_driver_register(&exynos4_busfreq_driver);
 }
-late_initcall(exynos4_busfreq_init);
+deferred_init(exynos4_busfreq_init);
 
 static void __exit exynos4_busfreq_exit(void)
 {

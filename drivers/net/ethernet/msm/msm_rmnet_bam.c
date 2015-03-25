@@ -152,7 +152,7 @@ static int __init rmnet_late_init(void)
 	return 0;
 }
 
-late_initcall(rmnet_late_init);
+deferred_init(rmnet_late_init);
 #endif
 
 /* Returns 1 if packet caused rmnet to wakeup, 0 otherwise. */

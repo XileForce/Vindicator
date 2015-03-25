@@ -1832,7 +1832,7 @@ __apicdebuginit(int) print_ICs(void)
 	return 0;
 }
 
-late_initcall(print_ICs);
+deferred_init(print_ICs);
 
 
 /* Where if anywhere is the i8259 connect in external int mode */
@@ -2873,7 +2873,7 @@ static int __init io_apic_bug_finalize(void)
 	return 0;
 }
 
-late_initcall(io_apic_bug_finalize);
+deferred_init(io_apic_bug_finalize);
 
 static void resume_ioapic_id(int ioapic_idx)
 {

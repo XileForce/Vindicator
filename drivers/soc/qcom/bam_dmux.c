@@ -2504,6 +2504,6 @@ static int __init bam_dmux_init(void)
 	return platform_driver_register(&bam_dmux_driver);
 }
 
-late_initcall(bam_dmux_init); /* needs to init after SMD */
+deferred_init(bam_dmux_init); /* needs to init after SMD */
 MODULE_DESCRIPTION("MSM BAM DMUX");
 MODULE_LICENSE("GPL v2");

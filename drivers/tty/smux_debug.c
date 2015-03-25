@@ -167,4 +167,4 @@ static int __init smux_debugfs_init(void)
 	return 0;
 }
 
-late_initcall(smux_debugfs_init);
+deferred_init(smux_debugfs_init);

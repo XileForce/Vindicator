@@ -272,7 +272,7 @@ static __init int sched_init_debug(void)
 
 	return 0;
 }
-late_initcall(sched_init_debug);
+deferred_init(sched_init_debug);
 #endif /* CONFIG_SCHED_DEBUG */
 
 /*

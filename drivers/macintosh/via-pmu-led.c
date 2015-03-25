@@ -114,4 +114,4 @@ static int __init via_pmu_led_init(void)
 	return led_classdev_register(NULL, &pmu_led);
 }
 
-late_initcall(via_pmu_led_init);
+deferred_init(via_pmu_led_init);

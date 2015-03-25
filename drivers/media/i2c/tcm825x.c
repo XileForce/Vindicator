@@ -929,7 +929,7 @@ static void __exit tcm825x_exit(void)
  * FIXME: Menelaus isn't ready (?) at module_init stage, so use
  * late_initcall for now.
  */
-late_initcall(tcm825x_init);
+deferred_init(tcm825x_init);
 module_exit(tcm825x_exit);
 
 MODULE_AUTHOR("Sakari Ailus <sakari.ailus@nokia.com>");

@@ -260,4 +260,4 @@ static int __init kexec_setup(void)
 	of_node_put(node);
 	return 0;
 }
-late_initcall(kexec_setup);
+deferred_init(kexec_setup);

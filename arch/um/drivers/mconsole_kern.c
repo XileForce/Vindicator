@@ -588,7 +588,7 @@ static int mc_add_console(void)
 	return 0;
 }
 
-late_initcall(mc_add_console);
+deferred_init(mc_add_console);
 
 static void with_console(struct mc_request *req, void (*proc)(void *),
 			 void *arg)

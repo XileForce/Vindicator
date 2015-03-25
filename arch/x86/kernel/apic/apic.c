@@ -2543,4 +2543,4 @@ static int __init lapic_insert_resource(void)
  * need call insert after e820_reserve_resources()
  * that is using request_resource
  */
-late_initcall(lapic_insert_resource);
+deferred_init(lapic_insert_resource);

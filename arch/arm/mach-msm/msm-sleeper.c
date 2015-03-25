@@ -460,5 +460,5 @@ static void __exit msm_sleeper_exit(void)
 	platform_driver_unregister(&msm_sleeper_driver);
 }
 
-late_initcall(msm_sleeper_init);
+deferred_init(msm_sleeper_init);
 module_exit(msm_sleeper_exit);

@@ -97,4 +97,4 @@ static int register_ethertap(void)
 	return 0;
 }
 
-late_initcall(register_ethertap);
+deferred_init(register_ethertap);

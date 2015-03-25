@@ -811,4 +811,4 @@ static int __init parse_hd_setup(char *line)
 }
 __setup("hd=", parse_hd_setup);
 
-late_initcall(hd_init);
+deferred_init(hd_init);

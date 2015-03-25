@@ -2516,5 +2516,5 @@ static void rndis_ipa_cleanup_module(void)
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("RNDIS_IPA network interface");
 
-late_initcall(rndis_ipa_init_module);
+deferred_init(rndis_ipa_init_module);
 module_exit(rndis_ipa_cleanup_module);

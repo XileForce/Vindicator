@@ -233,7 +233,7 @@ static __exit void rs_exit(void)
  * `module_init' to declare their init routines are likely to be broken.
  */
 
-late_initcall(rs_init);
+deferred_init(rs_init);
 
 
 #ifdef CONFIG_SERIAL_CONSOLE

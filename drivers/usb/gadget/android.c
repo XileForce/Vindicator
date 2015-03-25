@@ -3894,7 +3894,7 @@ static int __init init(void)
 
 	return ret;
 }
-late_initcall(init);
+deferred_init(init);
 
 static void __exit cleanup(void)
 {

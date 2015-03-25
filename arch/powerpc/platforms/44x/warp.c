@@ -298,7 +298,7 @@ static int __init pika_dtm_start(void)
 
 	return 0;
 }
-machine_late_initcall(warp, pika_dtm_start);
+machine_deferred_init(warp, pika_dtm_start);
 
 #else /* !CONFIG_SENSORS_AD7414 */
 
@@ -312,7 +312,7 @@ int pika_dtm_unregister_shutdown(void (*func)(void *arg), void *arg)
 	return 0;
 }
 
-machine_late_initcall(warp, warp_post_info);
+machine_deferred_init(warp, warp_post_info);
 
 #endif
 

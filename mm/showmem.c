@@ -51,4 +51,4 @@ int show_mem_notifier_debugfs_register(void)
 
 	return 0;
 }
-late_initcall(show_mem_notifier_debugfs_register);
+deferred_init(show_mem_notifier_debugfs_register);

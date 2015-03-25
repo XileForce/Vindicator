@@ -1347,7 +1347,7 @@ static int __init rio_basic_attach(void)
 	return 0;
 }
 
-late_initcall(rio_basic_attach);
+deferred_init(rio_basic_attach);
 
 MODULE_DESCRIPTION("Basic RapidIO enumeration/discovery");
 MODULE_LICENSE("GPL");

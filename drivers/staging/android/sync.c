@@ -983,7 +983,7 @@ static __init int sync_debugfs_init(void)
 	debugfs_create_file("sync", S_IRUGO, NULL, NULL, &sync_debugfs_fops);
 	return 0;
 }
-late_initcall(sync_debugfs_init);
+deferred_init(sync_debugfs_init);
 
 #define DUMP_CHUNK 256
 static char sync_dump_buf[64 * 1024];

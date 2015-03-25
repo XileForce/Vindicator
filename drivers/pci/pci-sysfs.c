@@ -1443,7 +1443,7 @@ static int __init pci_sysfs_init(void)
 	return 0;
 }
 
-late_initcall(pci_sysfs_init);
+deferred_init(pci_sysfs_init);
 
 static struct attribute *pci_dev_dev_attrs[] = {
 	&vga_attr.attr,

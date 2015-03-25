@@ -175,4 +175,4 @@ static int __init xscale_cp0_init(void)
 	return 0;
 }
 
-late_initcall(xscale_cp0_init);
+deferred_init(xscale_cp0_init);

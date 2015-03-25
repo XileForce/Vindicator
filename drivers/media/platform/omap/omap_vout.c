@@ -2290,5 +2290,5 @@ static void omap_vout_cleanup(void)
 	platform_driver_unregister(&omap_vout_driver);
 }
 
-late_initcall(omap_vout_init);
+deferred_init(omap_vout_init);
 module_exit(omap_vout_cleanup);

@@ -230,7 +230,7 @@ static int __init pm_debugfs_init(void)
 	return 0;
 }
 
-late_initcall(pm_debugfs_init);
+deferred_init(pm_debugfs_init);
 #endif /* CONFIG_DEBUG_FS */
 
 #endif /* CONFIG_PM_SLEEP */

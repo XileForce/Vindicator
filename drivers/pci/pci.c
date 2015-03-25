@@ -3860,7 +3860,7 @@ static int __init pci_resource_alignment_sysfs_init(void)
 					&bus_attr_resource_alignment);
 }
 
-late_initcall(pci_resource_alignment_sysfs_init);
+deferred_init(pci_resource_alignment_sysfs_init);
 
 static void pci_no_domains(void)
 {

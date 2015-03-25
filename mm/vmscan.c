@@ -227,7 +227,7 @@ static int __init add_shrinker_debug(void)
 	return 0;
 }
 
-late_initcall(add_shrinker_debug);
+deferred_init(add_shrinker_debug);
 
 /*
  * Remove one

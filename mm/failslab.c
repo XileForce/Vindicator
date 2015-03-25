@@ -55,6 +55,6 @@ fail:
 	return -ENOMEM;
 }
 
-late_initcall(failslab_debugfs_init);
+deferred_init(failslab_debugfs_init);
 
 #endif /* CONFIG_FAULT_INJECTION_DEBUG_FS */

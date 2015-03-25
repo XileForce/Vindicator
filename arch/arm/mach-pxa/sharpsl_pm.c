@@ -951,5 +951,5 @@ static void sharpsl_pm_exit(void)
 	platform_driver_unregister(&sharpsl_pm_driver);
 }
 
-late_initcall(sharpsl_pm_init);
+deferred_init(sharpsl_pm_init);
 module_exit(sharpsl_pm_exit);

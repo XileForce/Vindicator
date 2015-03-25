@@ -53,7 +53,7 @@ Machine Support
   saving the resume address, if your board requires it, then contact
   the maintainer and discuss what is required.
 
-  Note, the original method of adding an late_initcall() is wrong,
+  Note, the original method of adding an deferred_init() is wrong,
   and will end up initialising all compiled machines' pm init!
 
   The following is an example of code used for testing wakeup from

@@ -1278,7 +1278,7 @@ static int __init s3c24xx_dma_syscore_init(void)
 	return 0;
 }
 
-late_initcall(s3c24xx_dma_syscore_init);
+deferred_init(s3c24xx_dma_syscore_init);
 
 int __init s3c24xx_dma_init(unsigned int channels, unsigned int irq,
 			    unsigned int stride)

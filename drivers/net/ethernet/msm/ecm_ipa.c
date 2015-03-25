@@ -1440,5 +1440,5 @@ static void ecm_ipa_cleanup_module(void)
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("ECM IPA network interface");
 
-late_initcall(ecm_ipa_init_module);
+deferred_init(ecm_ipa_init_module);
 module_exit(ecm_ipa_cleanup_module);

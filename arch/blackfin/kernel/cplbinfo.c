@@ -177,4 +177,4 @@ static int __init cplbinfo_init(void)
 
 	return 0;
 }
-late_initcall(cplbinfo_init);
+deferred_init(cplbinfo_init);

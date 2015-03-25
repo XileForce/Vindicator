@@ -918,7 +918,7 @@ static void __exit mct_exit(void)
 	platform_driver_unregister(&mct_driver);
 }
 
-late_initcall(mct_init);
+deferred_init(mct_init);
 module_exit(mct_exit);
 
 MODULE_LICENSE("GPL v2");

@@ -689,4 +689,4 @@ static int __init lpm_test_platform_driver_init(void)
 	return platform_driver_register(&lpm_test_driver);
 }
 
-late_initcall(lpm_test_platform_driver_init);
+deferred_init(lpm_test_platform_driver_init);

@@ -69,4 +69,4 @@ static int __init flash_init(void)
 	return 0;
 }
 
-late_initcall(flash_init);
+deferred_init(flash_init);

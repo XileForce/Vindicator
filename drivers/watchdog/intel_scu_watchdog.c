@@ -558,7 +558,7 @@ static void __exit intel_scu_watchdog_exit(void)
 	iounmap(watchdog_device.timer_load_count_addr);
 }
 
-late_initcall(intel_scu_watchdog_init);
+deferred_init(intel_scu_watchdog_init);
 module_exit(intel_scu_watchdog_exit);
 
 MODULE_AUTHOR("Intel Corporation");

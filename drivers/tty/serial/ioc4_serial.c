@@ -2943,7 +2943,7 @@ static void __exit ioc4_serial_exit(void)
 	uart_unregister_driver(&ioc4_uart_rs422);
 }
 
-late_initcall(ioc4_serial_init); /* Call only after tty init is done */
+deferred_init(ioc4_serial_init); /* Call only after tty init is done */
 module_exit(ioc4_serial_exit);
 
 MODULE_AUTHOR("Pat Gefre - Silicon Graphics Inc. (SGI) <pfg@sgi.com>");
