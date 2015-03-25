@@ -181,7 +181,7 @@ static void __exit msm_flash_lm3646_exit_module(void)
 	return;
 }
 
-deferred_module_init(msm_flash_lm3646_init);
+module_init(msm_flash_lm3646_init);
 module_exit(msm_flash_lm3646_exit_module);
 MODULE_DESCRIPTION("LM3646 FLASH");
 MODULE_LICENSE("GPL v2");
