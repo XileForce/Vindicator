@@ -339,16 +339,56 @@ cat << CTAG
 					}},'
 				fi
 			fi`
-			`if [ -f "/sys/module/wakeup/parameters/enable_msm_hsic_ws" ]; then
-			MHH=\`bool /sys/module/wakeup/parameters/enable_msm_hsic_ws\`;
+			`if [ -f "/sys/module/xhci_hcd/parameters/wl_divide" ]; then
+			MHH=\`$BB cat /sys/module/xhci_hcd/parameters/wl_divide\`;
 				$BB echo '{ SPane:{
-					title:"Msm_hsic_host wakelock",
+					title:"Msm_Hsic_Host WakeLock",
+				}},
+					{ SSeekBar:{
+						description:"Adjust Divisor For MSM_HSIC WakeLock (0 = Disable 1 = stock, higher = lower wake time)",
+						step:1,
+						min:0,
+						max:8,
+						default:'$MHH',
+						action:"generic /sys/module/xhci_hcd/parameters/wl_divide"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_bluesleep_ws" ]; then
+			BS=\`bool /sys/module/wakeup/parameters/enable_bluesleep_ws\`
+				$BB echo '{ SPane:{
+					title:"BlueSleep WakeLock"
 				}},
 					{ SCheckBox:{
+						description:"Check Box To Enable BlueSleep Wakelock(Stock)",
 						label:"Enable",
-						description:"Enable/Disable msm_hsic_host wakelock.",
-						default:'$MHH',
-						action:"boolean /sys/module/wakeup/parameters/enable_msm_hsic_ws"
+						default:'$BS',
+						action:"boolean /sys/module/wakeup/parameters/enable_bluesleep_ws"
+					}},'
+			fi`
+			`if [ -f "/sys/module/wakeup/parameters/enable_si_ws" ]; then
+			SI=\`bool /sys/module/wakeup/parameters/enable_si_ws\`
+				$BB echo '{ SPane:{
+					title:"SensorInd WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable SensorInd Wakelock(Stock)",
+						label:"Enable",
+						default:'$SI',
+						action:"boolean /sys/module/wakeup/parameters/enable_si_ws"
+					}},'
+			fi`
+						`if [ -f "/sys/module/bcmdhd/parameters/wl_divide" ]; then
+			BCMDHD=\`$BB cat /sys/module/bcmdhd/parameters/wl_divide\`;
+				$BB echo '{ SPane:{
+					title:"BCMDHD WakeLock",
+				}},
+					{ SSeekBar:{
+						description:"Adjust Divisor For BCMDHD WakeLock (1 = stock, higher = lower wake time)",
+						step:1,
+						min:1,
+						max:8,
+						default:'$BCMDHD',
+						action:"generic /sys/module/bcmdhd/parameters/wl_divide"
 					}},'
 			fi`
 		]
