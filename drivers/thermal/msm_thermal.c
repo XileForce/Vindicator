@@ -49,14 +49,12 @@
 #define TSENS_NAME_FORMAT "tsens_tz_sensor%d"
 #define THERM_SECURE_BITE_CMD 8
 
-<<<<<<< HEAD
 unsigned int temp_threshold = 60;
 module_param(temp_threshold, int, 0755);
-=======
+
 // allow full frequency mitigation
 bool full_fm = true;
 module_param(full_fm, bool, 0644);
->>>>>>> 9314d41... cpufreq/thermal: frequency mitigation preventer V2
 
 static struct msm_thermal_data msm_thermal_info;
 static struct delayed_work check_temp_work;
