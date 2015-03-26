@@ -4,7 +4,7 @@ sdir="/home/ryan/Kernels/Vindicator"
 udir="/home/ryan/Kernels/Vindicator/lk.utils"
 outdir="/home/ryan/Kernels/Vindicator_Out"
 device="shamu"
-cc="/home/ryan/Onyx/prebuilts/gcc/linux-x86/arm/arm-eabi-4.9/bin/arm-eabi-"
+cc="/home/ryan/VChain/bin/arm-eabi-"
 filename="Vindicator.1.8.zip"
 
 compile() {
