@@ -38,6 +38,10 @@ chmod 755 /data/data/leankernel
 # Default MPDecision OFF!
 stop mpdecision
 
+# Make Sure Min Frequency Starts At 35 And Max At 2649 From Boot Just To Be Safe
+echo > 35800 /sys/device/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo > 2649600 /sys/device/system/cpu/cpu0/cpufreq/scaling_max_freq
+
 #
 # lkconfig settings below
 #
