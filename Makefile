@@ -343,11 +343,11 @@ CHECK		= sparse
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 # GRAPHITE	    = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize -ftree-parallelize-loops=4
-CFLAGS_MODULE   = $(GRAPHITE) -DNDEBUG -pthread -DMODULE -munaligned-access -fgcse-sm -fgcse-las -fgcse-after-reload -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
-AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG -pthread -munaligned-access -fgcse-sm -fgcse-las -fgcse-after-reload -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
+CFLAGS_MODULE   = $(GRAPHITE) -DNDEBUG  -funsafe-math-optimizations -pthread -DMODULE -munaligned-access -fgcse-sm -fgcse-las -fgcse-after-reload -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
+AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG -pthread -funsafe-math-optimizations -munaligned-access -fgcse-sm -fgcse-las -fgcse-after-reload -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
 LDFLAGS_MODULE  = $(GRAPHITE) -DMODULE -DNDEBUG 
-CFLAGS_KERNEL	= $(GRAPHITE) -pthread -falign-functions -falign-jumps -falign-loops -ftree-partial-pre -ftree-loop-distribute-patterns -finline-functions -funswitch-loops -DNDEBUG -munaligned-access -fgcse-sm -fgcse-after-reload -fgcse-las -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
-AFLAGS_KERNEL	= $(GRAPHITE) -pthread -munaligned-access -fgcse-sm -fgcse-las -fgcse-after-reload -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
+CFLAGS_KERNEL	= $(GRAPHITE) -pthread -funsafe-math-optimizations -falign-functions -falign-jumps -falign-loops -ftree-partial-pre -ftree-loop-distribute-patterns -finline-functions -funswitch-loops -DNDEBUG -munaligned-access -fgcse-sm -fgcse-after-reload -fgcse-las -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
+AFLAGS_KERNEL	= $(GRAPHITE) -pthread -funsafe-math-optimizations -munaligned-access -fgcse-sm -fgcse-las -fgcse-after-reload -fsched-spec-load -fforce-addr -ffast-math -fsingle-precision-constant -mcpu=cortex-a15 -mtune=cortex-a15 -marm -mfpu=neon-vfpv4 -fno-tree-vectorize -mvectorize-with-neon-quad -funroll-loops -ftree-loop-im -ftree-loop-ivcanon -fmodulo-sched -fmodulo-sched-allow-regmoves -fivopts -mneon-for-64bits -fopenmp -fopenmp-simd -fsimd-cost-model=unlimited
 CFLAGS_GCOV	    = -fprofile-arcs -ftest-coverage
 
 
@@ -370,7 +370,7 @@ LINUXINCLUDE    := \
 
 KBUILD_CPPFLAGS := -D__KERNEL__
 
-KBUILD_CFLAGS   := $(GRAPHITE) -Wall -pthread -Wundef -Wstrict-prototypes -Wno-trigraphs \
+KBUILD_CFLAGS   := $(GRAPHITE) -Wall -funsafe-math-optimizations -pthread -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fstrict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
