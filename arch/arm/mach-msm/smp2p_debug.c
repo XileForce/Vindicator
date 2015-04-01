@@ -325,5 +325,5 @@ static int __init smp2p_debugfs_init(void)
 	return 0;
 }
 
-deferred_init(smp2p_debugfs_init);
+late_initcall(smp2p_debugfs_init);
 #endif /* CONFIG_DEBUG_FS */

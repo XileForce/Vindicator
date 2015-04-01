@@ -722,4 +722,4 @@ err:
  * late initcall ensures initialization of statistics collection
  * mechanisms precedes initialization of the taskstats interface
  */
-deferred_init(taskstats_init);
+late_initcall(taskstats_init);

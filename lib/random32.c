@@ -293,7 +293,7 @@ static int __init prandom_reseed(void)
 	__prandom_start_seed_timer();
 	return 0;
 }
-deferred_init(prandom_reseed);
+late_initcall(prandom_reseed);
 
 #ifdef CONFIG_RANDOM32_SELFTEST
 static struct prandom_test1 {

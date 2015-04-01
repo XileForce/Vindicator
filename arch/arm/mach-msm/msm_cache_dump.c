@@ -182,5 +182,5 @@ static void __exit msm_cache_dump_exit(void)
 {
 	platform_driver_unregister(&msm_cache_dump_driver);
 }
-deferred_init(msm_cache_dump_init);
+late_initcall(msm_cache_dump_init);
 module_exit(msm_cache_dump_exit)

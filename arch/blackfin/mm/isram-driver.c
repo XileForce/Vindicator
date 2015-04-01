@@ -399,7 +399,7 @@ static __init int isram_test_init(void)
 	pr_info("PASS: all tests worked !\n");
 	return 0;
 }
-deferred_init(isram_test_init);
+late_initcall(isram_test_init);
 
 static __exit void isram_test_exit(void)
 {

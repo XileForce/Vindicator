@@ -1440,4 +1440,4 @@ int __init msm_rpm_driver_init(void)
 	return platform_driver_register(&msm_rpm_device_driver);
 }
 EXPORT_SYMBOL(msm_rpm_driver_init);
-deferred_init(msm_rpm_driver_init);
+late_initcall(msm_rpm_driver_init);

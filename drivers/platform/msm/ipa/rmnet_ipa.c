@@ -1306,7 +1306,7 @@ fail:
 	free_netdev(ipa_netdevs[0]);
 	return ret;
 }
-deferred_init(ipa_wwan_init);
+late_initcall(ipa_wwan_init);
 
 void ipa_wwan_cleanup(void)
 {

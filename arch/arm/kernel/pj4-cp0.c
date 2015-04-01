@@ -90,4 +90,4 @@ static int __init pj4_cp0_init(void)
 	return 0;
 }
 
-deferred_init(pj4_cp0_init);
+late_initcall(pj4_cp0_init);

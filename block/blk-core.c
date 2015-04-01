@@ -1716,7 +1716,7 @@ static int __init fail_make_request_debugfs(void)
 	return IS_ERR(dir) ? PTR_ERR(dir) : 0;
 }
 
-deferred_init(fail_make_request_debugfs);
+late_initcall(fail_make_request_debugfs);
 
 #else /* CONFIG_FAIL_MAKE_REQUEST */
 

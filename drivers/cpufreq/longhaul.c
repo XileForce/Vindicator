@@ -1035,5 +1035,5 @@ MODULE_AUTHOR("Dave Jones <davej@redhat.com>");
 MODULE_DESCRIPTION("Longhaul driver for VIA Cyrix processors.");
 MODULE_LICENSE("GPL");
 
-deferred_init(longhaul_init);
+late_initcall(longhaul_init);
 module_exit(longhaul_exit);

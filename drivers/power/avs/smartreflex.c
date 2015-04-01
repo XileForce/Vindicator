@@ -1092,7 +1092,7 @@ static int __init sr_init(void)
 
 	return 0;
 }
-deferred_init(sr_init);
+late_initcall(sr_init);
 
 static void __exit sr_exit(void)
 {

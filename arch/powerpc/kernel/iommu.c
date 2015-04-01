@@ -104,7 +104,7 @@ static int __init fail_iommu_debugfs(void)
 
 	return PTR_RET(dir);
 }
-deferred_init(fail_iommu_debugfs);
+late_initcall(fail_iommu_debugfs);
 
 static ssize_t fail_iommu_show(struct device *dev,
 			       struct device_attribute *attr, char *buf)

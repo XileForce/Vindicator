@@ -283,7 +283,7 @@ out_put_node:
 	of_node_put(np);
 	return ret;
 }
-deferred_init(spear_cpufreq_driver_init);
+late_initcall(spear_cpufreq_driver_init);
 
 MODULE_AUTHOR("Deepak Sikri <deepak.sikri@st.com>");
 MODULE_DESCRIPTION("SPEAr CPUFreq driver");

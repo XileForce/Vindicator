@@ -1037,7 +1037,7 @@ static void __exit cleanup_encrypted(void)
 	unregister_key_type(&key_type_encrypted);
 }
 
-deferred_init(init_encrypted);
+late_initcall(init_encrypted);
 module_exit(cleanup_encrypted);
 
 MODULE_LICENSE("GPL");

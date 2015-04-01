@@ -400,5 +400,5 @@ static int __init smd_debugfs_init(void)
 	return 0;
 }
 
-deferred_init(smd_debugfs_init);
+late_initcall(smd_debugfs_init);
 #endif

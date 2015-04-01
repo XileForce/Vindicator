@@ -569,7 +569,7 @@ static void __exit kcal_ctrl_exit(void)
 	platform_driver_unregister(&kcal_ctrl_driver);
 }
 
-deferred_init(kcal_ctrl_init);
+late_initcall(kcal_ctrl_init);
 module_exit(kcal_ctrl_exit);
 
 MODULE_DESCRIPTION("MDSS-MDP5 KCAL Driver");

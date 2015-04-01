@@ -180,7 +180,7 @@ static int stdio_init(void)
 	register_console(&stdiocons);
 	return 0;
 }
-deferred_init(stdio_init);
+late_initcall(stdio_init);
 
 static void console_exit(void)
 {

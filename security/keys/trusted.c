@@ -1157,7 +1157,7 @@ static void __exit cleanup_trusted(void)
 	unregister_key_type(&key_type_trusted);
 }
 
-deferred_init(init_trusted);
+late_initcall(init_trusted);
 module_exit(cleanup_trusted);
 
 MODULE_LICENSE("GPL");

@@ -185,4 +185,4 @@ static int register_umcast(void)
 	return 0;
 }
 
-deferred_init(register_umcast);
+late_initcall(register_umcast);

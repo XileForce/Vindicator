@@ -106,4 +106,4 @@ static int __init octeon_serial_init(void)
 {
 	return platform_driver_register(&octeon_serial_driver);
 }
-deferred_init(octeon_serial_init);
+late_initcall(octeon_serial_init);

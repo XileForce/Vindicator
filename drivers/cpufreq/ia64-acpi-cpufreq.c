@@ -413,6 +413,6 @@ acpi_cpufreq_exit (void)
 }
 
 
-deferred_init(acpi_cpufreq_init);
+late_initcall(acpi_cpufreq_init);
 module_exit(acpi_cpufreq_exit);
 

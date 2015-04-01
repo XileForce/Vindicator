@@ -566,5 +566,5 @@ static int __init tegra_gpio_debuginit(void)
 					NULL, NULL, &debug_fops);
 	return 0;
 }
-deferred_init(tegra_gpio_debuginit);
+late_initcall(tegra_gpio_debuginit);
 #endif

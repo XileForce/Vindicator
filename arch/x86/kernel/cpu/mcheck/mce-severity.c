@@ -284,5 +284,5 @@ static int __init severities_debugfs_init(void)
 err_out:
 	return -ENOMEM;
 }
-deferred_init(severities_debugfs_init);
+late_initcall(severities_debugfs_init);
 #endif /* CONFIG_DEBUG_FS */

@@ -1023,7 +1023,7 @@ static int __init socinfo_init_sysfs(void)
 	return 0;
 }
 
-deferred_init(socinfo_init_sysfs);
+late_initcall(socinfo_init_sysfs);
 
 static void socinfo_print(void)
 {

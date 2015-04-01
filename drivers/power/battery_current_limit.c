@@ -1355,7 +1355,7 @@ static void __exit bcl_exit(void)
 	platform_driver_unregister(&bcl_driver);
 }
 
-deferred_init(bcl_init);
+late_initcall(bcl_init);
 module_exit(bcl_exit);
 
 MODULE_LICENSE("GPL v2");

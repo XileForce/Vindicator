@@ -734,4 +734,4 @@ static int __init smp2p_debugfs_init(void)
 	smp2p_debug_create("ut_remote_gpio_inout", smp2p_ut_remote_inout);
 	return 0;
 }
-deferred_init(smp2p_debugfs_init);
+late_initcall(smp2p_debugfs_init);

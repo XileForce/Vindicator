@@ -282,4 +282,4 @@ static int __init pxa910_pm_init(void)
 	return 0;
 }
 
-deferred_init(pxa910_pm_init);
+late_initcall(pxa910_pm_init);

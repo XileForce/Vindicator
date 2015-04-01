@@ -46,4 +46,4 @@ static int __init init_hlt_debug(void)
 	return 0;
 }
 
-deferred_init(init_hlt_debug);
+late_initcall(init_hlt_debug);

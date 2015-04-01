@@ -755,7 +755,7 @@ fail:
 	}
 	return ret;
 }
-deferred_init(wwan_init);
+late_initcall(wwan_init);
 
 void wwan_cleanup(void)
 {

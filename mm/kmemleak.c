@@ -1863,4 +1863,4 @@ static int __init kmemleak_late_init(void)
 
 	return 0;
 }
-deferred_init(kmemleak_late_init);
+late_initcall(kmemleak_late_init);

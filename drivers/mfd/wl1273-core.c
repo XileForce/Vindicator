@@ -283,7 +283,7 @@ static void __exit wl1273_core_exit(void)
 {
 	i2c_del_driver(&wl1273_core_driver);
 }
-deferred_init(wl1273_core_init);
+late_initcall(wl1273_core_init);
 module_exit(wl1273_core_exit);
 
 MODULE_AUTHOR("Matti Aaltonen <matti.j.aaltonen@nokia.com>");

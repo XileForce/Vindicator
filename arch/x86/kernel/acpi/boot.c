@@ -829,7 +829,7 @@ static __init int hpet_insert_resource(void)
 	return insert_resource(&iomem_resource, hpet_res);
 }
 
-deferred_init(hpet_insert_resource);
+late_initcall(hpet_insert_resource);
 
 #else
 #define	acpi_parse_hpet	NULL

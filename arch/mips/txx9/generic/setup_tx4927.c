@@ -337,4 +337,4 @@ static int __init tx4927_late_init(void)
 	tx4927_stop_unused_modules();
 	return 0;
 }
-deferred_init(tx4927_late_init);
+late_initcall(tx4927_late_init);

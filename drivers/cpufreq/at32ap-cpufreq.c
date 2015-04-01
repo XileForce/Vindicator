@@ -119,4 +119,4 @@ static int __init at32_cpufreq_init(void)
 {
 	return cpufreq_register_driver(&at32_driver);
 }
-deferred_init(at32_cpufreq_init);
+late_initcall(at32_cpufreq_init);

@@ -1586,4 +1586,4 @@ static int __init pm_qos_power_init(void)
 	return ret;
 }
 
-deferred_init(pm_qos_power_init);
+late_initcall(pm_qos_power_init);

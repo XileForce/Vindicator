@@ -452,7 +452,7 @@ static int __init evm_display_config(void)
 }
 
 pure_initcall(evm_display_config);
-deferred_init(init_evm);
+late_initcall(init_evm);
 
 MODULE_DESCRIPTION("Extended Verification Module");
 MODULE_LICENSE("GPL");

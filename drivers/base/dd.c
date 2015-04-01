@@ -213,7 +213,7 @@ static int deferred_probe_enable_fn(void)
 	enable_trigger_defer_cycle();
 	return 0;
 }
-deferred_init(deferred_probe_enable_fn);
+late_initcall(deferred_probe_enable_fn);
 
 static void driver_bound(struct device *dev)
 {

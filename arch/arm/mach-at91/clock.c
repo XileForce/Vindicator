@@ -953,7 +953,7 @@ static int __init at91_clock_reset(void)
 
 	return 0;
 }
-deferred_init(at91_clock_reset);
+late_initcall(at91_clock_reset);
 
 void at91sam9_idle(void)
 {

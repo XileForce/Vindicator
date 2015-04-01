@@ -685,7 +685,7 @@ static void __exit android_bat_exit(void)
 	platform_driver_unregister(&android_bat_driver);
 }
 
-deferred_init(android_bat_init);
+late_initcall(android_bat_init);
 module_exit(android_bat_exit);
 
 MODULE_DESCRIPTION("Android battery driver");

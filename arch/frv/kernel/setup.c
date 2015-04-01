@@ -865,7 +865,7 @@ static int setup_arch_serial(void)
 	return 0;
 } /* end setup_arch_serial() */
 
-deferred_init(setup_arch_serial);
+late_initcall(setup_arch_serial);
 #endif
 
 /*****************************************************************************/

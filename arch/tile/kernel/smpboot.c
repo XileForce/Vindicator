@@ -131,7 +131,7 @@ static __init int reset_init_affinity(void)
 		       rc);
 	return 0;
 }
-deferred_init(reset_init_affinity);
+late_initcall(reset_init_affinity);
 
 static struct cpumask cpu_started __cpuinitdata;
 

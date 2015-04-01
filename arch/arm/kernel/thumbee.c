@@ -79,4 +79,4 @@ static int __init thumbee_init(void)
 	return 0;
 }
 
-deferred_init(thumbee_init);
+late_initcall(thumbee_init);

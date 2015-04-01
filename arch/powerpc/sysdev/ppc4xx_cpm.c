@@ -336,7 +336,7 @@ out:
 	return ret;
 }
 
-deferred_init(cpm_init);
+late_initcall(cpm_init);
 
 static int __init cpm_powersave_off(char *arg)
 {

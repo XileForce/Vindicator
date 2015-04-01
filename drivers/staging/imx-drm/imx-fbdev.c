@@ -66,7 +66,7 @@ static void __exit imx_fb_helper_exit(void)
 	imx_drm_device_put();
 }
 
-deferred_init(imx_fb_helper_init);
+late_initcall(imx_fb_helper_init);
 module_exit(imx_fb_helper_exit);
 
 MODULE_DESCRIPTION("Freescale i.MX legacy fb driver");

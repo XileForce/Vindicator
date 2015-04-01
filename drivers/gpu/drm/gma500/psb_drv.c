@@ -687,7 +687,7 @@ static void __exit psb_exit(void)
 	drm_pci_exit(&driver, &psb_pci_driver);
 }
 
-deferred_init(psb_init);
+late_initcall(psb_init);
 module_exit(psb_exit);
 
 MODULE_AUTHOR("Alan Cox <alan@linux.intel.com> and others");

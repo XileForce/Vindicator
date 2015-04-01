@@ -1078,7 +1078,7 @@ static int __init ubd_init(void)
 	return 0;
 }
 
-deferred_init(ubd_init);
+late_initcall(ubd_init);
 
 static int __init ubd_driver_init(void){
 	unsigned long stack;

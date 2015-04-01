@@ -66,7 +66,7 @@ static int __init userimask_sysdev_init(void)
 
 	return device_create_file(intc_subsys.dev_root, &dev_attr_userimask);
 }
-deferred_init(userimask_sysdev_init);
+late_initcall(userimask_sysdev_init);
 
 int register_intc_userimask(unsigned long addr)
 {

@@ -245,5 +245,5 @@ int __init msi_bitmap_selftest(void)
 
 	return 0;
 }
-deferred_init(msi_bitmap_selftest);
+late_initcall(msi_bitmap_selftest);
 #endif /* CONFIG_MSI_BITMAP_SELFTEST */

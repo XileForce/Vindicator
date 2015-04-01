@@ -352,7 +352,7 @@ int __init make_proc_sysemu(void)
 	return 0;
 }
 
-deferred_init(make_proc_sysemu);
+late_initcall(make_proc_sysemu);
 
 int singlestepping(void * t)
 {

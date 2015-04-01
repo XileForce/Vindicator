@@ -1012,7 +1012,7 @@ static int __init msm_pm_drv_init(void)
 
 	return platform_driver_register(&msm_cpu_pm_driver);
 }
-deferred_init(msm_pm_drv_init);
+late_initcall(msm_pm_drv_init);
 
 void __init msm_pm_sleep_status_init(void)
 {

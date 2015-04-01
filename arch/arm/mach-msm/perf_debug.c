@@ -89,4 +89,4 @@ static int msm_perf_debugfs_init(void)
 init_exit:
 	return ret;
 }
-deferred_init(msm_perf_debugfs_init);
+late_initcall(msm_perf_debugfs_init);

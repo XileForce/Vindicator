@@ -89,4 +89,4 @@ static int __init tcp_fastopen_init(void)
 	return 0;
 }
 
-deferred_init(tcp_fastopen_init);
+late_initcall(tcp_fastopen_init);

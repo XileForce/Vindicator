@@ -434,7 +434,7 @@ static int __init init_machine_late(void)
 		machine_desc->init_late();
 	return 0;
 }
-deferred_init(init_machine_late);
+late_initcall(init_machine_late);
 
 #ifdef CONFIG_PROC_FS
 /*

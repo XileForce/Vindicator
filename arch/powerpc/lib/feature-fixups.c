@@ -371,6 +371,6 @@ static int __init test_feature_fixups(void)
 
 	return 0;
 }
-deferred_init(test_feature_fixups);
+late_initcall(test_feature_fixups);
 
 #endif /* CONFIG_FTR_FIXUP_SELFTEST */

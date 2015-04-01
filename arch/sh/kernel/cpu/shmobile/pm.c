@@ -153,4 +153,4 @@ static int __init sh_pm_init(void)
 	return sh_mobile_setup_cpuidle();
 }
 
-deferred_init(sh_pm_init);
+late_initcall(sh_pm_init);

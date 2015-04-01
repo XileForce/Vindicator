@@ -350,7 +350,7 @@ void __init exynos_init_late(void)
 		/* to be supported later */
 		return;
 
-	exynos_pm_deferred_init();
+	exynos_pm_late_initcall();
 }
 
 #ifdef CONFIG_OF

@@ -110,4 +110,4 @@ static int __init init(void)
 
 	return 0;
 }
-deferred_init(init);
+late_initcall(init);

@@ -515,4 +515,4 @@ static int cpu_boost_init(void)
 
 	return ret;
 }
-deferred_init(cpu_boost_init);
+late_initcall(cpu_boost_init);

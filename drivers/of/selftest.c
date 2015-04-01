@@ -225,4 +225,4 @@ static int __init of_selftest(void)
 	pr_info("end of selftest - %s\n", selftest_passed ? "PASS" : "FAIL");
 	return 0;
 }
-deferred_init(of_selftest);
+late_initcall(of_selftest);

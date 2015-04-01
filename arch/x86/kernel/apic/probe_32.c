@@ -50,7 +50,7 @@ static int __init print_ipi_mode(void)
 		no_broadcast ? "No-Shortcut" : "Shortcut");
 	return 0;
 }
-deferred_init(print_ipi_mode);
+late_initcall(print_ipi_mode);
 
 static int default_x86_32_early_logical_apicid(int cpu)
 {

@@ -2830,6 +2830,6 @@ static __init int event_trace_self_tests_init(void)
 	return 0;
 }
 
-deferred_init(event_trace_self_tests_init);
+late_initcall(event_trace_self_tests_init);
 
 #endif

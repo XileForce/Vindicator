@@ -216,4 +216,4 @@ int __exit exit_tracecounters(void)
 	unregister_cpu_notifier(&tracectr_cpu_hotplug_notifier_block);
 	return 0;
 }
-deferred_init(init_tracecounters);
+late_initcall(init_tracecounters);

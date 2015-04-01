@@ -490,7 +490,7 @@ static int __init boot_wait_for_devices(void)
 	return 0;
 }
 
-deferred_init(boot_wait_for_devices);
+late_initcall(boot_wait_for_devices);
 #endif
 
 MODULE_LICENSE("GPL");

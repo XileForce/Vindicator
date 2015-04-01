@@ -580,4 +580,4 @@ static int __init tx4939_late_init(void)
 	tx4939_stop_unused_modules();
 	return 0;
 }
-deferred_init(tx4939_late_init);
+late_initcall(tx4939_late_init);

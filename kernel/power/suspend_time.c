@@ -67,7 +67,7 @@ static int __init suspend_time_debug_init(void)
 	return 0;
 }
 
-deferred_init(suspend_time_debug_init);
+late_initcall(suspend_time_debug_init);
 #endif
 
 static int suspend_time_syscore_suspend(void)

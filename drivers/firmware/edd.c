@@ -797,5 +797,5 @@ edd_exit(void)
 	kset_unregister(edd_kset);
 }
 
-deferred_init(edd_init);
+late_initcall(edd_init);
 module_exit(edd_exit);

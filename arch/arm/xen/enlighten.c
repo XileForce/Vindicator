@@ -281,7 +281,7 @@ static int __init xen_pm_init(void)
 
 	return 0;
 }
-deferred_init(xen_pm_init);
+late_initcall(xen_pm_init);
 
 static irqreturn_t xen_arm_callback(int irq, void *arg)
 {

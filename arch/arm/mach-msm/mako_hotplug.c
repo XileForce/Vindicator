@@ -524,5 +524,5 @@ static void __exit mako_hotplug_exit(void)
 	platform_driver_unregister(&mako_hotplug_driver);
 }
 
-deferred_init(mako_hotplug_init);
+late_initcall(mako_hotplug_init);
 module_exit(mako_hotplug_exit);

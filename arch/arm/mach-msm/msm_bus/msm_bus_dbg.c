@@ -719,7 +719,7 @@ err:
 	debugfs_remove_recursive(dir);
 	return -ENODEV;
 }
-deferred_init(msm_bus_debugfs_init);
+late_initcall(msm_bus_debugfs_init);
 
 static void __exit msm_bus_dbg_teardown(void)
 {

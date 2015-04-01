@@ -99,7 +99,7 @@ static void __exit db8500_cpufreq_cooling_exit(void)
 }
 
 /* Should be later than db8500_cpufreq_register */
-deferred_init(db8500_cpufreq_cooling_init);
+late_initcall(db8500_cpufreq_cooling_init);
 module_exit(db8500_cpufreq_cooling_exit);
 
 MODULE_AUTHOR("Hongbo Zhang <hongbo.zhang@stericsson.com>");

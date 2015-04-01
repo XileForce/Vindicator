@@ -1049,4 +1049,4 @@ static int __init pb_keys_init(void)
 	}
 	return 0;
 }
-deferred_init(pb_keys_init);
+late_initcall(pb_keys_init);

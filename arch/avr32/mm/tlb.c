@@ -371,5 +371,5 @@ static int __init proctlb_init(void)
 	proc_create("tlb", 0, NULL, &proc_tlb_operations);
 	return 0;
 }
-deferred_init(proctlb_init);
+late_initcall(proctlb_init);
 #endif /* CONFIG_PROC_FS */

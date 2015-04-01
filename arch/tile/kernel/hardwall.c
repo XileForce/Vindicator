@@ -1090,4 +1090,4 @@ static int __init dev_hardwall_init(void)
 
 	return 0;
 }
-deferred_init(dev_hardwall_init);
+late_initcall(dev_hardwall_init);

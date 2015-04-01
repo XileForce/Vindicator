@@ -378,7 +378,7 @@ static int init_oops_id(void)
 
 	return 0;
 }
-deferred_init(init_oops_id);
+late_initcall(init_oops_id);
 
 void print_oops_end_marker(void)
 {

@@ -491,7 +491,7 @@ static int __init check_early_ioremap_leak(void)
 
 	return 1;
 }
-deferred_init(check_early_ioremap_leak);
+late_initcall(check_early_ioremap_leak);
 
 static void __init __iomem *
 __early_ioremap(resource_size_t phys_addr, unsigned long size, pgprot_t prot)

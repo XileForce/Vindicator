@@ -141,4 +141,4 @@ static int __init fpsimd_init(void)
 
 	return 0;
 }
-deferred_init(fpsimd_init);
+late_initcall(fpsimd_init);

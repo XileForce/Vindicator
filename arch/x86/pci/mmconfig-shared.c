@@ -687,7 +687,7 @@ static int __init pci_mmcfg_late_insert_resources(void)
  * misprogrammed MCFG tables that state larger sizes but actually conflict
  * with other system resources.
  */
-deferred_init(pci_mmcfg_late_insert_resources);
+late_initcall(pci_mmcfg_late_insert_resources);
 
 /* Add MMCFG information for host bridges */
 int pci_mmconfig_insert(struct device *dev, u16 seg, u8 start, u8 end,

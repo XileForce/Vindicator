@@ -386,5 +386,5 @@ void s3c64xx_restart(char mode, const char *cmd)
 
 void __init s3c64xx_init_late(void)
 {
-	s3c64xx_pm_deferred_init();
+	s3c64xx_pm_late_initcall();
 }

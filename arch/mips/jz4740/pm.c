@@ -50,4 +50,4 @@ static int __init jz4740_pm_init(void)
 	return 0;
 
 }
-deferred_init(jz4740_pm_init);
+late_initcall(jz4740_pm_init);

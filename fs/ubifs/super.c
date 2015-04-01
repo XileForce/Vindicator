@@ -2279,7 +2279,7 @@ out_shrinker:
 	return err;
 }
 /* late_initcall to let compressors initialize first */
-deferred_init(ubifs_init);
+late_initcall(ubifs_init);
 
 static void __exit ubifs_exit(void)
 {

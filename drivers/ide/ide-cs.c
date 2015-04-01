@@ -360,5 +360,5 @@ static void __exit exit_ide_cs(void)
 	pcmcia_unregister_driver(&ide_cs_driver);
 }
 
-deferred_init(init_ide_cs);
+late_initcall(init_ide_cs);
 module_exit(exit_ide_cs);

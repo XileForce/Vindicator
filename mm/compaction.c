@@ -1319,5 +1319,5 @@ static int  __init mem_compaction_init(void)
 	fb_register_client(&compact_notifier_block);
 	return 0;
 }
-deferred_init(mem_compaction_init);
+late_initcall(mem_compaction_init);
 #endif /* CONFIG_COMPACTION */

@@ -851,7 +851,7 @@ close_finish:
 	goto Finish;
 }
 
-deferred_init(software_resume);
+late_initcall(software_resume);
 
 
 static const char * const hibernation_modes[] = {

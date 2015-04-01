@@ -614,7 +614,7 @@ static void msm_cpufreq_limit_exit(void)
 
 }
 
-deferred_init(msm_cpufreq_limit_init);
+late_initcall(msm_cpufreq_limit_init);
 module_exit(msm_cpufreq_limit_exit);
 
 MODULE_AUTHOR("Dorimanx <yuri@bynet.co.il>");

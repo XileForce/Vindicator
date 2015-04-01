@@ -586,5 +586,5 @@ static void __exit rionet_exit(void)
 	rio_unregister_driver(&rionet_driver);
 }
 
-deferred_init(rionet_init);
+late_initcall(rionet_init);
 module_exit(rionet_exit);

@@ -177,4 +177,4 @@ int __init wakeup_reason_init(void)
 	return 0;
 }
 
-deferred_init(wakeup_reason_init);
+late_initcall(wakeup_reason_init);

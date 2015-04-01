@@ -90,4 +90,4 @@ static int register_slip(void)
 	return 0;
 }
 
-deferred_init(register_slip);
+late_initcall(register_slip);

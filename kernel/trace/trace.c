@@ -6614,4 +6614,4 @@ __init static int clear_boot_tracer(void)
 
 early_initcall(tracer_alloc_buffers);
 fs_initcall(tracer_init_debugfs);
-deferred_init(clear_boot_tracer);
+late_initcall(clear_boot_tracer);

@@ -220,7 +220,7 @@ static int __init init_nmi_wdt_syscore(void)
 
 	return 0;
 }
-deferred_init(init_nmi_wdt_syscore);
+late_initcall(init_nmi_wdt_syscore);
 
 #endif	/* CONFIG_PM */
 

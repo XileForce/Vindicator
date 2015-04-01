@@ -783,9 +783,9 @@ static __init int threshold_init_device(void)
  * so we use following _initcalls
  * 1. device_initcall(xen_late_init_mcelog);
  * 2. device_initcall_sync(mcheck_init_device);
- * 3. deferred_init(threshold_init_device);
+ * 3. late_initcall(threshold_init_device);
  *
  * when running under xen, the initcall order is 1,2,3;
  * on baremetal, we skip 1 and we do only 2 and 3.
  */
-deferred_init(threshold_init_device);
+late_initcall(threshold_init_device);

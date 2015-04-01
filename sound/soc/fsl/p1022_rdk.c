@@ -384,7 +384,7 @@ static void __exit p1022_rdk_exit(void)
 	platform_driver_unregister(&p1022_rdk_driver);
 }
 
-deferred_init(p1022_rdk_init);
+late_initcall(p1022_rdk_init);
 module_exit(p1022_rdk_exit);
 
 MODULE_AUTHOR("Timur Tabi <timur@freescale.com>");

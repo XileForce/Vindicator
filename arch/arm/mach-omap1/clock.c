@@ -974,8 +974,8 @@ static int __init clk_disable_unused(void)
 
 	return 0;
 }
-deferred_init(clk_disable_unused);
-deferred_init(omap_clk_enable_autoidle_all);
+late_initcall(clk_disable_unused);
+late_initcall(omap_clk_enable_autoidle_all);
 #endif
 
 #if defined(CONFIG_PM_DEBUG) && defined(CONFIG_DEBUG_FS)
@@ -1099,6 +1099,6 @@ err_out:
 	debugfs_remove_recursive(clk_debugfs_root);
 	return err;
 }
-deferred_init(clk_debugfs_init);
+late_initcall(clk_debugfs_init);
 
 #endif /* defined(CONFIG_PM_DEBUG) && defined(CONFIG_DEBUG_FS) */

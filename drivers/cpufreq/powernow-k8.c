@@ -1316,5 +1316,5 @@ MODULE_AUTHOR("Paul Devriendt <paul.devriendt@amd.com> and "
 MODULE_DESCRIPTION("AMD Athlon 64 and Opteron processor frequency driver.");
 MODULE_LICENSE("GPL");
 
-deferred_init(powernowk8_init);
+late_initcall(powernowk8_init);
 module_exit(powernowk8_exit);

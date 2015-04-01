@@ -751,7 +751,7 @@ static __init int uv_init_heartbeat(void)
 	return 0;
 }
 
-deferred_init(uv_init_heartbeat);
+late_initcall(uv_init_heartbeat);
 
 #endif /* !CONFIG_HOTPLUG_CPU */
 

@@ -992,5 +992,5 @@ MODULE_AUTHOR("Oracle");
 MODULE_LICENSE("GPL");
 
 #ifndef CONFIG_RAMSTER_MODULE
-deferred_init(r2nm_init);
+late_initcall(r2nm_init);
 #endif

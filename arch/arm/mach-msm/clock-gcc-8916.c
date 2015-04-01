@@ -2769,4 +2769,4 @@ static int __init msm_clock_debug_init(void)
 {
 	return platform_driver_register(&msm_clock_debug_driver);
 }
-deferred_init(msm_clock_debug_init);
+late_initcall(msm_clock_debug_init);

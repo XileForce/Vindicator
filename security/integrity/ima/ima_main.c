@@ -300,7 +300,7 @@ static int __init init_ima(void)
 	return error;
 }
 
-deferred_init(init_ima);	/* Start IMA after the TPM is available */
+late_initcall(init_ima);	/* Start IMA after the TPM is available */
 
 MODULE_DESCRIPTION("Integrity Measurement Architecture");
 MODULE_LICENSE("GPL");

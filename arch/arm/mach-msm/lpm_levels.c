@@ -1213,4 +1213,4 @@ static int __init lpm_levels_module_init(void)
 fail:
 	return rc;
 }
-deferred_init(lpm_levels_module_init);
+late_initcall(lpm_levels_module_init);

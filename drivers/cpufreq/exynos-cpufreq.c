@@ -329,4 +329,4 @@ err_vdd_arm:
 	pr_debug("%s: failed initialization\n", __func__);
 	return -EINVAL;
 }
-deferred_init(exynos_cpufreq_init);
+late_initcall(exynos_cpufreq_init);

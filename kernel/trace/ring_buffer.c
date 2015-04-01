@@ -4973,5 +4973,5 @@ static __init int test_ringbuffer(void)
 	return 0;
 }
 
-deferred_init(test_ringbuffer);
+late_initcall(test_ringbuffer);
 #endif /* CONFIG_RING_BUFFER_STARTUP_TEST */

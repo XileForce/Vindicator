@@ -119,4 +119,4 @@ static int __init sstate_running(void)
 	return 0;
 }
 
-deferred_init(sstate_running);
+late_initcall(sstate_running);

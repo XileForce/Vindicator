@@ -1044,7 +1044,7 @@ MODULE_PARM_DESC(acpi_pstate_strict,
 	"value 0 or non-zero. non-zero -> strict ACPI checks are "
 	"performed during frequency changes.");
 
-deferred_init(acpi_cpufreq_init);
+late_initcall(acpi_cpufreq_init);
 module_exit(acpi_cpufreq_exit);
 
 static const struct x86_cpu_id acpi_cpufreq_ids[] = {

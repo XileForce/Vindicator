@@ -142,7 +142,7 @@ static int __init tcp_congestion_default(void)
 {
 	return tcp_set_default_congestion_control(CONFIG_DEFAULT_TCP_CONG);
 }
-deferred_init(tcp_congestion_default);
+late_initcall(tcp_congestion_default);
 
 
 /* Build string with list of available congestion control values */

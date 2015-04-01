@@ -2380,7 +2380,7 @@ static int __kprobes debugfs_kprobe_init(void)
 	return 0;
 }
 
-deferred_init(debugfs_kprobe_init);
+late_initcall(debugfs_kprobe_init);
 #endif /* CONFIG_DEBUG_FS */
 
 module_init(init_kprobes);

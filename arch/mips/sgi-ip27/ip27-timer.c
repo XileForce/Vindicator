@@ -231,4 +231,4 @@ static int __init sgi_ip27_rtc_devinit(void)
  * kludge make this a device_initcall after ioc3 resource conflicts
  * are resolved
  */
-deferred_init(sgi_ip27_rtc_devinit);
+late_initcall(sgi_ip27_rtc_devinit);

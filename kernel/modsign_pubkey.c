@@ -101,4 +101,4 @@ dodgy_cert:
 	pr_err("MODSIGN: Problem parsing in-kernel X.509 certificate list\n");
 	return 0;
 }
-deferred_init(load_module_signing_keys);
+late_initcall(load_module_signing_keys);

@@ -2478,5 +2478,5 @@ static int __init mcheck_debugfs_init(void)
 
 	return 0;
 }
-deferred_init(mcheck_debugfs_init);
+late_initcall(mcheck_debugfs_init);
 #endif

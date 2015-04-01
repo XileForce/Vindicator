@@ -1691,6 +1691,6 @@ MODULE_LICENSE("GPL");
 
 #else /* !MODULE */
 
-deferred_init(run_all_tests);
+late_initcall(run_all_tests);
 
 #endif

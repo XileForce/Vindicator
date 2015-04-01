@@ -560,6 +560,6 @@ MODULE_AUTHOR("engstk <eng.stk@sapo.pt>");
 MODULE_DESCRIPTION("'dyn_hotplug' - A dynamic hotplug driver for mako / hammerhead / shamu (blu_plug)");
 MODULE_LICENSE("GPLv2");
 
-deferred_init(dyn_hp_init);
+late_initcall(dyn_hp_init);
 module_exit(dyn_hp_exit);
 

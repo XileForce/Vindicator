@@ -117,4 +117,4 @@ static int register_slirp(void)
 	return 0;
 }
 
-deferred_init(register_slirp);
+late_initcall(register_slirp);

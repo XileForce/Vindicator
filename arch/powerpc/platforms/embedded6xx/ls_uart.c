@@ -139,4 +139,4 @@ static int __init ls_uarts_init(void)
 	return 0;
 }
 
-machine_deferred_init(linkstation, ls_uarts_init);
+machine_late_initcall(linkstation, ls_uarts_init);

@@ -194,5 +194,5 @@ static int __init s3c_freq_debugfs_init(void)
 	return 0;
 }
 
-deferred_init(s3c_freq_debugfs_init);
+late_initcall(s3c_freq_debugfs_init);
 

@@ -728,7 +728,7 @@ static int __init arm_mrc_hook_init(void)
 	return 0;
 }
 
-deferred_init(arm_mrc_hook_init);
+late_initcall(arm_mrc_hook_init);
 
 #endif
 

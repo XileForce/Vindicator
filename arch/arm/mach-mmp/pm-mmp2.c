@@ -261,4 +261,4 @@ static int __init mmp2_pm_init(void)
 	return 0;
 }
 
-deferred_init(mmp2_pm_init);
+late_initcall(mmp2_pm_init);

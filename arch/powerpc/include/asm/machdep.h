@@ -345,7 +345,7 @@ static inline void log_error(char *buf, unsigned int err_type, int fatal)
 #define machine_rootfs_initcall(mach, fn)	__define_machine_initcall(mach, fn, rootfs)
 #define machine_device_initcall(mach, fn)	__define_machine_initcall(mach, fn, 6)
 #define machine_device_initcall_sync(mach, fn)	__define_machine_initcall(mach, fn, 6s)
-#define machine_deferred_init(mach, fn)		__define_machine_initcall(mach, fn, 7)
+#define machine_late_initcall(mach, fn)		__define_machine_initcall(mach, fn, 7)
 #define machine_late_initcall_sync(mach, fn)	__define_machine_initcall(mach, fn, 7s)
 
 #endif /* __KERNEL__ */

@@ -92,7 +92,7 @@ int __init mac_unregister_early_cons(void)
 	return unregister_console(&mac_early_cons);
 }
 
-deferred_init(mac_unregister_early_cons);
+late_initcall(mac_unregister_early_cons);
 #endif
 
 static void __init mac_sched_init(irq_handler_t vector)
