@@ -490,7 +490,20 @@ cat << CTAG
 						}
 					}},'
 				fi`
-				`if [ -f "/sys/module/workqueue/parameters/power_efficient" ]; then
+				`if [ -f "/sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy" ]; then
+				PAS=\`$BB cat /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy\`
+					$BB echo '{ SPane:{
+						title:"CPU Process Scheduling",
+						description:"Power Aware Scheduling will attempt to pack as many processes onto one core as possible. Stock is standard behavior."
+					}},
+					{ SOptionList:{
+						default:'$PAS',
+						action:"generic /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy",
+						values:{ performance:"Stock", powersaving:"Power-Aware"
+						}
+					}},'
+				fi`
+					`if [ -f "/sys/module/workqueue/parameters/power_efficient" ]; then
 				PE=\`bool /sys/module/workqueue/parameters/power_efficient\`
 					$BB echo '{ SPane:{
 						title:"Power-efficient Workqueues",
