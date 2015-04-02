@@ -169,16 +169,16 @@ static __ref void load_timer(struct work_struct *work)
  */
 static __ref void max_screenoff(bool screenoff)
 {
-	uint32_t cpu;
+	uint32_t cpu, freq;
 	
 	if (screenoff) {
 		max_freq_plug = cpufreq_quick_get_max(0);
-		freq = max_freq_screenoff;
+		freq = min(max_freq_screenoff, max_freq_plug);
 
 		cancel_delayed_work_sync(&dyn_work);
 		
 		for_each_possible_cpu(cpu) {
-			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, max_freq_screenoff);
+			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, freq);
 			
 			if (cpu && num_online_cpus() > max_cores_screenoff)
 				cpu_down(cpu);
@@ -191,7 +191,7 @@ static __ref void max_screenoff(bool screenoff)
 		up_all();
 		
 		for_each_possible_cpu(cpu) {
-			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, max_freq_plug);
+			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, freq);
 		}
 		cpufreq_update_policy(cpu);
 		
@@ -467,4 +467,3 @@ MODULE_LICENSE("GPLv2");
 
 late_initcall(dyn_hp_init);
 module_exit(dyn_hp_exit);
-
