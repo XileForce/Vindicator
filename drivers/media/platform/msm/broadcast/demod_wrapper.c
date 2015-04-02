@@ -2881,7 +2881,7 @@ static void __exit demod_wrapper_mod_exit(void) /* Destructor */
 	platform_driver_unregister(&demod_wrapper_driver);
 }
 
-deferred_module_init(demod_wrapper_mod_init);
+module_init(demod_wrapper_mod_init);
 module_exit(demod_wrapper_mod_exit);
 
 MODULE_DESCRIPTION("Demod Wrapper (demod_wrapper) Device Driver");
