@@ -1139,5 +1139,5 @@ EXPORT_SYMBOL(hostap_add_interface);
 EXPORT_SYMBOL(hostap_remove_interface);
 EXPORT_SYMBOL(prism2_update_comms_qual);
 
-deferred_module_init(hostap_init);
+module_init(hostap_init);
 module_exit(hostap_exit);
