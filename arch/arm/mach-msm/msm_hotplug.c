@@ -19,8 +19,11 @@
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/cpufreq.h>
+#ifdef CONFIG_STATE_NOTIFIER
+#include <linux/state_notifier.h>
+#else
 #include <linux/fb.h>
-#include <linux/notifier.h>
+#endif
 #include <linux/mutex.h>
 #include <linux/input.h>
 #include <linux/math64.h>
@@ -336,8 +339,7 @@ static void cpu_down_work(struct work_struct *work)
 			continue;
 		lowest_cpu = get_lowest_load_cpu();
 		if (lowest_cpu > 0 && lowest_cpu <= stats.total_cpus) {
-			if (check_down_lock(lowest_cpu) ||
-			    check_cpuboost(lowest_cpu))
+			if (check_down_lock(lowest_cpu))
 				break;
 			cpu_down(lowest_cpu);
 		}
@@ -475,9 +477,6 @@ static void msm_hotplug_suspend(struct work_struct *work)
 {
 	int cpu;
 
-	if (!hotplug.msm_enabled)
-		return;
-
 	mutex_lock(&hotplug.msm_hotplug_mutex);
 	hotplug.suspended = 1;
 	hotplug.min_cpus_online_res = hotplug.min_cpus_online;
@@ -506,9 +505,6 @@ static void __ref msm_hotplug_resume(struct work_struct *work)
 {
 	int cpu, required_reschedule = 0, required_wakeup = 0;
 
-	if (!hotplug.msm_enabled)
-		return;
-
 	if (hotplug.suspended) {
 		mutex_lock(&hotplug.msm_hotplug_mutex);
 		hotplug.suspended = 0;
@@ -523,7 +519,7 @@ static void __ref msm_hotplug_resume(struct work_struct *work)
 		}
 	}
 
-	if (wakeup_boost || required_wakeup) {
+	if (required_wakeup) {
 		/* Fire up all CPUs */
 		for_each_cpu_not(cpu, cpu_online_mask) {
 			if (cpu == 0)
@@ -540,6 +536,9 @@ static void __ref msm_hotplug_resume(struct work_struct *work)
 
 static void __msm_hotplug_suspend(void)
 {
+	if (!hotplug.msm_enabled || hotplug.suspended)
+		return;
+
 	INIT_DELAYED_WORK(&hotplug.suspend_work, msm_hotplug_suspend);
 	queue_delayed_work_on(0, susp_wq, &hotplug.suspend_work, 
 				 msecs_to_jiffies(hotplug.suspend_defer_time * 1000)); 
@@ -547,10 +546,33 @@ static void __msm_hotplug_suspend(void)
 
 static void __msm_hotplug_resume(void)
 {
+	if (!hotplug.msm_enabled)
+		return;
+
 	flush_workqueue(susp_wq);
 	cancel_delayed_work_sync(&hotplug.suspend_work);
 	queue_work_on(0, susp_wq, &hotplug.resume_work);
 }
+
+#ifdef CONFIG_STATE_NOTIFIER
+static int state_notifier_callback(struct notifier_block *this,
+				unsigned long event, void *data)
+{
+	switch (event) {
+		case STATE_NOTIFIER_ACTIVE:
+			__msm_hotplug_resume();
+			break;
+		case STATE_NOTIFIER_SUSPEND:
+			__msm_hotplug_suspend();
+			break;
+		default:
+			break;
+	}
+
+	return NOTIFY_OK;
+}
+#else
+static int prev_fb = FB_BLANK_UNBLANK;
 
 static int fb_notifier_callback(struct notifier_block *self,
 				unsigned long event, void *data)
@@ -562,21 +584,23 @@ static int fb_notifier_callback(struct notifier_block *self,
 		blank = evdata->data;
 		switch (*blank) {
 			case FB_BLANK_UNBLANK:
-				//display on
-				__msm_hotplug_resume();
+				if (prev_fb == FB_BLANK_POWERDOWN) {
+					__msm_hotplug_resume();
+					prev_fb = FB_BLANK_UNBLANK;
+				}
 				break;
 			case FB_BLANK_POWERDOWN:
-			case FB_BLANK_HSYNC_SUSPEND:
-			case FB_BLANK_VSYNC_SUSPEND:
-			case FB_BLANK_NORMAL:
-				//display off
-				__msm_hotplug_suspend();
+				if (prev_fb == FB_BLANK_UNBLANK) {
+					__msm_hotplug_suspend();
+					prev_fb = FB_BLANK_POWERDOWN;
+				}
 				break;
 		}
 	}
 
-	return 0;
+	return NOTIFY_OK;
 }
+#endif
 
 static void hotplug_input_event(struct input_handle *handle, unsigned int type,
 				unsigned int code, int value)
@@ -692,7 +716,21 @@ static int __ref msm_hotplug_start(void)
 		goto err_out;
 	}
 
+#ifdef CONFIG_STATE_NOTIFIER
+	hotplug.notif.notifier_call = state_notifier_callback;
+	if (state_register_client(&hotplug.notif)) {
+		pr_err("%s: Failed to register State notifier callback\n",
+			MSM_HOTPLUG);
+		goto err_dev;
+	}
+#else
 	hotplug.notif.notifier_call = fb_notifier_callback;
+	if (fb_register_client(&hotplug.notif)) {
+		pr_err("%s: Failed to register FB notifier callback\n",
+			MSM_HOTPLUG);
+		goto err_dev;
+	}
+#endif
 
 	ret = input_register_handler(&hotplug_input_handler);
 	if (ret) {
@@ -761,6 +799,11 @@ static void msm_hotplug_stop(void)
 	mutex_destroy(&stats.stats_mutex);
 	kfree(stats.load_hist);
 
+#ifdef CONFIG_STATE_NOTIFIER
+	state_unregister_client(&hotplug.notif);
+#else
+	fb_unregister_client(&hotplug.notif);
+#endif
 	hotplug.notif.notifier_call = NULL;
 	input_unregister_handler(&hotplug_input_handler);
 
