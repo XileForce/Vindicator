@@ -707,7 +707,7 @@ static void __exit demod_module_exit(void)
 }
 
 
-deferred_module_init(demod_module_init);
+module_init(demod_module_init);
 module_exit(demod_module_exit);
 
 MODULE_DESCRIPTION("DEMOD (Internal demodulator) platform device driver");
