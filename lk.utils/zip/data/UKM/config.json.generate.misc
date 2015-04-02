@@ -146,6 +146,18 @@ cat << CTAG
 						action:"generic /sys/vibrator/pwmvalue"
 					}},'
 			fi`
+			`if [ -f "/sys/module/state_notifier/parameters/use_fb_notifier" ]; then
+			SN=\`bool /sys/module/state_notifier/parameters/use_fb_notifier\`
+				$BB echo '{ SPane:{
+					title:"Framebuffer Notifiers"
+				}},
+					{ SCheckBox:{
+						label:"Use FB notifiers (Experimental)",
+						description:"If enabled, many drivers like hotplug, cpu-boost and limiter driver will use FB notifiers instead of State notifers. FB notifiers are useful only when Ambient mode is enabled and will contribute to power conservation by preventing calls to resume routines after suspend if screen is turned on due to Ambient mode notifications.",
+						default:'$SN',
+						action:"boolean /sys/module/state_notifier/parameters/use_fb_notifier"
+					}},'
+			fi`
 			`if [ -f "/sys/kernel/fast_charge/force_fast_charge" ] && [ ! -f "/sys/kernel/fast_charge/fast_charge_level" ]; then
 			FC=\`$BB cat /sys/kernel/fast_charge/force_fast_charge\`
 				$BB echo '{ SPane:{
