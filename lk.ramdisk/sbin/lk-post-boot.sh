@@ -38,6 +38,10 @@ chmod 755 /data/data/leankernel
 # Default MPDecision OFF!
 stop mpdecision
 
+# Permissive By Default.
+touch $lkdata/selinux_permissive
+echo 0 > /sys/fs/selinux/enforce
+
 # Make Sure Min Frequency Starts At 35 And Max At 2649 From Boot Just To Be Safe
 echo > 35800 /sys/kernel/msm_limiter/suspend_min_freq_0
 echo > 35800 /sys/kernel/msm_limiter/suspend_min_freq_1
