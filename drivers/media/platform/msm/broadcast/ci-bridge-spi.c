@@ -508,7 +508,7 @@ static void __exit ci_bridge_exit(void)
 	spi_unregister_driver(&ci_bridge_driver);
 }
 
-deferred_module_init(ci_bridge_init);
+module_init(ci_bridge_init);
 module_exit(ci_bridge_exit);
 
 MODULE_DESCRIPTION("CI Bridge SPI Driver");
