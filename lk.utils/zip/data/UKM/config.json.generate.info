@@ -89,16 +89,10 @@ cat << CTAG
 				}
 			}},
 				{ SDescription:{
-					description:"ACPU PVS:`$BB cat $UKM/debug/pvs_bin`"
+					description:"ACPU PVS:`$BB cat /proc/cpu/msm_acpu_pvs`"
 				}},
 				{ SDescription:{
 					description:"The higher value of the binning, the lower voltages your device can run."
-				}},
-				{ SDescription:{
-					description:"SPEED BIN:`$BB cat $UKM/debug/speed_bin`"
-				}},
-				{ SDescription:{
-					description:"The higher value of the speed, the higher frequencies your device can run."
 				}},
 			{ STitleBar:{
 				title:{
