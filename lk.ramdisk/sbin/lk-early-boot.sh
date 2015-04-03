@@ -9,3 +9,7 @@ SFILE="/sys/fs/selinux/enforce"
 CFILE="/data/data/leankernel/allow_maxdown"
 SFILE="/sys/module/msm_thermal/parameters/full_fm"
 [ -f $CFILE ] && echo `cat $CFILE` > $SFILE
+
+# Permissive By Default.
+touch $lkdata/selinux_permissive
+echo 0 > /sys/fs/selinux/enforce

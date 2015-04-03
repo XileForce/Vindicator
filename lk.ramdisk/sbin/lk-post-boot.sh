@@ -38,10 +38,6 @@ chmod 755 /data/data/leankernel
 # Default MPDecision OFF!
 stop mpdecision
 
-# Permissive By Default.
-touch $lkdata/selinux_permissive
-echo 0 > /sys/fs/selinux/enforce
-
 # Allow untrusted apps to read from debugfs
 if [ -e /system/lib/libsupol.so ]; then
 /system/xbin/supolicy --live \
