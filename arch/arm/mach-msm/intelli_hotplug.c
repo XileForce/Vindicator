@@ -18,13 +18,16 @@
 #include <linux/slab.h>
 #include <linux/input.h>
 #include <linux/kobject.h>
+#ifdef CONFIG_STATE_NOTIFIER
+#include <linux/state_notifier.h>
+#else
 #include <linux/fb.h>
-#include <linux/notifier.h>
+#endif
 #include <linux/cpufreq.h>
 
 #define INTELLI_PLUG			"intelli_plug"
 #define INTELLI_PLUG_MAJOR_VERSION	5
-#define INTELLI_PLUG_MINOR_VERSION	0
+#define INTELLI_PLUG_MINOR_VERSION	1
 
 #define DEF_SAMPLING_MS			268
 #define RESUME_SAMPLING_MS		HZ / 10
@@ -40,7 +43,9 @@
 #define DEFAULT_MAX_CPUS_ONLINE_SUSP	1
 
 #define CAPACITY_RESERVE		50
-#if defined(CONFIG_ARCH_MSM8960) || defined(CONFIG_ARCH_APQ8064) || \
+#if defined(CONFIG_ARCH_APQ8084) || defined(CONFIG_ARM64)
+#define THREAD_CAPACITY (430 - CAPACITY_RESERVE)
+#elif defined(CONFIG_ARCH_MSM8960) || defined(CONFIG_ARCH_APQ8064) || \
 defined(CONFIG_ARCH_MSM8974)
 #define THREAD_CAPACITY			(339 - CAPACITY_RESERVE)
 #elif defined(CONFIG_ARCH_MSM8226) || defined (CONFIG_ARCH_MSM8926) || \
@@ -245,7 +250,7 @@ static void __ref cpu_up_down_work(struct work_struct *work)
 		for_each_online_cpu(cpu) {
 			if (cpu == 0)
 				continue;
-			if (check_down_lock(cpu) || check_cpuboost(cpu))
+			if (check_down_lock(cpu))
 				break;
 			l_nr_threshold =
 				cpu_nr_run_threshold << 1 / (num_online_cpus());
@@ -286,9 +291,6 @@ static void intelli_plug_suspend(struct work_struct *work)
 {
 	int cpu = 0;
 
-	if (atomic_read(&intelli_plug_active) == 0)
-		return;
-
 	mutex_lock(&intelli_plug_mutex);
 	hotplug_suspended = true;
 	min_cpus_online_res = min_cpus_online;
@@ -318,9 +320,6 @@ static void __ref intelli_plug_resume(struct work_struct *work)
 {
 	int cpu, required_reschedule = 0, required_wakeup = 0;
 
-	if (atomic_read(&intelli_plug_active) == 0)
-		return;
-
 	if (hotplug_suspended) {
 		mutex_lock(&intelli_plug_mutex);
 		hotplug_suspended = false;
@@ -336,7 +335,7 @@ static void __ref intelli_plug_resume(struct work_struct *work)
 		}
 	}
 
-	if (wakeup_boost || required_wakeup) {
+	if (required_wakeup) {
 		/* Fire up all CPUs */
 		for_each_cpu_not(cpu, cpu_online_mask) {
 			if (cpu == 0)
@@ -354,6 +353,10 @@ static void __ref intelli_plug_resume(struct work_struct *work)
 
 static void __intelli_plug_suspend(void)
 {
+	if ((atomic_read(&intelli_plug_active) == 0) ||
+		hotplug_suspended)
+		return;
+
 	INIT_DELAYED_WORK(&suspend_work, intelli_plug_suspend);
 	queue_delayed_work_on(0, susp_wq, &suspend_work, 
 				 msecs_to_jiffies(suspend_defer_time * 1000)); 
@@ -361,10 +364,33 @@ static void __intelli_plug_suspend(void)
 
 static void __intelli_plug_resume(void)
 {
+	if (atomic_read(&intelli_plug_active) == 0)
+		return;
+
 	flush_workqueue(susp_wq);
 	cancel_delayed_work_sync(&suspend_work);
 	queue_work_on(0, susp_wq, &resume_work);
 }
+
+#ifdef CONFIG_STATE_NOTIFIER
+static int state_notifier_callback(struct notifier_block *this,
+				unsigned long event, void *data)
+{
+	switch (event) {
+		case STATE_NOTIFIER_ACTIVE:
+			__intelli_plug_resume();
+			break;
+		case STATE_NOTIFIER_SUSPEND:
+			__intelli_plug_suspend();
+			break;
+		default:
+			break;
+	}
+
+	return NOTIFY_OK;
+}
+#else
+static int prev_fb = FB_BLANK_UNBLANK;
 
 static int fb_notifier_callback(struct notifier_block *self,
 				unsigned long event, void *data)
@@ -376,21 +402,23 @@ static int fb_notifier_callback(struct notifier_block *self,
 		blank = evdata->data;
 		switch (*blank) {
 			case FB_BLANK_UNBLANK:
-				//display on
-				__intelli_plug_resume();
+				if (prev_fb == FB_BLANK_POWERDOWN) {
+					__intelli_plug_resume();
+					prev_fb = FB_BLANK_UNBLANK;
+				}
 				break;
 			case FB_BLANK_POWERDOWN:
-			case FB_BLANK_HSYNC_SUSPEND:
-			case FB_BLANK_VSYNC_SUSPEND:
-			case FB_BLANK_NORMAL:
-				//display off
-				__intelli_plug_suspend();
+				if (prev_fb == FB_BLANK_UNBLANK) {
+					__intelli_plug_suspend();
+					prev_fb = FB_BLANK_POWERDOWN;
+				}
 				break;
 		}
 	}
 
-	return 0;
+	return NOTIFY_OK;
 }
+#endif
 
 static void intelli_plug_input_event(struct input_handle *handle,
 		unsigned int type, unsigned int code, int value)
@@ -504,7 +532,21 @@ static int __ref intelli_plug_start(void)
 		goto err_out;
 	}
 
+#ifdef CONFIG_STATE_NOTIFIER
+	notif.notifier_call = state_notifier_callback;
+	if (state_register_client(&notif)) {
+		pr_err("%s: Failed to register State notifier callback\n",
+			INTELLI_PLUG);
+		goto err_dev;
+	}
+#else
 	notif.notifier_call = fb_notifier_callback;
+	if (fb_register_client(&notif)) {
+		pr_err("%s: Failed to register FB notifier callback\n",
+			INTELLI_PLUG);
+		goto err_dev;
+	}
+#endif
 
 	ret = input_register_handler(&intelli_plug_input_handler);
 	if (ret) {
@@ -560,6 +602,11 @@ static void intelli_plug_stop(void)
 	cancel_work_sync(&up_down_work);
 	cancel_delayed_work_sync(&intelli_plug_work);
 	mutex_destroy(&intelli_plug_mutex);
+#ifdef CONFIG_STATE_NOTIFIER
+	state_unregister_client(&notif);
+#else
+	fb_unregister_client(&notif);
+#endif
 	notif.notifier_call = NULL;
 
 	input_unregister_handler(&intelli_plug_input_handler);
@@ -740,7 +787,7 @@ static ssize_t store_max_cpus_online_susp(struct kobject *kobj,
 
 #define KERNEL_ATTR_RW(_name) \
 static struct kobj_attribute _name##_attr = \
-	__ATTR(_name, 0644, show_##_name, store_##_name)
+	__ATTR(_name, 0664, show_##_name, store_##_name)
 
 KERNEL_ATTR_RW(intelli_plug_active);
 KERNEL_ATTR_RW(cpus_boosted);
