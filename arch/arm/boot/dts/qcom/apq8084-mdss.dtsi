@@ -37,7 +37,7 @@
 		qcom,max-bandwidth-low-kbps = <6000000>;
 		qcom,max-bandwidth-high-kbps = <6000000>;
 		qcom,max-bandwidth-per-pipe-kbps = <1500000>;
-		qcom,max-clk-rate = <320000000>;
+		qcom,max-clk-rate = <250000000>;
 
 		qcom,mdss-pipe-vig-off = <0x00001200 0x00001600
 					  0x00001A00 0x00001E00>;
