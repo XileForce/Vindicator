@@ -87,5 +87,3 @@ obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_FW_UPDATE_MMI) += synaptics_dsx_fw_update
 obj-$(CONFIG_WAKE_GESTURES)		+= wake_gestures.o
 obj-y += touchboost.o
 obj-$(CONFIG_STATE_NOTIFIER)		+= state_notifier.o
-obj-$(CONFIG_TOUCHSCREEN_TOUCHX)        += touchx.o
-
