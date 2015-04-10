@@ -1,2 +1,3 @@
-# ZenKernel_Shamu
-Zen Kernel for the Moto Nexus 6
+# Vindicator-Rebase
+Forked From ZenKernel
+
