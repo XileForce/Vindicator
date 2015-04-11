@@ -1,0 +1,53 @@
+ui_print(" ");
+ui_print(" ___    ______       _____________             _____               " );  
+ui_print(" __ |  / /__(_)____________  /__(_)___________ __  /______________ ");
+ui_print(" __ | / /__  /__  __ \  __  /__  /_  ___/  __ \/  __/  __ \_  ___/ ");
+ui_print(" __ |/ / _  / _  / / / /_/ / _  / / /__ / /_/ // /_ / /_/ /  /     ");
+ui_print(" _____/  /_/  /_/ /_/\__,_/  /_/  \___/ \__,_/\\__/ \____//_/      " );                                                           
+ui_print(" ");
+show_progress(1.000000, 0);
+ui_print("Mounting filesystems...");
+run_program("/sbin/busybox", "mount", "/data");
+run_program("/sbin/busybox", "mount", "/system");
+set_progress(0.100000);
+
+ui_print("Deleting old files...");
+delete_recursive("/data/N4UKM", "/data/UKM");
+delete("/system/etc/init.d/N4UKM", "/system/etc/init.d/UKM", "/system/etc/init.d/UKM_WAKE", "/system/xbin/uci", "/system/addon.d/UKM.sh");
+set_progress(0.300000);
+
+ui_print("Extracting files...");
+package_extract_dir("data", "/data");
+ui_print("Installing UKM...");
+run_program("/sbin/sh", "-c", "mkdir /system/etc/init.d");
+run_program("/sbin/sh", "-c", "mkdir /system/addon.d");
+set_perm_recursive(0, 0, 0755, 0755, "/system/etc/init.d");
+set_perm_recursive(0, 0, 0755, 0755, "/system/addon.d");
+package_extract_file("data/UKM/uci", "/system/xbin/uci");
+package_extract_file("data/UKM/UKM", "/system/etc/init.d/UKM");
+package_extract_file("data/UKM/UKM.sh", "/system/addon.d/UKM.sh");
+set_progress(0.500000);
+
+ui_print("Setting permissions...");
+set_perm_recursive(0, 0, 0755, 0755, "/data/UKM");
+set_perm(0, 0, 0755, "/system/xbin/uci");
+set_perm(0, 0, 0755, "/system/etc/init.d/UKM");
+set_perm(0, 0, 0755, "/system/addon.d/UKM.sh");
+set_progress(0.700000);
+
+# Unmounting filesystems...
+run_program("/sbin/busybox", "umount", "/data");
+run_program("/sbin/busybox", "umount", "/system");
+set_progress(0.900000);
+ui_print("Flashing Kernel Image...");
+package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
+show_progress(0.200000, 10);
+
+set_progress(1.000000);
+ui_print("****************************************");
+ui_print("*          Install Complete            *");
+ui_print("*        Control With Synapse          *");
+ui_print("****************************************");
+ui_print("*       Universal Kernel Manager       *");
+ui_print("*         Created by apb_axel          *");
+ui_print("****************************************");
