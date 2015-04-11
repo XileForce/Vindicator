@@ -339,7 +339,8 @@ static void cpu_down_work(struct work_struct *work)
 			continue;
 		lowest_cpu = get_lowest_load_cpu();
 		if (lowest_cpu > 0 && lowest_cpu <= stats.total_cpus) {
-			if (check_down_lock(lowest_cpu))
+			if (check_down_lock(lowest_cpu) ||
+			    check_cpuboost(lowest_cpu))
 				break;
 			cpu_down(lowest_cpu);
 		}
@@ -519,7 +520,7 @@ static void __ref msm_hotplug_resume(struct work_struct *work)
 		}
 	}
 
-	if (required_wakeup) {
+	if (wakeup_boost || required_wakeup) {
 		/* Fire up all CPUs */
 		for_each_cpu_not(cpu, cpu_online_mask) {
 			if (cpu == 0)
