@@ -241,8 +241,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOSTCXXFLAGS = -O2
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer
+HOSTCXXFLAGS = -O3
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -347,12 +347,12 @@ CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 		  
-GRAPHITE = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize
-CFLAGS_MODULE   = $(GRAPHITE)
-AFLAGS_MODULE   = $(GRAPHITE)
-LDFLAGS_MODULE  = $(GRAPHITE)
-CFLAGS_KERNEL	= $(GRAPHITE)
-AFLAGS_KERNEL	= $(GRAPHITE)
+GRAPHITE = -fgraphite-identity -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize
+CFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
+AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
+LDFLAGS_MODULE  = $(GRAPHITE) -DMODULE -DNDEBUG
+CFLAGS_KERNEL	= $(GRAPHITE) -DNDEBUG
+AFLAGS_KERNEL	= $(GRAPHITE) -DNDEBUG
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
 
@@ -375,13 +375,13 @@ LINUXINCLUDE    := \
 
 KBUILD_CPPFLAGS := -D__KERNEL__
 
-KBUILD_CFLAGS   := $(GRAPHITE) -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+KBUILD_CFLAGS   := $(GRAPHITE) -Wall -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fstrict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security -marm -funsafe-math-optimizations \
-                   -mtune=cortex-a15 \
-                   -fmodulo-sched -fmodulo-sched-allow-regmoves \
-                   -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
+           -mtune=cortex-a15 -finline-functions \
+           -fmodulo-sched -fmodulo-sched-allow-regmoves \
+           -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
 		   -fno-aggressive-loop-optimizations \
 		   -fno-delete-null-pointer-checks
 KBUILD_AFLAGS_KERNEL :=
