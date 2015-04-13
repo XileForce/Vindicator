@@ -38,6 +38,10 @@ chmod 755 /data/data/leankernel
 # Default MPDecision OFF!
 stop mpdecision
 
+# Set CPUFreq Post-Boot To Prevent Issues
+echo > 35800 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo > 2649600 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
 # Allow untrusted apps to read from debugfs
 if [ -e /system/lib/libsupol.so ]; then
 /system/xbin/supolicy --live \
@@ -59,16 +63,6 @@ if [ -e /system/lib/libsupol.so ]; then
 	"allow atfwd property_socket sock_file write" \
 	"allow debuggerd app_data_file dir search"
 fi;
-
-# Make Sure Min Frequency Starts At 35 And Max At 2649 From Boot Just To Be Safe
-echo > 35800 /sys/kernel/msm_limiter/suspend_min_freq_0
-echo > 35800 /sys/kernel/msm_limiter/suspend_min_freq_1
-echo > 35800 /sys/kernel/msm_limiter/suspend_min_freq_2
-echo > 35800 /sys/kernel/msm_limiter/suspend_min_freq_3
-echo > 2649600 /sys/kernel/msm_limiter/resume_max_freq_0
-echo > 2649600 /sys/kernel/msm_limiter/resume_max_freq_1
-echo > 2649600 /sys/kernel/msm_limiter/resume_max_freq_2
-echo > 2649600 /sys/kernel/msm_limiter/resume_max_freq_3
 
 #
 # lkconfig settings below
