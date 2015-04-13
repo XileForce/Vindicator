@@ -89,11 +89,11 @@ case $option in
 	read select
 	case $select in
 	  1) 
-		[ $minfreq -lt 300000 ] && echo -n "Enter 0 (223mhz/default), 1 (300mhz), 2 (422mhz), 3 (653mhz):" || \
+		[ $minfreq -lt 300000 ] && echo -n "Enter 0 (35mhz/default), 1 (300mhz), 2 (422mhz), 3 (653mhz):" || \
 			echo -n "Enter 1 (300mhz/default), 2 (422mhz), 3 (653mhz):"
 		read value
 		case $value in
-		  0) FREQ=223200;;
+		  0) FREQ=35800;;
 		  1) FREQ=300000;;
 		  2) FREQ=422400;;
 		  3) FREQ=652800;;

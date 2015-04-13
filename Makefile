@@ -347,11 +347,11 @@ CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 		  
-GRAPHITE = -fgraphite-identity -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize
+GRAPHITE = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize
 CFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 LDFLAGS_MODULE  = $(GRAPHITE) -DMODULE -DNDEBUG
-CFLAGS_KERNEL	= $(GRAPHITE) -DNDEBUG
+CFLAGS_KERNEL	= $(GRAPHITE) -DNDEBUG -fsingle-precision-constant
 AFLAGS_KERNEL	= $(GRAPHITE) -DNDEBUG
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -378,11 +378,12 @@ KBUILD_CPPFLAGS := -D__KERNEL__
 KBUILD_CFLAGS   := $(GRAPHITE) -Wall -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fstrict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
+		   -funroll-loops -ftree-loop-im -ftree-loop-ivcanon \
 		   -Wno-format-security -marm -funsafe-math-optimizations \
-           -mtune=cortex-a15 -finline-functions \
+           -mtune=cortex-a15 -finline-functions -ftree-partial-pre -falign-functions -falign-jumps -falign-loops \
            -fmodulo-sched -fmodulo-sched-allow-regmoves \
            -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
-		   -fno-aggressive-loop-optimizations \
+		   -fno-aggressive-loop-optimizations -fsingle-precision-constant \
 		   -fno-delete-null-pointer-checks
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=

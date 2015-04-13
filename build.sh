@@ -4,7 +4,7 @@ sdir="/home/ryan/Kernels/VindicatorRB"
 udir="/home/ryan/Kernels/VindicatorRB/utils"
 outdir="/home/ryan/Kernels/Vindicator_Out"
 device="shamu"
-cc="/home/ryan/VChain/bin/arm-eabi-"
+cc="/home/ryan/arm-eabi-5.0/bin/arm-eabi-"
 filename="Vindicator.2.1.zip"
 
 compile() {
