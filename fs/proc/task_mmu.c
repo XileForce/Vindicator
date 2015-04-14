@@ -187,9 +187,8 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
 	struct proc_maps_private *priv = m->private;
 	unsigned long last_addr = m->version;
 	struct mm_struct *mm;
+	struct vm_area_struct *vma;
 	unsigned int pos = *ppos;
-	struct vm_area_struct *vma, *tail_vma = NULL;
-	loff_t l = *pos;
 
 	/* Clear the per syscall fields in priv */
 	priv->task = NULL;
@@ -201,7 +200,6 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
 	 * the beginning and also after lseek. We will have -1 last_addr
 	 * after the end of the vmas.
 	 */
-
 	/* See m_cache_vma(). Zero at the start or after lseek. */
 	if (last_addr == -1UL)
 		return NULL;
