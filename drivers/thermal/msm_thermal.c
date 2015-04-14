@@ -40,6 +40,7 @@
 #include <soc/qcom/rpm-smd.h>
 #include <soc/qcom/scm.h>
 #include <linux/moduleparam.h>
+#include "lk_thermal.h"
 
 #define MAX_RAILS 5
 #define MAX_THRESHOLD 2
@@ -1667,8 +1668,8 @@ static __ref int do_freq_mitigation(void *data)
 			min_freq_req = max(min_freq_limit,
 					cpus[cpu].user_min_freq);
 
-			if (cpus[cpu].limited_max_freq > 2649600)
-				cpus[cpu].limited_max_freq = 2649600;
+			if (cpus[cpu].limited_max_freq > LK_MAXFREQ)
+				cpus[cpu].limited_max_freq = LK_MAXFREQ;
 
 			if (skip_mitig && cpus[cpu].limited_max_freq &&
 				cpus[cpu].limited_max_freq > max_freq_req) {
