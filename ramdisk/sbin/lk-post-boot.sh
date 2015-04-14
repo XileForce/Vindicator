@@ -39,18 +39,16 @@ chmod 755 /data/data/leankernel
 stop mpdecision
 
 # Set CPUFreq Post-Boot To Prevent Issues
-f1="/sys/devices/system/cpu/cpu"
-f2="/cpufreq/scaling_min_freq"
-f3="/cpufreq/scaling_max_freq"
-lkdata="/data/data/leankernel"
-echo 2649600 > $lkdata/maxfreq
-echo 2649600 > ${f1}0${f3}
-for i in 1 2 3; do
-	[ -f $f1$i$f3 ] && echo 2649600 > $f1$i$f3
-echo 35800 > $lkdata/minfreq
-echo 35800 > ${f1}0${f2}
-for i in 1 2 3; do
-	[ -f $f1$i$f2 ] && echo 35800 > $f1$i$f2
+echo 2649600 > /data/data/leankernel/maxfreq
+echo 2649600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo 2649600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+echo 2649600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+echo 2649600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+echo 35800 > /data/data/leankernel/minfreq
+echo 35800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo 35800 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo 35800 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+echo 35800 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
 
 # Allow untrusted apps to read from debugfs
 if [ -e /system/lib/libsupol.so ]; then
