@@ -381,10 +381,8 @@ KBUILD_CFLAGS   := $(GRAPHITE) -Wall -pipe -pthread -DNDEBUG -Wundef -Wstrict-pr
            -mtune=cortex-a15 \
            -fmodulo-sched -fmodulo-sched-allow-regmoves \
 		   -fgcse-after-reload \
-		   -fno-aggressive-loop-optimizations -fsingle-precision-constant \
+		   -fsingle-precision-constant \
 		   -fno-delete-null-pointer-checks
-		   
-KBUILD_CFLAGS	+= -Ofast $(call cc-disable-warning,maybe-uninitialized,)
 		   
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
@@ -585,7 +583,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -Ofast
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
