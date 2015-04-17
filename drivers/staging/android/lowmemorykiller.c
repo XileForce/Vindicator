@@ -427,6 +427,13 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 			    tasksize <= selected_tasksize)
 				continue;
 		}
+<<<<<<< HEAD
+		selected = p;
+		selected_tasksize = tasksize;
+		selected_oom_score_adj = oom_score_adj;
+		lowmem_print(2, "select '%s' (%d), adj %hd, size %d, to kill\n",
+			     p->comm, p->pid, oom_score_adj, tasksize);
+=======
 		pcred = __task_cred(p);
 		uid = pcred->uid;
 		if (avoid_to_kill(uid) || protected_apps(p->comm)){
@@ -446,6 +453,7 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 			lowmem_print(3, "select %d (%s), adj %hd, size %d, to kill\n",
 			     	p->pid, p->comm, oom_score_adj, tasksize);
 		}
+>>>>>>> 29161d3... lowmemorykiller: Improve routines
 	}
 	if (selected) {
 		int i, j;
