@@ -326,7 +326,7 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
-REAL_CC		= $(CROSS_COMPILE)gcc
+CC		= $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -340,14 +340,10 @@ DEPMOD		= /sbin/depmod
 PERL		= perl
 CHECK		= sparse
 
-# Use the wrapper for the compiler.  This wrapper scans for new
-# warnings and causes the build to stop upon encountering them.
-CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
-
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 		  
-GRAPHITE = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize
+#GRAPHITE = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize -ftree-parallelize-loops=4 -floop-unroll-and-jam
 CFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 LDFLAGS_MODULE  = $(GRAPHITE) -DMODULE -DNDEBUG
@@ -375,16 +371,21 @@ LINUXINCLUDE    := \
 
 KBUILD_CPPFLAGS := -D__KERNEL__
 
-KBUILD_CFLAGS   := $(GRAPHITE) -Wall -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
-		   -fstrict-aliasing -fno-common \
+KBUILD_CFLAGS   := $(GRAPHITE) -Wall -pipe -pthread -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
+		   -fstrict-aliasing -fivopts -fipa-pta -fira-hoist-pressure -fno-common \
+		   -ftree-loop-distribution -ftree-loop-if-convert -fprefetch-loop-arrays \
+		   -ftree-vectorize -mvectorize-with-neon-quad \
 		   -Werror-implicit-function-declaration \
 		   -funroll-loops -ftree-loop-im -ftree-loop-ivcanon \
 		   -Wno-format-security -marm -funsafe-math-optimizations \
-           -mtune=cortex-a15 -finline-functions -ftree-partial-pre -falign-functions -falign-jumps -falign-loops \
+           -mtune=cortex-a15 \
            -fmodulo-sched -fmodulo-sched-allow-regmoves \
-           -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
+		   -fgcse-after-reload \
 		   -fno-aggressive-loop-optimizations -fsingle-precision-constant \
 		   -fno-delete-null-pointer-checks
+		   
+KBUILD_CFLAGS	+= -Ofast $(call cc-disable-warning,maybe-uninitialized,)
+		   
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
