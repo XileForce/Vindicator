@@ -33,7 +33,7 @@
 #include <linux/moduleparam.h>
 
 static unsigned int lkuser_max = 0;
-static bool allow_minup = true;
+bool allow_minup = true;
 module_param(allow_minup, bool, 0644);
 
 /**
