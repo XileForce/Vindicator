@@ -389,7 +389,7 @@ cat << CTAG
 						action:"boolean /sys/module/wakeup/parameters/enable_si_ws"
 					}},'
 			fi`
-						`if [ -f "/sys/module/bcmdhd/parameters/wl_divide" ]; then
+			`if [ -f "/sys/module/bcmdhd/parameters/wl_divide" ]; then
 			BCMDHD=\`$BB cat /sys/module/bcmdhd/parameters/wl_divide\`;
 				$BB echo '{ SPane:{
 					title:"BCMDHD WakeLock",

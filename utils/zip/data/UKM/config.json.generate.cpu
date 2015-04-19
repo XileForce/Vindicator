@@ -292,6 +292,20 @@ cat << CTAG
 							}},'
 					fi
 				fi`
+				`if [ -f "/sys/module/bcmdhd/parameters/wl_divide" ]; then
+			RR=\`$BB cat /proc/sys/kernel/rr_interval\`;
+				$BB echo '{ SPane:{
+					title:"BFS RR Interval",
+				}},
+					{ SSeekBar:{
+						description:"Decreasing the value will decrease latencies at the cost of decreasing throughput, while increasing it will improve throughput, but at the cost of worsening latencies.",
+						step:1,
+						min:1,
+						max:1000,
+						default:'$RR',
+						action:"generic /proc/sys/kernel/rr_interval"
+					}},'
+			fi`
 				`if [ -d "/sys/module/cpu_boost/parameters" ]; then
 					$BB echo '{ SPane:{
 							title:"CPU Boost Driver"
