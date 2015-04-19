@@ -108,7 +108,7 @@ case $option in
 		fi
 		;;
 	  2) 
-		[ $maxfreq -gt 2649600 ] && echo -n "Enter 0 (2.9ghz/default), 1 (2.6ghz), 2 (2.5ghz), 3 (2.2ghz):" || \
+		[ $maxfreq -gt 2880000 ] && echo -n "Enter 0 (2.9ghz/default), 1 (2.6ghz), 2 (2.5ghz), 3 (2.2ghz):" || \
 			echo -n "Enter 1 (2.6ghz/default), 2 (2.5ghz), 3 (2.2ghz):"
 		read value
 		case $value in
