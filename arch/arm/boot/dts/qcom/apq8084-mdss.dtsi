@@ -37,7 +37,7 @@
 		qcom,max-bandwidth-low-kbps = <6000000>;
 		qcom,max-bandwidth-high-kbps = <6000000>;
 		qcom,max-bandwidth-per-pipe-kbps = <1500000>;
-		qcom,max-clk-rate = <320000000>;
+		qcom,max-clk-rate = <250000000>;
 
 		qcom,mdss-pipe-vig-off = <0x00001200 0x00001600
 					  0x00001A00 0x00001E00>;
@@ -216,8 +216,8 @@
 			qcom,panel-supply-entry@0 {
 				reg = <0>;
 				qcom,supply-name = "vdd";
-				qcom,supply-min-voltage = <3000000>;
-				qcom,supply-max-voltage = <3000000>;
+				qcom,supply-min-voltage = <2500000>;
+				qcom,supply-max-voltage = <2500000>;
 				qcom,supply-enable-load = <150000>;
 				qcom,supply-disable-load = <100>;
 				qcom,supply-post-on-sleep = <20>;
@@ -226,8 +226,8 @@
 			qcom,panel-supply-entry@1 {
 				reg = <1>;
 				qcom,supply-name = "vddio";
-				qcom,supply-min-voltage = <1800000>;
-				qcom,supply-max-voltage = <1800000>;
+				qcom,supply-min-voltage = <1300000>;
+				qcom,supply-max-voltage = <1300000>;
 				qcom,supply-enable-load = <100000>;
 				qcom,supply-disable-load = <100>;
 				qcom,supply-post-on-sleep = <20>;
@@ -304,8 +304,8 @@
 			qcom,panel-supply-entry@0 {
 				reg = <0>;
 				qcom,supply-name = "vdd";
-				qcom,supply-min-voltage = <3000000>;
-				qcom,supply-max-voltage = <3000000>;
+				qcom,supply-min-voltage = <2500000>;
+				qcom,supply-max-voltage = <2500000>;
 				qcom,supply-enable-load = <150000>;
 				qcom,supply-disable-load = <100>;
 				qcom,supply-post-on-sleep = <20>;
@@ -314,8 +314,8 @@
 			qcom,panel-supply-entry@1 {
 				reg = <1>;
 				qcom,supply-name = "vddio";
-				qcom,supply-min-voltage = <1800000>;
-				qcom,supply-max-voltage = <1800000>;
+				qcom,supply-min-voltage = <1300000>;
+				qcom,supply-max-voltage = <1300000>;
 				qcom,supply-enable-load = <100000>;
 				qcom,supply-disable-load = <100>;
 				qcom,supply-post-on-sleep = <20>;
@@ -337,8 +337,8 @@
 		core-vdda-supply = <&pma8084_l12>;
 		core-vcc-supply = <&pma8084_s4>;
 		qcom,supply-names = "hpd-gdsc", "hpd-5v", "hpd-5v-en", "core-vdda", "core-vcc";
-		qcom,min-voltage-level = <0 0 0 1800000 1800000>;
-		qcom,max-voltage-level = <0 0 0 1800000 1800000>;
+		qcom,min-voltage-level = <0 0 0 1300000 1300000>;
+		qcom,max-voltage-level = <0 0 0 1300000 1300000>;
 		qcom,enable-load = <0 0 0 300000 0>;
 		qcom,disable-load = <0 0 0 0 0>;
 
