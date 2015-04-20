@@ -378,9 +378,9 @@ KBUILD_CFLAGS   := $(GRAPHITE) -Wall -pipe -pthread -DNDEBUG -Wundef -Wstrict-pr
 		   -Werror-implicit-function-declaration \
 		   -funroll-loops -ftree-loop-im -ftree-loop-ivcanon \
 		   -Wno-format-security -marm -funsafe-math-optimizations \
-           -mtune=cortex-a15 \
+           -mtune=cortex-a15 -fbranch-target-load-optimize \
            -fmodulo-sched -fmodulo-sched-allow-regmoves \
-		   -fgcse-after-reload \
+		   -fgcse-after-reload -fgcse-las \
 		   -fsingle-precision-constant \
 		   -fno-delete-null-pointer-checks
 		   
