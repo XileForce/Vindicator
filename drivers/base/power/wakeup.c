@@ -21,6 +21,8 @@
 static bool enable_si_ws = true;
 module_param(enable_si_ws, bool, 0644);
 
+static bool enable_bluesleep_ws = true;
+module_param(enable_bluesleep_ws, bool, 0644);
 #include "power.h"
 
 /*
@@ -395,6 +397,10 @@ static void wakeup_source_activate(struct wakeup_source *ws)
 
 	if (!enable_si_ws && !strcmp(ws->name, "sensor_ind")) {
 		pr_info("wakeup source sensor_ind activate skipped\n");
+		return;
+	}
+	if (!enable_bluesleep_ws && !strcmp(ws->name, "bluesleep")) {
+		pr_info("wakeup source bluesleep activate skipped\n");
 		return;
 	}
 	/*
