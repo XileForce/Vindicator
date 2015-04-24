@@ -50,7 +50,7 @@
 #define THERM_SECURE_BITE_CMD 8
 
 // allow full frequency mitigation
-bool full_fm = true;
+bool full_fm = false;
 module_param(full_fm, bool, 0644);
 
 unsigned int temp_threshold = 70;
