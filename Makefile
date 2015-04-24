@@ -343,7 +343,7 @@ CHECK		= sparse
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 		  
-#GRAPHITE = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize -ftree-parallelize-loops=4 -floop-unroll-and-jam
+GRAPHITE = -fgraphite-identity -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-flatten -floop-nest-optimize -floop-unroll-and-jam
 CFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 AFLAGS_MODULE   = $(GRAPHITE) -DMODULE -DNDEBUG
 LDFLAGS_MODULE  = $(GRAPHITE) -DMODULE -DNDEBUG
@@ -371,7 +371,7 @@ LINUXINCLUDE    := \
 
 KBUILD_CPPFLAGS := -D__KERNEL__
 
-KBUILD_CFLAGS   := $(GRAPHITE) -Wall -pipe -pthread -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
+KBUILD_CFLAGS   := $(GRAPHITE) -Wall -pipe -DNDEBUG -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fstrict-aliasing -fivopts -fipa-pta -fira-hoist-pressure -fno-common \
 		   -ftree-loop-distribution -ftree-loop-if-convert -fprefetch-loop-arrays \
 		   -ftree-vectorize -mvectorize-with-neon-quad \
