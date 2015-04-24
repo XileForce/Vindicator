@@ -1,10 +1,10 @@
 #!/bin/bash
 
-sdir="/home/ryan/Kernels/VindicatorRB"
-udir="/home/ryan/Kernels/VindicatorRB/utils"
+sdir="/home/ryan/Kernels/Vindicator"
+udir="/home/ryan/Kernels/Vindicator/utils"
 outdir="/home/ryan/Kernels/Vindicator_Out"
 device="shamu"
-cc="/home/ryan/arm-eabi-6.0/bin/arm-eabi-"
+cc="/home/ryan/arm-eabi-6.0Uber/bin/arm-eabi-"
 filename="Vindicator.2.1.zip"
 
 compile() {
