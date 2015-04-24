@@ -89,8 +89,7 @@ case $option in
 	read select
 	case $select in
 	  1) 
-		[ $minfreq -lt 300000 ] && echo -n "Enter 0 (35mhz/default), 1 (300mhz), 2 (422mhz), 3 (653mhz):" || \
-			echo -n "Enter 1 (300mhz/default), 2 (422mhz), 3 (653mhz):"
+		[ $minfreq -lt 300000 ] && echo -n "Enter 0 (35mhz/default), 1 (300mhz), 2 (422mhz), 3 (653mhz):"
 		read value
 		case $value in
 		  0) FREQ=35800;;
@@ -108,8 +107,7 @@ case $option in
 		fi
 		;;
 	  2) 
-		[ $maxfreq -gt 2880000 ] && echo -n "Enter 0 (2.9ghz/default), 1 (2.6ghz), 2 (2.5ghz), 3 (2.2ghz):" || \
-			echo -n "Enter 1 (2.6ghz/default), 2 (2.5ghz), 3 (2.2ghz):"
+		[ $maxfreq -gt 2649600 ] && echo -n "Enter 0 (2.9ghz/default), 1 (2.6ghz), 2 (2.5ghz), 3 (2.2ghz):"
 		read value
 		case $value in
 		  0) FREQ=2880000;;
@@ -430,16 +428,13 @@ case $option in
 	read value
 	case $value in
 	  0)
-		rm -f $lkdata/allow_minup $lkdata/cpuboost_enable $lkdata/allow_maxdown
+		rm -f $lkdata/allow_minup $lkdata/allow_maxdown
 		echo Y > /sys/module/cpufreq/parameters/allow_minup
 		echo Y > /sys/module/msm_thermal/parameters/full_fm
-		echo Y > /sys/module/cpu_boost/parameters/cpuboost_enable
 		;;
 	  1)
 		echo N > /sys/module/cpufreq/parameters/allow_minup
 		echo N > $lkdata/allow_minup
-		echo N > /sys/module/cpu_boost/parameters/cpuboost_enable
-		echo N > $lkdata/cpuboost_enable
 		;;
 	  2)
 		echo N > /sys/module/msm_thermal/parameters/full_fm
@@ -450,8 +445,6 @@ case $option in
 		echo N > $lkdata/allow_minup
 		echo N > /sys/module/msm_thermal/parameters/full_fm
 		echo N > $lkdata/allow_maxdown
-		echo N > /sys/module/cpu_boost/parameters/cpuboost_enable
-		echo N > $lkdata/cpuboost_enable
 		;;
 	  *) mc=0;;
 	esac
