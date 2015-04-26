@@ -23,7 +23,7 @@
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
 #define MAX_SAMPLING_DOWN_FACTOR		(10)
 #define MICRO_FREQUENCY_MIN_SAMPLE_RATE	(10000)
-#define BOOST_DURATION_US			(150000)
+#define BOOST_DURATION_US			(500000)
 #define BOOST_FREQ_VAL				(1497600)
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
