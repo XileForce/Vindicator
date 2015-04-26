@@ -1,4 +1,5 @@
 # This file gets copied as /init.shamu.diag.rc
+
 on post-fs-data
     # Modem logging collection
     mkdir /data/diag_logs 0777 system system
