@@ -74,7 +74,7 @@ struct cpufreq_suspend_t {
 };
 
 /* Max frequency to add to the frequency_table */
-static unsigned long arg_cpu_max_freq = 2880000;
+static unsigned long arg_cpu_max_freq = 3033600;
 
 static int __init cpufreq_read_cpu_max_freq(char *cpu_max_freq)
 {
@@ -371,7 +371,7 @@ static int msm_cpufreq_init(struct cpufreq_policy *policy)
 	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
 #endif
 	policy->max = 2649600;
-	policy->min = 300000;
+	policy->min = 35800;
 
 	cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
 
