@@ -21,17 +21,17 @@ cat << CTAG
 						action:"serviceset mpdecision"
 					}},'
 			fi`
-			`if [ -d "/sys/module/intelli_plug/parameters" ] && [ ! -f "/sys/kernel/intelli_plug/full_mode_profile" ]; then
+			`if  [ -d "/sys/kernel/intelli_plug" ] && [ -f "/sys/kernel/intelli_plug/full_mode_profile" ]; then
 				$BB echo '{ SPane:{
-					title:"Intelliplug"
+					title:"IntelliPlug 5.0"
 				}},'
-				if [ -f "/sys/module/intelli_plug/parameters/intelli_plug_active" ]; then
-				INTELLIPLUG=\`$BB cat /sys/module/intelli_plug/parameters/intelli_plug_active\`;
+				if [ -f "/sys/kernel/intelli_plug/intelli_plug_active" ]; then
+				INTELLIPLUG=\`$BB cat /sys/kernel/intelli_plug/intelli_plug_active\`;
 					$BB echo '{ SCheckBox:{
 						label:"Enable",
-						description:"An in kernel replacement for Qualcomms MPDecision. Developed by faux123.",
+						description:"An in kernel replacement for Qualcomms MPDecision. Developed by faux123 & neobuddy89.",
 						default:'$INTELLIPLUG',
-						action:"generic /sys/module/intelli_plug/parameters/intelli_plug_active"
+						action:"generic /sys/kernel/intelli_plug/intelli_plug_active"
 					}},'
 				fi
 				if [ -f "/sys/module/intelli_plug/parameters/nr_run_profile_sel" ]; then
@@ -697,6 +697,31 @@ cat << CTAG
 					}},'
 				fi
 			fi`
+			`if [ -d "/sys/kernel/zen_decision" ]; then
+				$BB echo '{ SPane:{
+					title:"Zen Decision"
+				}},'
+				if [ -f "/sys/kernel/zen_decision/enabled" ]; then
+				ZD=\`$BB cat /sys/kernel/zen_decision/enabled\`;
+					$BB echo '{ SCheckBox:{
+						label:"Enable",
+						description:"An In Kernel Replacement For Qcom's MPDecision Built By Bbedward",
+						default:'$ZD',
+						action:"generic /sys/kernel/zen_decision/enabled"
+					}},'
+				fi
+				if [ -f "/sys/kernel/zen_decision/suspend_wait_time" ]; then
+				ZDWT=\`$BB cat /sys/kernel/zen_decision/suspend_wait_time\`
+					$BB echo '{ SSeekBar:{
+						title:"Zen Decision Suspend Wait Time",
+						description:"Refers to how long we wait after screen is off to remove the cores (default 5s). This just to avoid removing cores in excess. In ms",
+						min:1,
+						max:20000,
+						step:1,							
+						default:'$ZDWT',
+						action:"generic /sys/kernel/zen_decision/suspend_wait_time",
+					}},'
+				fi
 			`if [ -d "/sys/module/msm_hotplug" ]; then
 				$BB echo '{ SPane:{
 						title:"MSM Hotplug"
