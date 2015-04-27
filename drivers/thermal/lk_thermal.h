@@ -1,1 +1,1 @@
-#define LK_MAXFREQ 2649600
+#define LK_MAXFREQ 3033600
