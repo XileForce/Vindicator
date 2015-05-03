@@ -74,7 +74,7 @@ struct cpufreq_suspend_t {
 };
 
 /* Max frequency to add to the frequency_table */
-static unsigned long arg_cpu_max_freq = 3033600;
+static unsigned long arg_cpu_max_freq = 3091200;
 
 static int __init cpufreq_read_cpu_max_freq(char *cpu_max_freq)
 {
