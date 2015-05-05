@@ -1021,7 +1021,9 @@ dhd_pno_stop_for_ssid(dhd_pub_t *dhd)
 		gscan_params = &_params->params_gscan;
 		if (gscan_params->mscan) {
 			/* retrieve the batching data from firmware into host */
-			dhd_wait_batch_results_complete(dhd);
+			err = dhd_wait_batch_results_complete(dhd);
+			if (err != BCME_OK)
+				goto exit;
 		}
 		/* save current pno_mode before calling dhd_pno_clean */
 		mutex_lock(&_pno_state->pno_mutex);
@@ -1657,12 +1659,16 @@ static void dhd_pno_reset_cfg_gscan(dhd_pno_params_t *_params,
 	return;
 }
 
-void dhd_pno_lock_batch_results(dhd_pub_t *dhd)
+int dhd_pno_lock_batch_results(dhd_pub_t *dhd)
 {
 	dhd_pno_status_info_t *_pno_state;
+	int err = BCME_OK;
+
+	NULL_CHECK(dhd, "dhd is NULL", err);
+	NULL_CHECK(dhd->pno_state, "pno_state is NULL", err);
 	_pno_state = PNO_GET_PNOSTATE(dhd);
 	mutex_lock(&_pno_state->pno_mutex);
-	return;
+	return err;
 }
 
 void dhd_pno_unlock_batch_results(dhd_pub_t *dhd)
@@ -1673,11 +1679,14 @@ void dhd_pno_unlock_batch_results(dhd_pub_t *dhd)
 	return;
 }
 
-void dhd_wait_batch_results_complete(dhd_pub_t *dhd)
+int dhd_wait_batch_results_complete(dhd_pub_t *dhd)
 {
 	dhd_pno_status_info_t *_pno_state;
 	dhd_pno_params_t *_params;
+	int err = BCME_OK;
 
+	NULL_CHECK(dhd, "dhd is NULL", err);
+	NULL_CHECK(dhd->pno_state, "pno_state is NULL", err);
 	_pno_state = PNO_GET_PNOSTATE(dhd);
 	_params = &_pno_state->pno_params_arr[INDEX_OF_GSCAN_PARAMS];
 
@@ -1690,7 +1699,6 @@ void dhd_wait_batch_results_complete(dhd_pub_t *dhd)
 	} else { /* GSCAN_BATCH_RETRIEVAL_COMPLETE */
 		gscan_results_cache_t *iter;
 		uint16 num_results = 0;
-		int err;
 
 		mutex_lock(&_pno_state->pno_mutex);
 		iter = _params->params_gscan.gscan_batch_cache;
@@ -1714,8 +1722,7 @@ void dhd_wait_batch_results_complete(dhd_pub_t *dhd)
 		}
 	}
 	DHD_PNO(("%s: Wait complete\n", __FUNCTION__));
-
-	return;
+	return err;
 }
 
 static void *dhd_get_gscan_batch_results(dhd_pub_t *dhd, uint32 *len)
@@ -1748,11 +1755,15 @@ void * dhd_pno_get_gscan(dhd_pub_t *dhd, dhd_pno_gscan_cmd_cfg_t type,
 	dhd_pno_params_t *_params;
 	dhd_pno_status_info_t *_pno_state;
 
+	if (!dhd || !dhd->pno_state) {
+		DHD_ERROR(("NULL POINTER : %s\n", __FUNCTION__));
+		return NULL;
+	}
 	_pno_state = PNO_GET_PNOSTATE(dhd);
 	_params = &_pno_state->pno_params_arr[INDEX_OF_GSCAN_PARAMS];
 	if (!len) {
 		DHD_ERROR(("%s: len is NULL\n", __FUNCTION__));
-		return ret;
+		return NULL;
 	}
 
 	switch (type) {
@@ -1871,6 +1882,7 @@ int dhd_pno_set_cfg_gscan(dhd_pub_t *dhd, dhd_pno_gscan_cmd_cfg_t type,
 	dhd_pno_status_info_t *_pno_state;
 
 	NULL_CHECK(dhd, "dhd is NULL", err);
+	NULL_CHECK(dhd->pno_state, "pno_state is NULL", err);
 
 	DHD_PNO(("%s enter\n", __FUNCTION__));
 
@@ -2466,7 +2478,9 @@ static int  dhd_pno_stop_for_gscan(dhd_pub_t *dhd)
 	}
 	if (_pno_state->pno_params_arr[INDEX_OF_GSCAN_PARAMS].params_gscan.mscan) {
 		/* retrieve the batching data from firmware into host */
-		dhd_wait_batch_results_complete(dhd);
+		err = dhd_wait_batch_results_complete(dhd);
+		if (err != BCME_OK)
+			goto exit;
 	}
 	mutex_lock(&_pno_state->pno_mutex);
 	mode = _pno_state->pno_mode & ~DHD_PNO_GSCAN_MODE;
@@ -3510,6 +3524,9 @@ int dhd_retreive_batch_scan_results(dhd_pub_t *dhd)
 	dhd_pno_status_info_t *_pno_state;
 	dhd_pno_params_t *_params;
 	struct dhd_pno_batch_params *params_batch;
+
+	NULL_CHECK(dhd, "dhd is NULL", err);
+	NULL_CHECK(dhd->pno_state, "pno_state is NULL", err);
 	_pno_state = PNO_GET_PNOSTATE(dhd);
 	_params = &_pno_state->pno_params_arr[INDEX_OF_GSCAN_PARAMS];
 
