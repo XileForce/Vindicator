@@ -111,7 +111,7 @@ static void __ref __msm_zen_dec_wake(struct work_struct *work)
  * Call __msm_zen_dec_wake as a delayed worker thread on wake_wq.
  * Delayed by wake_wait_time.
  */
-static int msm_zen_dec_wake(void)
+static void msm_zd_queue_online_work(void)
 {
 	int ret;
 
