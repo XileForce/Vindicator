@@ -1,3 +1,5 @@
+CFLAGS_cpufreq_ondemand.o := -fno-strict-aliasing -fno-graphite -Os -fno-aggressive-loop-optimizations
+
 # CPUfreq core
 obj-$(CONFIG_CPU_FREQ)			+= cpufreq.o freq_table.o
 # CPUfreq stats
