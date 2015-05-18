@@ -1,0 +1,158 @@
+cat << CTAG
+{
+	name:GPU,
+		elements:[
+			{ SPane:{
+				title:"Current GPU Frequency:"
+			}},
+				{ SLiveLabel:{
+					refresh:1000,
+					style:italic,
+					action:"live GPUFrequency"
+				}},
+			{ SPane:{
+				title:"GPU Frequency Scaling",
+			}},
+				`if [ -f "\`sh $DEVICE DirGPUMinPwrLevel\`" ]; then
+				GPUMIN=\`sh $DEVICE DirGPUMinPwrLevel\`
+					$BB echo '{ SSeekBar:{
+						title:"GPU Min Frequency",
+						description:"Set the minimum frequency the GPU scales down to.",
+						default:'\`$BB cat $GPUMIN\`',
+						action:"gpuset '$GPUMIN'",
+						values:{
+							'\`sh $DEVICE GPUPowerLevel\`'
+						}
+					}},'
+				fi`
+				`if [ -f "\`sh $DEVICE DirGPUMaxFrequency\`" ]; then
+				GPUMAX=\`sh $DEVICE DirGPUMaxFrequency\`
+					$BB echo '{ SSeekBar:{
+						title:"GPU Max Frequency",
+						description:"Set the maximum frequency the GPU scales up to.",
+						default:'\`$BB cat $GPUMAX\`',
+						action:"generic '$GPUMAX'",
+						values:{
+							'\`sh $DEVICE GPUFrequencyList\`'
+						}
+				}},'
+				fi`
+			`if [ -f "\`sh $DEVICE DirGPUGovernor\`" ]; then
+			GPUGOV=\`sh $DEVICE DirGPUGovernor\`
+				$BB echo '{ SPane:{
+					title:"GPU Governor",
+					description:"The GPU Governor makes scaling decisions based on specific algorithm for 2D/3D scenarios."
+				}},
+					{ SOptionList:{
+						default:'\`sh $DEVICE DefaultGPUGovernor\`',
+						action:"gpuset '$GPUGOV'",
+						values:[
+							'\`sh $DEVICE GPUGovernorList\`'
+						]
+					}},'
+			fi`
+			`SGA=/sys/module/msm_kgsl_core/parameters;
+			if [ -f "$SGA/simple_laziness" ] || [ -f "$SGA/simple_ramp_threshold" ] || [ -d "/sys/module/simple_gpu_algorithm/parameters" ]; then
+
+			[ -d "/sys/module/simple_gpu_algorithm/parameters" ] && SGA=/sys/module/simple_gpu_algorithm/parameters;
+			
+				$BB echo '{ SPane:{
+					title:"Simple Governor Tunables"
+				}},'
+				if [ -f "$SGA/simple_gpu_activate" ]; then
+					SIMPLE=\`$BB cat $SGA/simple_gpu_activate\`
+					$BB echo '{ SCheckBox:{
+						label:"Enable",
+						description:"An add-on for MSM Adreno TZ GPU Governor. Developed by faux123.",
+						default:'$SIMPLE',
+						action:"generic '$SGA'/simple_gpu_activate"
+					}},'
+				fi
+				if [ -f "$SGA/simple_laziness" ]; then
+					LAZ=\`$BB cat $SGA/simple_laziness\`
+					$BB echo '{ SSeekBar:{
+						title:"Laziness",
+						description:"Adjusts the number of times the governor skips ramp down requests. Higher = better performance (more battery drain).",
+						default:'$LAZ',
+						action:"generic '$SGA'/simple_laziness",
+						min:0,
+						max:10,
+						step:1
+					}},'
+				fi
+				if [ -f "$SGA/simple_ramp_threshold" ]; then
+					RAMP=\`$BB cat $SGA/simple_ramp_threshold\`
+					$BB echo '{ SSeekBar:{
+						title:"Ramp Threshold",
+						description:"Adjusts the threshold to ramp up or down GPU frequencies. Lower = better performance (more battery drain).",
+						default:'$RAMP',
+						action:"generic '$SGA'/simple_ramp_threshold",
+						min:0,
+						max:10000,
+						step:1000
+					}},'
+				fi
+			fi`
+			`if [ -f "/sys/module/msm_kgsl_core/parameters/up_threshold" ] || [ -f "/sys/module/msm_kgsl_core/parameters/down_threshold" ] || [ -f "/sys/module/msm_kgsl_core/parameters/sample_time_ms" ]; then
+				$BB echo '{ SPane:{
+					title:"Interactive Governor Tunables"
+				}},'
+				if [ -f "/sys/module/msm_kgsl_core/parameters/down_threshold" ]; then
+					DT=\`$BB cat /sys/module/msm_kgsl_core/parameters/down_threshold\`
+					$BB echo '{ SSeekBar:{
+						title:"Down Threshold",
+						description:"When the GPU load is lower than this level, it ramps down the frequency one level.",
+						default:'$DT',
+						action:"generic /sys/module/msm_kgsl_core/parameters/down_threshold",
+						min:0,
+						max:100,
+						step:1
+					}},'
+				fi
+				if [ -f "/sys/module/msm_kgsl_core/parameters/up_threshold" ]; then
+					UT=\`$BB cat /sys/module/msm_kgsl_core/parameters/up_threshold\`
+					$BB echo '{ SSeekBar:{
+						title:"Up Threshold",
+						description:"When the GPU load is above this level, it ramps up the frequency one level.",
+						default:'$UT',
+						action:"generic /sys/module/msm_kgsl_core/parameters/up_threshold",
+						min:0,
+						max:100,
+						step:1
+					}},'
+				fi
+				if [ -f "/sys/module/msm_kgsl_core/parameters/sample_time_ms" ]; then
+					ST=\`$BB cat /sys/module/msm_kgsl_core/parameters/sample_time_ms\`
+					$BB echo '{ SSeekBar:{
+						title:"Sample Time",
+						description:"Sample time to ramp up or down GPU.",
+						unit:" ms",
+						default:'$ST',
+						action:"generic /sys/module/msm_kgsl_core/parameters/sample_time_ms",
+						min:0,
+						max:1000,
+						step:10
+					}},'
+				fi
+			fi`
+			`if [ -f "/sys/devices/system/cpu/cpu0/cpufreq/gpu_mv_table" ]; then
+				$BB echo '{ SPane:{
+					title:"GPU Voltages"
+				}},'
+					while read UVOLT UNIT; do
+					VOLTAGE=$(($VOLTAGE+1));
+						$BB echo '{ SSeekBar:{
+							default:'$UVOLT',
+							title:"Voltage '${VOLTAGE}'",
+							action:"voltage gpuvolt '${VOLTAGE}'",
+							unit:"' ${UNIT}'",'
+							if [ "$UVOLT" -ge "900000" ]; then
+								$BB echo 'min:900000, max:1200000, step:5000 }},'
+							else
+								$BB echo 'min:900, max:1200, step:5 }},'
+							fi;
+					done < /sys/devices/system/cpu/cpu0/cpufreq/gpu_mv_table
+			fi`
+		]
+}
+CTAG

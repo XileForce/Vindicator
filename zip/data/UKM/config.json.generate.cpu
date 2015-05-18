@@ -1,0 +1,753 @@
+[ -f "/sys/kernel/msm_limiter/suspend_min_freq_0" ] && LIMITER=/sys/kernel/msm_limiter;
+[ -f "/sys/module/msm_limiter/suspend_min_freq_0" ] && LIMITER=/sys/module/msm_limiter;
+
+cat << CTAG
+{
+	name:CPU,
+		elements:[
+			`if [ 2 == 1 ]; then
+				$BB echo '{ SPane:{
+					title:"Current CPU Frequency:"
+				}},
+				{ SLiveLabel:{
+					refresh:500,
+					style:italic,
+					action:"live CPUFrequency"
+				}},'
+			fi`
+			{ STitleBar:{
+				title:"CPU Frequency Scaling"
+			}},
+				`if [ ! -f "$LIMITER/suspend_min_freq_0" ] && [ ! -f "/sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_all_cpus" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"CPU Min Frequency",
+						description:"Set the minimum frequency the CPU scales down to.",
+						default:'\`sh $DEVICE DefaultCPUMinFrequency\`',
+						action:"cpuset '\`sh $DEVICE DirCPUMinFrequency\`'",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo }'
+					}},'
+				elif [ -f "$LIMITER/suspend_min_freq_0" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"CPU0 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU0 scales down to.",
+						default:'\`$BB cat $LIMITER/suspend_min_freq_0\`',
+						action:"generic '$LIMITER'/suspend_min_freq_0",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU1 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU1 scales down to.",
+						default:'\`$BB cat $LIMITER/suspend_min_freq_1\`',
+						action:"generic '$LIMITER'/suspend_min_freq_1",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU2 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU2 scales down to.",
+						default:'\`$BB cat $LIMITER/suspend_min_freq_2\`',
+						action:"generic '$LIMITER'/suspend_min_freq_2",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU3 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU3 scales down to.",
+						default:'\`$BB cat $LIMITER/suspend_min_freq_3\`',
+						action:"generic '$LIMITER'/suspend_min_freq_3",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},'
+				elif [ -f "/sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_all_cpus" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"CPU0 Min Frequency (All CPUs)",
+						description:"Set the minimum frequency the CPU0 scales down to. Changing CPU0 will automatically change all other CPUs.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_all_cpus\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_all_cpus",
+						notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:[
+										"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1",
+										"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2",
+										"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3"
+									]
+								}
+							],
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU1 Min Frequency (All CPUs)",
+						description:"Set the minimum frequency the CPU1 scales down to.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu1",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU2 Min Frequency",
+						description:"Set the minimum frequency the CPU2 scales down to.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu2",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU3 Min Frequency (All CPUs)",
+						description:"Set the minimum frequency the CPU3 scales down to.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_min_freq_cpu3",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},'
+				fi`
+				`if [ ! -f "$LIMITER/resume_max_freq_0" ] && [ ! -f "/sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_all_cpus" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"CPU Max Frequency",
+						description:"Set the maximum frequency the CPU scales up to.",
+						default:'\`sh $DEVICE DefaultCPUMaxFrequency\`',
+						action:"cpuset '\`sh $DEVICE DirCPUMaxFrequency\`'",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo }'
+					}},'
+				elif [ -f "$LIMITER/resume_max_freq_0" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"CPU0 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU0 scales up to.",
+						default:'\`$BB cat $LIMITER/resume_max_freq_0\`',
+						action:"generic '$LIMITER'/resume_max_freq_0",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU1 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU1 scales up to.",
+						default:'\`$BB cat $LIMITER/resume_max_freq_1\`',
+						action:"generic '$LIMITER'/resume_max_freq_1",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU2 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU2 scales up to.",
+						default:'\`$BB cat $LIMITER/resume_max_freq_2\`',
+						action:"generic '$LIMITER'/resume_max_freq_2",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU3 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU3 scales up to.",
+						default:'\`$BB cat $LIMITER/resume_max_freq_3\`',
+						action:"generic '$LIMITER'/resume_max_freq_3",
+						values:{ '
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},'
+				elif [ -f "/sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_all_cpus" ]; then
+					$BB echo '{ SSeekBar:{
+						title:"CPU0 Max Frequency (All CPUs)",
+						description:"Set the maximum frequency the CPU0 scales up to. Changing CPU0 will automatically change all other CPUs.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_all_cpus\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_all_cpus",
+						notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:[
+										"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1",
+										"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2",
+										"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3"
+									]
+								}
+							],
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU1 Max Frequency (All CPUs)",
+						description:"Set the maximum frequency the CPU1 scales up to.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu1",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU2 Max Frequency (All CPUs)",
+						description:"Set the maximum frequency the CPU2 scales up to.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu2",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},
+					{ SSeekBar:{
+						title:"CPU3 Max Frequency (All CPUs)",
+						description:"Set the maximum frequency the CPU3 scales up to.",
+						default:'\`$BB cat /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_max_freq_cpu3",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},'
+				fi`
+				`if [ -f "/sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq" ]; then
+				SOMF=\`$BB cat /sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq\`
+					$BB echo '{ SSeekBar:{
+						title:"CPU Max Screen Off Frequency",
+						description:"Set the maximum frequency the CPU scales up to when the screen is off.",
+						default:'$SOMF',
+						action:"generic /sys/devices/system/cpu/cpu0/cpufreq/screen_off_max_freq",
+						values:{'
+							sh $DEVICE CPUFrequencyList
+						$BB echo '}
+					}},'
+				fi`
+				`if [ -d "$LIMITER" ]; then
+					if [ -f "$LIMITER/limiter_enabled" ]; then
+					MSMLIMIT=\`$BB cat $LIMITER/limiter_enabled\`;
+						$BB echo '{ SPane:{
+							title:"MSM Limiter"
+						}},
+							{ SCheckBox:{
+								label:"Enable",
+								description:"An in kernel driver that limits CPU frequency. Developed by neobuddy89.",
+								default:'$MSMLIMIT',
+								action:"generic '$LIMITER'/limiter_enabled"
+							}},'
+					fi
+					if [ -f "/sys/module/msm_limiter/parameters/debug_mask" ]; then
+					DEBUG=\`$BB cat /sys/module/msm_limiter/parameters/debug_mask\`
+						echo '{ SCheckBox:{
+								label:"Debug Mask",
+								description:"Allows you to activate debug mask for MSM Limiter operations.",
+								default:'$DEBUG',
+								action:"generic /sys/module/msm_limiter/parameters/debug_mask"
+						}},'
+					fi
+					if [ -f "$LIMITER/suspend_min_freq" ]; then
+					SMINF=\`$BB cat $LIMITER/suspend_min_freq\`
+						$BB echo '{ SSeekBar:{
+							title:"Suspend Min Frequency",
+							description:"Set the minimum frequency all CPUs scales down to.",
+							default:'$SMINF',
+							action:"generic '$LIMITER'/suspend_min_freq",
+							values:{ '
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi
+					if [ -f "$LIMITER/resume_max_freq" ]; then
+					RMF=\`$BB cat $LIMITER/resume_max_freq\`
+						$BB echo '{ SSeekBar:{
+							title:"Resume Max Frequency",
+							description:"Set the maximum frequency all CPUs scales up to.",
+							default:'$RMF',
+							action:"generic '$LIMITER'/resume_max_freq",
+							values:{ '
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi
+					if [ -f "$LIMITER/suspend_max_freq" ]; then
+					SMF=\`$BB cat $LIMITER/suspend_max_freq\`
+						$BB echo '{ SSeekBar:{
+							title:"Suspend Max Frequency",
+							description:"Set the maximum frequency all CPUs scales up to when device is suspended.",
+							default:'$SMF',
+							action:"generic '$LIMITER'/suspend_max_freq",
+							values:{ '
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi
+					if [ -f "$LIMITER/suspend_defer_time" ]; then
+					SDT=\`$BB cat $LIMITER/suspend_defer_time\`
+							$BB echo '{ SSeekBar:{
+								title:"Suspend Defer Time",
+								min:0,
+								max:5000,
+								step:10,
+								default:'$SDT',
+								action:"generic '$LIMITER'/suspend_defer_time"
+							}},'
+					fi
+				fi`
+				`if [ -f "/sys/module/bcmdhd/parameters/wl_divide" ]; then
+			RR=\`$BB cat /proc/sys/kernel/rr_interval\`;
+				$BB echo '{ SPane:{
+					title:"BFS RR Interval",
+				}},
+					{ SSeekBar:{
+						description:"Decreasing the value will decrease latencies at the cost of decreasing throughput, while increasing it will improve throughput, but at the cost of worsening latencies.",
+						step:1,
+						min:1,
+						max:1000,
+						default:'$RR',
+						action:"generic /proc/sys/kernel/rr_interval"
+					}},'
+			fi`
+				`if [ -d "/sys/module/cpu_boost/parameters" ]; then
+					$BB echo '{ SPane:{
+							title:"CPU Boost Driver"
+						}},'
+					if [ -f "/sys/module/cpu_boost/parameters/cpu_boost" ]; then
+					CPUBOOST=\`$BB cat /sys/module/cpu_boost/parameters/cpu_boost\`;
+						$BB echo '{ SCheckBox:{
+							label:"Enable",
+							description:"An in kernel replacement for Qualcomms MPDecision. Developed by Cyanogenmod.",
+							default:'$CPUBOOST',
+							action:"generic /sys/module/cpu_boost/parameters/cpu_boost"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/cpuboost_enable" ]; then
+					CPUBOOSTE=\`bool /sys/module/cpu_boost/parameters/cpuboost_enable\`;
+						$BB echo '{ SCheckBox:{
+							label:"Enable",
+							description:"Enable/Disable CPU Boost",
+							default:'$CPUBOOSTE',
+							action:"boolean /sys/module/cpu_boost/parameters/cpuboost_enable"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/debug_mask" ]; then
+					DEBUG=\`$BB cat /sys/module/cpu_boost/parameters/debug_mask\`
+						echo '{ SCheckBox:{
+								label:"Debug Mask",
+								description:"Allows you to activate debug mask for CPU Boost operations.",
+								default:'$DEBUG',
+								action:"generic /sys/module/cpu_boost/parameters/debug_mask"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/boost_ms" ]; then
+					BOOSTMS=\`$BB cat /sys/module/cpu_boost/parameters/boost_ms\`
+						$BB echo '{ SSeekBar:{
+								title:"Boost",
+								description:"Minimum interval a CPU is boosted.",
+								unit:" ms",
+								min:0,
+								max:5000,
+								step:10,
+								default:'$BOOSTMS',
+								action:"generic /sys/module/cpu_boost/parameters/boost_ms"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/sync_threshold" ]; then
+					SYNCT=\`$BB cat /sys/module/cpu_boost/parameters/sync_threshold\`
+						$BB echo '{ SSeekBar:{
+							title:"Sync Threshold",
+							description:"When CPU loading crosses the preset threshold, the current CPU is raised to this frequency.",
+							default:'$SYNCT',
+							action:"generic /sys/module/cpu_boost/parameters/sync_threshold",
+							values:{ 0:"Disabled", '
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/input_boost_ms" ]; then
+					SYNCT=\`$BB cat /sys/module/cpu_boost/parameters/input_boost_ms\`
+						$BB echo '{ SSeekBar:{
+								title:"Input Boost",
+								description:"Minimum interval a CPU is boosted when input is detected.",
+								unit:" ms",
+								min:0,
+								max:5000,
+								step:10,
+								default:'$SYNCT',
+								action:"generic /sys/module/cpu_boost/parameters/input_boost_ms"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/input_boost_freq" ]; then
+					
+					VALUE=0; for i in \`$BB cat /sys/module/cpu_boost/parameters/input_boost_freq\`; do VALUE=$(($VALUE+1)); done;
+					
+						if [ $VALUE -eq 1 ]; then
+							IBF=\`$BB cat /sys/module/cpu_boost/parameters/input_boost_freq\`
+							
+							$BB echo '{ SSeekBar:{
+								title:"Input Boost Frequency",
+								description:"This will boost your minimum CPU speed to the selected frequency when you touch the screen or press a button.",
+								default:'$IBF',
+								action:"generic /sys/module/cpu_boost/parameters/input_boost_freq",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},'
+						elif [ $VALUE -eq 4 ]; then
+							$BB echo '{ SSeekBar:{
+								title:"CPU0 Input Boost Frequency",
+								description:"This will boost your minimum CPU0 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 0",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},
+							{ SSeekBar:{
+								title:"CPU1 Input Boost Frequency",
+								description:"This will boost your minimum CPU1 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 1",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},
+							{ SSeekBar:{
+								title:"CPU2 Input Boost Frequency",
+								description:"This will boost your minimum CPU2 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 2",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},
+							{ SSeekBar:{
+								title:"CPU3 Input Boost Frequency",
+								description:"This will boost your minimum CPU3 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 3",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},'
+						fi;
+					fi;
+					if [ -f "/sys/module/cpu_boost/parameters/load_based_syncs" ]; then
+					LBS=\`bool /sys/module/cpu_boost/parameters/load_based_syncs\`
+						$BB echo '{ SCheckBox:{
+							label:"Load Based Syncs",
+							description:"",
+							default:'$LBS',
+							action:"boolean /sys/module/cpu_boost/parameters/load_based_syncs",
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/migration_load_threshold" ]; then
+					MLT=\`$BB cat /sys/module/cpu_boost/parameters/migration_load_threshold\`
+						$BB echo '{ SSeekBar:{
+								title:"Migration Load Threshold",
+								description:"",
+								min:0,
+								max:100,
+								step:1,
+								default:'$MLT',
+								action:"generic /sys/module/cpu_boost/parameters/migration_load_threshold"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/hotplug_boost" ]; then
+					HB=\`bool /sys/module/cpu_boost/parameters/hotplug_boost\`
+						$BB echo '{ SCheckBox:{
+							label:"Hotplug Boost",
+							description:"Hotplug Boost is similar to input boost but it occurs when CPUs go online.",
+							default:'$HB',
+							action:"boolean /sys/module/cpu_boost/parameters/hotplug_boost",
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/wakeup_boost" ]; then
+					WB=\`bool /sys/module/cpu_boost/parameters/wakeup_boost\`
+						$BB echo '{ SCheckBox:{
+							label:"Wakeup Boost",
+							description:"Wakeup Boost is similar to input boost but it occurs when screen is turned on.",
+							default:'$WB',
+							action:"boolean /sys/module/cpu_boost/parameters/wakeup_boost",
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/plug_boost_freq" ]; then
+					PBF=\`$BB cat /sys/module/cpu_boost/parameters/plug_boost_freq\`
+						$BB echo '{ SSeekBar:{
+							title:"Plug Boost Frequency",
+							description:"",
+							default:'$PBF',
+							action:"generic /sys/module/cpu_boost/parameters/plug_boost_freq",
+							values:{ '
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/plug_boost_ms" ]; then
+					PB=\`$BB cat /sys/module/cpu_boost/parameters/plug_boost_ms\`
+						$BB echo '{ SSeekBar:{
+								title:"Plug Boost",
+								description:"",
+								unit:" ms",
+								min:1,
+								max:5000,
+								step:1,
+								default:'$PB',
+								action:"generic /sys/module/cpu_boost/parameters/plug_boost_ms"
+						}},'
+					fi
+				fi`
+				`if [ -f "/sys/devices/system/cpu/sched_mc_power_savings" ]; then
+				SMPS=\`$BB cat /sys/devices/system/cpu/sched_mc_power_savings\`
+					$BB echo '{ SPane:{
+						title:"CPU Multicore Power Saving",
+						description:"Try to group tasks into the least cores possible. The higher the value, the more aggressive the grouping."
+					}},
+					{ SOptionList:{
+						default:'$SMPS',
+						action:"generic /sys/devices/system/cpu/sched_mc_power_savings",
+						values:{ 0:"Disabled", 1:"Enabled", 2:"Aggressive"
+						}
+					}},'
+				fi`
+				`if [ -f "/sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy" ]; then
+				PAS=\`$BB cat /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy\`
+					$BB echo '{ SPane:{
+						title:"CPU Process Scheduling",
+						description:"Power Aware Scheduling will attempt to pack as many processes onto one core as possible. Stock is standard behavior."
+					}},
+					{ SOptionList:{
+						default:'$PAS',
+						action:"generic /sys/devices/system/cpu/sched_balance_policy/current_sched_balance_policy",
+						values:{ performance:"Stock", powersaving:"Power-Aware"
+						}
+					}},'
+				fi`
+					`if [ -f "/sys/module/workqueue/parameters/power_efficient" ]; then
+				PE=\`bool /sys/module/workqueue/parameters/power_efficient\`
+					$BB echo '{ SPane:{
+						title:"Power-efficient Workqueues",
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"This will help to reduce power consumption at the cost of slight performance overhead. PE workqueues are used for unbound scheduled work to save load on sibling CPU cores and queuing work on CPU0.",
+							default:'$PE',
+							action:"boolean /sys/module/workqueue/parameters/power_efficient",
+						}},'
+				fi`
+			{ SPane:{
+				title:"CPU Governor",
+				description:"The CPU governor determines how the CPU behaves in response to changes in workload. More info: <a href='http://timos.me/tm/wiki/cpugovernors'>HERE</a>"
+			}},
+				`if [ ! -f "$LIMITER/scaling_governor_0" ] && [ ! -f "/sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_all_cpus" ]; then
+					$BB echo '{ SOptionList:{
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"cpuset '\`sh $DEVICE DirCPUGovernor\`'",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},'
+				elif [ -f "$LIMITER/scaling_governor_0" ]; then
+					$BB echo '{ SOptionList:{
+						title:"CPU0 (MSM Limiter)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic '$LIMITER'/scaling_governor_0",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU1 (MSM Limiter)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic '$LIMITER'/scaling_governor_1",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU2 (MSM Limiter)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic '$LIMITER'/scaling_governor_2",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU3 (MSM Limiter)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic '$LIMITER'/scaling_governor_3",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},'
+				elif [ -f "/sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_all_cpus" ]; then
+					$BB echo '{ SOptionList:{
+						title:"CPU0 (All CPUs)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_all_cpus",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, APPLY ],
+								to:[
+									"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1",
+									"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2",
+									"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3",
+								]
+							}
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU1 (All CPUs)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu1",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU2 (All CPUs)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu2",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU3 (All CPUs)",
+						default:'\`sh $DEVICE DefaultCPUGovernor\`',
+						action:"generic /sys/devices/system/cpu/cpufreq/all_cpus/scaling_governor_cpu3",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"'\`sh $DEVICE DirCPUGovernorTree\`'"
+							}
+						]
+					}},'
+				fi`
+			{ SPane:{
+				title:"CPU Governor Tunables"
+			}},
+				{ STreeDescriptor:{
+					path:"`sh $DEVICE DirCPUGovernorTree`",
+					generic: {
+						directory: {
+							STreeDescriptor:{
+								generic: {
+									directory: {},
+									element: {
+										SGeneric: { title:"@BASENAME" }
+									}
+								},
+								exclude: [ 
+									"boost_duration", "boostpulse", "cpu_utilization", "multi_phase_freq_tbl", "profile", "profile_list", "sampling_rate_min", 
+									"up_threshold_h", "up_threshold_l", "version_profiles"
+								]
+							},
+						}
+					},
+					exclude: [ "all_cpus", "kset", "overall_stats", "stats", "vdd_table" ]
+				}},
+		]
+}
+CTAG
