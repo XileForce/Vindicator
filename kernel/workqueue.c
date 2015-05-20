@@ -3269,7 +3269,7 @@ static ssize_t wq_nice_store(struct device *dev, struct device_attribute *attr,
 		return -ENOMEM;
 
 	if (sscanf(buf, "%d", &attrs->nice) == 1 &&
-	    attrs->nice >= MIN_NICE && attrs->nice <= MAX_NICE)
+	    attrs->nice >= -20 && attrs->nice <= 19)
 		ret = apply_workqueue_attrs(wq, attrs);
 	else
 		ret = -EINVAL;
