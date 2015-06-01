@@ -530,8 +530,6 @@ static int wakeup_reason_pm_event(struct notifier_block *notifier,
 	case PM_POST_SUSPEND:
 		get_xtime_and_monotonic_and_sleep_offset(&curr_xtime, &xtom,
 			&curr_stime);
-		break;
-	case PM_POST_SUSPEND:
 		/* log_wakeups should have been cleared by now. */
 		if (WARN_ON(logging_wakeup_reasons())) {
 			stop_logging_wakeup_reasons();
