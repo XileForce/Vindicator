@@ -629,7 +629,6 @@ int __init wlan_partial_resume_init(void)
 
 	/* Setup partial resume */
 	spin_lock_init(&bcm_lock);
-	wlan_pr.irq = brcm_wake_irq;
 	printk("%s: Wlan wake IRQ = %d\n", __func__, wlan_pr.irq);
 	rc = register_partial_resume(&wlan_pr);
 	rc = register_partial_resume(&smd_pr);
