@@ -33,6 +33,27 @@ chmod 444 /dev/frandom
 [ ! -d "/data/data/leankernel" ] && mkdir /data/data/leankernel
 chmod 755 /data/data/leankernel
 
+#Fix GPS Wake Issues. From LSpeed Mod 
+mount -o remount,rw /
+mount -o remount,rw rootfs
+mount -o remount,rw /system
+busybox mount -o remount,rw /
+busybox mount -o remount,rw rootfs
+busybox mount -o remount,rw /system
+
+busybox sleep 40
+su -c "pm enable com.google.android.gms/.update.SystemUpdateActivity"
+su -c "pm enable com.google.android.gms/.update.SystemUpdateService"
+su -c "pm enable com.google.android.gms/.update.SystemUpdateService$ActiveReceiver"
+su -c "pm enable com.google.android.gms/.update.SystemUpdateService$Receiver"
+su -c "pm enable com.google.android.gms/.update.SystemUpdateService$SecretCodeReceiver"
+su -c "pm enable com.google.android.gsf/.update.SystemUpdateActivity"
+su -c "pm enable com.google.android.gsf/.update.SystemUpdatePanoActivity"
+su -c "pm enable com.google.android.gsf/.update.SystemUpdateService"
+su -c "pm enable com.google.android.gsf/.update.SystemUpdateService$Receiver"
+su -c "pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver"
+busybox mount -o remount,ro /system
+
 # init.d support
 /system/xbin/busybox run-parts /system/etc/init.d
 
