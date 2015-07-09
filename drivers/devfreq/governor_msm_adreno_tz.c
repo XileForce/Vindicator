@@ -52,6 +52,10 @@ static DEFINE_SPINLOCK(tz_lock);
 #define TZ_UPDATE_ID		0x4
 #define TZ_INIT_ID		0x6
 
+#define TZ_RESET_ID_64          0x7
+#define TZ_UPDATE_ID_64         0x8
+#define TZ_INIT_ID_64           0x9
+
 #define TAG "msm_adreno_tz: "
 
 /* Trap into the TrustZone, and call funcs there. */
@@ -87,8 +91,6 @@ static int __secure_tz_update_entry3(unsigned int *scm_data, u32 size_scm_data,
 	spin_unlock(&tz_lock);
 	return ret;
 }
-/* Boolean to detect if pm has entered suspend mode */
-static bool suspended = false;
 
 static int __secure_tz_entry3(u32 cmd, u32 val1, u32 val2, u32 val3)
 {
