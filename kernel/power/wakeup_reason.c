@@ -294,25 +294,6 @@ static ssize_t suspend_since_boot_show(struct kobject *kobj,
 				total_stime.tv_sec, total_stime.tv_nsec);
 }
 
-static ssize_t last_suspend_time_show(struct kobject *kobj,
-			struct kobj_attribute *attr, char *buf)
-{
-	struct timespec sleep_time;
-	struct timespec total_time;
-	struct timespec suspend_resume_time;
-
-	sleep_time = timespec_sub(curr_stime, last_stime);
-	total_time = timespec_sub(curr_xtime, last_xtime);
-	suspend_resume_time = timespec_sub(total_time, sleep_time);
-
-	/*
-	 * suspend_resume_time is calculated from sleep_time. Userspace would
-	 * always need both. Export them in pair here.
-	 */
-	return sprintf(buf, "%lu.%09lu %lu.%09lu\n",
-				suspend_resume_time.tv_sec, suspend_resume_time.tv_nsec,
-				sleep_time.tv_sec, sleep_time.tv_nsec);
-}
 
 static struct kobj_attribute resume_reason = __ATTR_RO(last_resume_reason);
 static struct kobj_attribute suspend_time = __ATTR_RO(last_suspend_time);
@@ -576,25 +557,6 @@ void clear_wakeup_reasons(void)
 	spin_lock_irqsave(&resume_reason_lock, flags);
 	clear_wakeup_reasons_nolock();
 	spin_unlock_irqrestore(&resume_reason_lock, flags);
-}
-
-void log_suspend_abort_reason(const char *fmt, ...)
-{
-	va_list args;
-
-	spin_lock(&resume_reason_lock);
-
-	//Suspend abort reason has already been logged.
-	if (suspend_abort) {
-		spin_unlock(&resume_reason_lock);
-		return;
-	}
-
-	suspend_abort = true;
-	va_start(args, fmt);
-	snprintf(abort_reason, MAX_SUSPEND_ABORT_LEN, fmt, args);
-	va_end(args);
-	spin_unlock(&resume_reason_lock);
 }
 
 /* Detects a suspend and clears all the previous wake up reasons*/

@@ -78,26 +78,19 @@ static int __secure_tz_reset_entry2(unsigned int *scm_data, u32 size_scm_data,
        return ret;
 }
 
-/* Boolean to detect if pm has entered suspend mode */
-static bool suspended = false;
-
-static int __secure_tz_update_entry3(unsigned int *scm_data, u32 size_scm_data,
-					int *val, u32 size_val, bool is_64)
+static int __secure_tz_entry3(u32 cmd, u32 val1, u32 val2, u32 val3)
 {
 	int ret;
+	spin_lock(&tz_lock);
 	/* sync memory before sending the commands to tz*/
 	__iowmb();
-	if (!is_64) {
-		spin_lock(&tz_lock);
-		ret = scm_call_atomic2(SCM_SVC_IO, TZ_RESET_ID, scm_data[0],
-					scm_data[1]);
-		spin_unlock(&tz_lock);
-	} else {
-		ret = scm_call(SCM_SVC_DCVS, TZ_RESET_ID_64, scm_data,
-				size_scm_data, NULL, 0);
-	}
+	ret = scm_call_atomic3(SCM_SVC_IO, cmd, val1, val2, val3);
+	spin_unlock(&tz_lock);
 	return ret;
 }
+
+/* Boolean to detect if pm has entered suspend mode */
+static bool suspended = false;
 
 static int __secure_tz_update_entry3(unsigned int *scm_data, u32 size_scm_data,
 					int *val, u32 size_val, bool is_64)
@@ -443,8 +436,6 @@ static int tz_resume(struct devfreq *devfreq)
 static int tz_suspend(struct devfreq *devfreq)
 {
 	struct devfreq_msm_adreno_tz_data *priv = devfreq->data;
-
-	__secure_tz_entry2(TZ_RESET_ID, 0, 0);
 	struct devfreq_dev_profile *profile = devfreq->profile;
 	unsigned long freq;
         unsigned int scm_data[2] = {0, 0};

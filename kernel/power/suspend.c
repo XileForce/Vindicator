@@ -470,6 +470,7 @@ static int enter_state(suspend_state_t state)
 	return error;
 }
 
+
 static void pm_suspend_marker(char *annotation)
 {
 	struct timespec ts;
